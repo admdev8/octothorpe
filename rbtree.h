@@ -1,3 +1,5 @@
+// slightly reworked by Dennis Yurichev
+
 /* Copyright (c) 2013 the authors listed at the following URL, and/or
 the authors of referenced articles or incorporated external code:
 http://en.literateprograms.org/Red-black_tree_(C)?action=history&offset=20120524204657
@@ -44,8 +46,13 @@ typedef struct rbtree_t {
 typedef int (*compare_func)(void* left, void* right);
 
 rbtree rbtree_create();
+void rbtree_clear();
 void* rbtree_lookup(rbtree t, void* key, compare_func compare);
 void rbtree_insert(rbtree t, void* key, void* value, compare_func compare);
 void rbtree_delete(rbtree t, void* key, compare_func compare);
 
+void rbtree_enumerate(rbtree t, void (*visitor)(void*, void*));
+int compare_size_t(void* leftp, void* rightp);
+
 #endif
+

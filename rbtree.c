@@ -1,3 +1,5 @@
+// slightly reworked by Dennis Yurichev
+
 /* Copyright (c) 2013 the authors listed at the following URL, and/or
 the authors of referenced articles or incorporated external code:
 http://en.literateprograms.org/Red-black_tree_(C)?action=history&offset=20120524204657
@@ -138,6 +140,12 @@ rbtree rbtree_create() {
     verify_properties(t);
     return t;
 }
+
+void rbtree_clear()
+{
+    // TODO
+};
+
 node new_node(void* key, void* value, color node_color, node left, node right) {
     node result = malloc(sizeof(struct rbtree_node_t));
     result->key = key;
@@ -280,6 +288,7 @@ void insert_case5(rbtree t, node n) {
         rotate_left(t, grandparent(n));
     }
 }
+
 void rbtree_delete(rbtree t, void* key, compare_func compare) {
     node child;
     node n = lookup_node(t, key, compare);
@@ -389,3 +398,34 @@ void delete_case6(rbtree t, node n) {
         rotate_right(t, n->parent);
     }
 }
+
+static void rbtree_enumerate_helper(rbtree_node n, void (*visitor)(void*, void*))
+{
+    if (n->right!=NULL)
+        rbtree_enumerate_helper(n->right, visitor);
+    visitor (n->key, n->value);
+    if (n->left!=NULL)
+        rbtree_enumerate_helper(n->left, visitor);
+};
+
+void rbtree_enumerate(rbtree t, void (*visitor)(void*, void*))
+{
+    if (t && t->root)
+        rbtree_enumerate_helper (t->root, visitor);
+};
+
+int compare_size_t(void* leftp, void* rightp)
+{
+    size_t left = (size_t)leftp;
+    size_t right = (size_t)rightp;
+    if (left < right)
+        return -1;
+    else if (left > right)
+        return 1;
+    else 
+    {
+        assert (left == right);
+        return 0;
+    };
+};
+
