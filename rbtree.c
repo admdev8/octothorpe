@@ -29,6 +29,11 @@ Retrieved from: http://en.literateprograms.org/Red-black_tree_(C)?oldid=18555
 #include "rbtree.h"
 #include <assert.h>
 #include <stdlib.h>
+#include "dmalloc.h"
+
+#if 0
+#define VERIFY_RBTREE
+#endif
 
 typedef rbtree_node node;
 typedef enum rbtree_node_color color;
@@ -44,8 +49,8 @@ static void verify_property_4(node root);
 static void verify_property_5(node root);
 static void verify_property_5_helper(node n, int black_count, int* black_count_path);
 
-static node new_node(void* key, void* value, color node_color, node left, node right);
-static node lookup_node(rbtree t, void* key, compare_func compare);
+static node new_node(rbtree t, void* key, void* value, color node_color, node left, node right);
+static node lookup_node(rbtree t, void* key);
 static void rotate_left(rbtree t, node n);
 static void rotate_right(rbtree t, node n);
 
@@ -134,10 +139,19 @@ void verify_property_5_helper(node n, int black_count, int* path_black_count) {
     verify_property_5_helper(n->left,  black_count, path_black_count);
     verify_property_5_helper(n->right, black_count, path_black_count);
 }
-rbtree rbtree_create() {
-    rbtree t = malloc(sizeof(struct rbtree_t));
+rbtree rbtree_create(BOOL use_dmalloc, const char *struct_name, compare_func compare) 
+{
+    rbtree t;
+
+    if (use_dmalloc)
+        t = DMALLOC(sizeof(struct rbtree_t), struct_name);
+    else
+        t = malloc(sizeof(struct rbtree_t));
     t->root = NULL;
     verify_properties(t);
+    t->use_dmalloc=use_dmalloc;
+    t->struct_name=struct_name;
+    t->cmp_func=compare;
     return t;
 }
 
@@ -146,8 +160,12 @@ void rbtree_clear()
     // TODO
 };
 
-node new_node(void* key, void* value, color node_color, node left, node right) {
-    node result = malloc(sizeof(struct rbtree_node_t));
+node new_node(rbtree t, void* key, void* value, color node_color, node left, node right) {
+    node result;
+    if (t->use_dmalloc)
+        result = DMALLOC(sizeof(struct rbtree_node_t), t->struct_name);
+    else
+        result = malloc(sizeof(struct rbtree_node_t));
     result->key = key;
     result->value = value;
     result->color = node_color;
@@ -157,11 +175,12 @@ node new_node(void* key, void* value, color node_color, node left, node right) {
     if (right != NULL) right->parent = result;
     result->parent = NULL;
     return result;
-}
-node lookup_node(rbtree t, void* key, compare_func compare) {
+};
+
+node lookup_node(rbtree t, void* key) {
     node n = t->root;
     while (n != NULL) {
-        int comp_result = compare(key, n->key);
+        int comp_result = t->cmp_func(key, n->key);
         if (comp_result == 0) {
             return n;
         } else if (comp_result < 0) {
@@ -173,8 +192,8 @@ node lookup_node(rbtree t, void* key, compare_func compare) {
     }
     return n;
 }
-void* rbtree_lookup(rbtree t, void* key, compare_func compare) {
-    node n = lookup_node(t, key, compare);
+void* rbtree_lookup(rbtree t, void* key) {
+    node n = lookup_node(t, key);
     return n == NULL ? NULL : n->value;
 }
 void rotate_left(rbtree t, node n) {
@@ -211,18 +230,21 @@ void replace_node(rbtree t, node oldn, node newn) {
         newn->parent = oldn->parent;
     }
 }
-void rbtree_insert(rbtree t, void* key, void* value, compare_func compare) {
-    node inserted_node = new_node(key, value, RED, NULL, NULL);
+void rbtree_insert(rbtree t, void* key, void* value) {
+    node inserted_node = new_node(t, key, value, RED, NULL, NULL);
     if (t->root == NULL) {
         t->root = inserted_node;
     } else {
         node n = t->root;
         while (1) {
-            int comp_result = compare(key, n->key);
+            int comp_result = t->cmp_func(key, n->key);
             if (comp_result == 0) {
                 n->value = value;
                 /* inserted_node isn't going to be used, don't leak it */
-                free (inserted_node);
+                if (t->use_dmalloc)
+                    dfree (inserted_node);
+                else
+                    free (inserted_node);
                 return;
             } else if (comp_result < 0) {
                 if (n->left == NULL) {
@@ -289,9 +311,9 @@ void insert_case5(rbtree t, node n) {
     }
 }
 
-void rbtree_delete(rbtree t, void* key, compare_func compare) {
+void rbtree_delete(rbtree t, void* key) {
     node child;
-    node n = lookup_node(t, key, compare);
+    node n = lookup_node(t, key);
     if (n == NULL) return;  /* Key not found, do nothing */
     if (n->left != NULL && n->right != NULL) {
         /* Copy key/value from predecessor and then delete it instead */
@@ -310,7 +332,10 @@ void rbtree_delete(rbtree t, void* key, compare_func compare) {
     replace_node(t, n, child);
     if (n->parent == NULL && child != NULL)
         child->color = BLACK;
-    free(n);
+    if (t->use_dmalloc)
+        dfree(n);
+    else
+        free(n);
 
     verify_properties(t);
 }
@@ -399,19 +424,19 @@ void delete_case6(rbtree t, node n) {
     }
 }
 
-static void rbtree_enumerate_helper(rbtree_node n, void (*visitor)(void*, void*))
+static void rbtree_walk_helper(rbtree_node n, void (*visitor)(void*, void*))
 {
     if (n->right!=NULL)
-        rbtree_enumerate_helper(n->right, visitor);
+        rbtree_walk_helper(n->right, visitor);
     visitor (n->key, n->value);
     if (n->left!=NULL)
-        rbtree_enumerate_helper(n->left, visitor);
+        rbtree_walk_helper(n->left, visitor);
 };
 
-void rbtree_enumerate(rbtree t, void (*visitor)(void*, void*))
+void rbtree_walk(rbtree t, void (*visitor)(void*, void*))
 {
     if (t && t->root)
-        rbtree_enumerate_helper (t->root, visitor);
+        rbtree_walk_helper (t->root, visitor);
 };
 
 int compare_size_t(void* leftp, void* rightp)

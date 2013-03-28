@@ -26,7 +26,13 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 Retrieved from: http://en.literateprograms.org/Red-black_tree_(C)?oldid=18555
 */
 
-#ifndef _RBTREE_H_
+#pragma once
+
+#include "bool.h"
+
+#ifdef  __cplusplus
+extern "C" {
+#endif
 
 enum rbtree_node_color { RED, BLACK };
 
@@ -39,20 +45,28 @@ typedef struct rbtree_node_t {
     enum rbtree_node_color color;
 } *rbtree_node;
 
-typedef struct rbtree_t {
-    rbtree_node root;
-} *rbtree;
-
 typedef int (*compare_func)(void* left, void* right);
 
-rbtree rbtree_create();
-void rbtree_clear();
-void* rbtree_lookup(rbtree t, void* key, compare_func compare);
-void rbtree_insert(rbtree t, void* key, void* value, compare_func compare);
-void rbtree_delete(rbtree t, void* key, compare_func compare);
+typedef struct rbtree_t {
+    rbtree_node root;
+    
+    // use DMALLOC? if so, pass debug string
+    BOOL use_dmalloc;
+    const char *struct_name;
 
-void rbtree_enumerate(rbtree t, void (*visitor)(void*, void*));
+    compare_func cmp_func;
+} *rbtree;
+
+rbtree rbtree_create(BOOL use_dmalloc, const char *struct_name, compare_func compare);
+void rbtree_clear();
+void* rbtree_lookup(rbtree t, void* key);
+void rbtree_insert(rbtree t, void* key, void* value);
+void rbtree_delete(rbtree t, void* key);
+
+void rbtree_walk(rbtree t, void (*visitor)(void*, void*));
 int compare_size_t(void* leftp, void* rightp);
 
+#ifdef  __cplusplus
+}
 #endif
 

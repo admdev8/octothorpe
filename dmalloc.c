@@ -45,10 +45,10 @@ void store_info (void* ptr, size_t size, const char * filename, unsigned line, c
     //printf ("adding ptr=0x%p\n", ptr);
     if (tbl_created==FALSE)
     {
-        tbl=rbtree_create();
+        tbl=rbtree_create(FALSE, NULL, compare_size_t);
         tbl_created=TRUE;
     };
-    rbtree_insert (tbl, ptr, tmp, compare_size_t);
+    rbtree_insert (tbl, ptr, tmp);
 };
 
 void* dmalloc (size_t size, const char * filename, unsigned line, const char * function, const char * structname)
@@ -59,6 +59,7 @@ void* dmalloc (size_t size, const char * filename, unsigned line, const char * f
         __debugbreak();
 
     rt=malloc (size);
+    assert(rt!=NULL);
     store_info (rt, size, filename, line, function, structname);
     return rt;
 };
@@ -75,10 +76,10 @@ void dfree (void* ptr)
 #ifdef _DEBUG
     struct dmalloc_info *tmp;
     //printf ("dfree (0x%p)\n", ptr);
-    tmp=rbtree_lookup(tbl, ptr, compare_size_t);
+    tmp=rbtree_lookup(tbl, ptr);
     assert(tmp); // ensure it's present
     free(tmp);
-    rbtree_delete(tbl, ptr, compare_size_t);
+    rbtree_delete(tbl, ptr);
 #endif
     free (ptr);
 };
@@ -95,7 +96,7 @@ static void dump_unfreed_block(void *k, struct dmalloc_info *i)
 
 void dump_unfreed_blocks()
 {
-    rbtree_enumerate(tbl, dump_unfreed_block);
+    rbtree_walk(tbl, dump_unfreed_block);
 };
 
 void dmalloc_deinit()

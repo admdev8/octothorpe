@@ -1,5 +1,9 @@
 #pragma once
 
+#ifdef  __cplusplus
+extern "C" {
+#endif
+
 #include <stdio.h>
 
 void* dmalloc (size_t size, const char * filename, unsigned line, const char * function, const char * structname);
@@ -22,3 +26,7 @@ void dfree (void* ptr);
 
 void dump_unfreed_blocks();
 void dmalloc_deinit();
+
+#ifdef  __cplusplus
+}
+#endif

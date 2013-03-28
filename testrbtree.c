@@ -29,7 +29,7 @@ int main()
     rbtree t = rbtree_create();
 
     printf ("enumerate:\n");
-    rbtree_enumerate(t, visitor);
+    rbtree_walk(t, visitor);
 
     rbtree_insert(t, (void*)12345, (void*)"value1", compare_uint32_t);
     assert(strcmp (rbtree_lookup(t, (void*)12345, compare_uint32_t), "value1")==0);
@@ -37,13 +37,13 @@ int main()
     rbtree_insert(t, (void*)12346, (void*)"value2", compare_uint32_t);
     
     printf ("enumerate:\n");
-    rbtree_enumerate(t, visitor);
+    rbtree_walk(t, visitor);
     
     rbtree_delete(t, (void*)12345, compare_uint32_t);
     
     rbtree_insert(t, (void*)12347, (void*)"value3", compare_uint32_t);
     
     printf ("enumerate:\n");
-    rbtree_enumerate(t, visitor);
+    rbtree_walk(t, visitor);
     return 0;
 }

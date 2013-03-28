@@ -4,13 +4,13 @@ dmalloc.obj: dmalloc.c dmalloc.h
 memutils.obj: memutils.c memutils.h
 	cl.exe memutils.c /D_DEBUG /c /Zi
 
-ptrie.obj: ptrie.c ptrie.h
-	cl.exe ptrie.c /D_DEBUG /c /Zi
+rbtree.obj: rbtree.c rbtree.h
+	cl.exe rbtree.c /D_DEBUG /c /Zi
 
-octothorpe.lib: dmalloc.obj memutils.obj ptrie.obj
-	lib.exe dmalloc.obj memutils.obj ptrie.obj /OUT:octothorpe.lib
+octothorped.lib: dmalloc.obj memutils.obj rbtree.obj
+	lib.exe dmalloc.obj memutils.obj rbtree.obj /OUT:octothorped.lib
 
-all: octothorpe.lib
+all: octothorped.lib
 
 clean:
-	del *.exe *.obj *.asm
+	del *.lib *.exe *.obj *.asm
