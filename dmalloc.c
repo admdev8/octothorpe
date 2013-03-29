@@ -1,4 +1,4 @@
-#include <windows.h>
+//#include <windows.h> do you need it here?
 #include <stdio.h>
 #include <stdint.h>
 #include <assert.h>

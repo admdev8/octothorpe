@@ -7,6 +7,8 @@
 
 #pragma once
 
+#include <stdio.h>
+
 typedef struct _strbuf
 {
     char *buf; // in future, short string may be placed instead of pointer here (?)

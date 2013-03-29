@@ -29,7 +29,7 @@ void strbuf_grow (strbuf *sb, size_t size)
         return; // we have space already
     };
 
-    new_buf=(char*)DMALLOC(sb->strlen + size + 1, "strbuf");
+    new_buf=(char*)DMALLOC(sb->strlen + size + 1, "strbuf"); // FIXME: realloc or DREALLOC should be here for clarity
     memcpy (new_buf, sb->buf, sb->strlen+1);
     dfree(sb->buf);
     sb->buf=new_buf;
