@@ -2,8 +2,8 @@
 
 // inspired by git strbuf
 
-// RATIONALE: string buffer should be used in place where one need to modify strings or
-// construct them in place
+// RATIONALE: string buffer should be used in places where one need to modify strings or
+// construct them 
 
 #pragma once
 
@@ -24,4 +24,4 @@ void strbuf_addstr (strbuf *sb, char *s);
 void strbuf_addc (strbuf *sb, char c);
 void strbuf_vaddf (strbuf *sb, const char *fmt, va_list va);
 void strbuf_addf (strbuf *sb, const char *fmt, ...);
-
+// TODO: BOOL strbuf_eq
