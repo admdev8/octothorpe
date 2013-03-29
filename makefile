@@ -7,8 +7,11 @@ memutils.obj: memutils.c memutils.h
 rbtree.obj: rbtree.c rbtree.h
 	cl.exe rbtree.c /D_DEBUG /c /Zi
 
-octothorped.lib: dmalloc.obj memutils.obj rbtree.obj
-	lib.exe dmalloc.obj memutils.obj rbtree.obj /OUT:octothorped.lib
+rand.obj: rand.c rand.h
+	cl.exe rand.c /D_DEBUG /c /Zi
+
+octothorped.lib: dmalloc.obj memutils.obj rbtree.obj rand.obj
+	lib.exe dmalloc.obj memutils.obj rbtree.obj rand.obj /OUT:octothorped.lib
 
 all: octothorped.lib
 
