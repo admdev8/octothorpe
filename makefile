@@ -13,8 +13,11 @@ rand.obj: rand.c rand.h
 strbuf.obj: strbuf.c strbuf.h
 	cl.exe strbuf.c /D_DEBUG /c /Zi
 
-octothorped.lib: dmalloc.obj memutils.obj rbtree.obj rand.obj strbuf.obj
-	lib.exe dmalloc.obj memutils.obj rbtree.obj rand.obj strbuf.obj /OUT:octothorped.lib
+stuff.obj: stuff.c stuff.h
+	cl.exe stuff.c /D_DEBUG /c /Zi
+
+octothorped.lib: dmalloc.obj memutils.obj rbtree.obj rand.obj strbuf.obj stuff.obj
+	lib.exe dmalloc.obj memutils.obj rbtree.obj rand.obj strbuf.obj stuff.obj /OUT:octothorped.lib
 
 all: octothorped.lib
 

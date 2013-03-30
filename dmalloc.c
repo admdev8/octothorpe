@@ -71,6 +71,19 @@ void* dcalloc (size_t size, const char * filename, unsigned line, const char * f
     return rt;
 };
 
+char* dstrdup (const char *s, const char * filename, unsigned line, const char * function, const char * structname)
+{
+    size_t len;
+    void *newp;
+
+    len=strlen(s)+1;
+
+    newp=dmalloc (len, filename, line, function, structname);
+    memcpy (newp, s, len);
+
+    return newp;
+};
+
 void dfree (void* ptr)
 {
 #ifdef _DEBUG

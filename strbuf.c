@@ -3,6 +3,7 @@
 #include <stdarg.h>
 #include <stdio.h>
 #include <assert.h>
+#include "stuff.h"
 
 void strbuf_init (strbuf *sb, size_t size)
 {
@@ -14,7 +15,7 @@ void strbuf_init (strbuf *sb, size_t size)
 
 void strbuf_deinit(strbuf *sb)
 {
-    dfree(sb->buf);
+    DFREE(sb->buf);
 };
 
 void strbuf_grow (strbuf *sb, size_t size)
@@ -31,12 +32,12 @@ void strbuf_grow (strbuf *sb, size_t size)
 
     new_buf=(char*)DMALLOC(sb->strlen + size + 1, "strbuf"); // FIXME: realloc or DREALLOC should be here for clarity
     memcpy (new_buf, sb->buf, sb->strlen+1);
-    dfree(sb->buf);
+    DFREE(sb->buf);
     sb->buf=new_buf;
     sb->buflen=sb->strlen + size + 1;
 };
 
-void strbuf_addstr_range (strbuf *sb, char *s, int len)
+void strbuf_addstr_range (strbuf *sb, const char *s, int len)
 {
     strbuf_grow (sb, len+1);
     memcpy (sb->buf + sb->strlen, s, len);
@@ -44,7 +45,7 @@ void strbuf_addstr_range (strbuf *sb, char *s, int len)
     sb->buf[sb->strlen]=0;
 };
 
-void strbuf_addstr (strbuf *sb, char *s)
+void strbuf_addstr (strbuf *sb, const char *s)
 {
     strbuf_addstr_range (sb, s, strlen(s));
 };
@@ -76,6 +77,45 @@ void strbuf_addf (strbuf *sb, const char *fmt, ...)
 	va_start(va, fmt);
 	strbuf_vaddf(sb, fmt, va);
 	va_end(va);
+};
+
+void make_uint32_compact (uint32_t a, strbuf* out)
+{
+    if (a<10)
+        strbuf_addf(out, "%d", a);
+    else
+        strbuf_addf(out, "0x%x", a);
+};
+
+void make_uint64_compact (uint64_t a, strbuf* out)
+{
+    if (a<10)
+        strbuf_addf (out, "%I64lld", a);
+    else
+        strbuf_addf (out, "0x%I64llx", a);
+};
+
+void make_SIZE_T_compact (size_t a, strbuf* out)
+{
+    if (sizeof(size_t)==sizeof(uint64_t))
+        make_uint64_compact (a, out);
+    else if (sizeof(size_t)==sizeof(uint32_t))
+        make_uint32_compact (a, out);
+    else
+    {
+        assert (0);
+    };
+};
+
+void strbuf_asmhex(strbuf *out, uint64_t v)
+{
+    if (v<10)
+        strbuf_addf(out, "%d", v);
+    else
+        if (most_significant_hex_number(v)<=9)
+            strbuf_addf (out, "%llXh", v);
+        else
+            strbuf_addf (out, "0%llXh", v);
 };
 
 #ifdef TEST
