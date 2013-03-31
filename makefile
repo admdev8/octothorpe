@@ -19,7 +19,10 @@ stuff.obj: stuff.c stuff.h
 octothorped.lib: dmalloc.obj memutils.obj rbtree.obj rand.obj strbuf.obj stuff.obj
 	lib.exe dmalloc.obj memutils.obj rbtree.obj rand.obj strbuf.obj stuff.obj /OUT:octothorped.lib
 
-all: octothorped.lib
+testrbtree.exe: testrbtree.c octothorped.lib
+	cl testrbtree.c octothorped.lib
+
+all: octothorped.lib testrbtree.exe
 
 clean:
 	del *.lib *.exe *.obj *.asm

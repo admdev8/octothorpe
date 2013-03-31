@@ -1,4 +1,8 @@
 #include <stdint.h>
+#include <stdarg.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <assert.h>
 
 unsigned most_significant_hex_number(uint64_t x)
 {
@@ -20,3 +24,21 @@ unsigned most_significant_hex_number(uint64_t x)
     //printf (__FUNCTION__"(0x%016llX) -> 0\n", x);
     return 0;
 };
+
+void die (const char * fmt, ...)
+{
+    va_list va;
+    va_start (va, fmt);
+
+    vprintf (fmt, va);
+    exit(0);
+};
+
+void* memdup (void *p, size_t s)
+{
+    void *rt=malloc (s);
+    assert(rt!=NULL);
+    memcpy(rt, p, s);
+    return rt;
+};
+

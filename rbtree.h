@@ -1,4 +1,4 @@
-// slightly reworked by Dennis Yurichev
+// reworked by Dennis Yurichev
 
 /* Copyright (c) 2013 the authors listed at the following URL, and/or
 the authors of referenced articles or incorporated external code:
@@ -36,35 +36,60 @@ extern "C" {
 
 enum rbtree_node_color { RED, BLACK };
 
+#pragma pack(push)
+#pragma pack(1)
 typedef struct rbtree_node_t {
     void* key;
     void* value;
     struct rbtree_node_t* left;
     struct rbtree_node_t* right;
+    // int right_count_of_hits? so to optimize subsequent blocks in memory for cache optimization?
     struct rbtree_node_t* parent;
-    enum rbtree_node_color color;
+    enum rbtree_node_color color:8;
 } *rbtree_node;
+#pragma pack(pop)
 
 typedef int (*compare_func)(void* left, void* right);
 
+#pragma pack(push)
+#pragma pack(1)
 typedef struct rbtree_t {
     rbtree_node root;
     
     // use DMALLOC? if so, pass debug string
-    BOOL use_dmalloc;
+    BOOL use_dmalloc:8;
     const char *struct_name;
 
     compare_func cmp_func;
+
+    // reinventing C++?
+    // callback: value comparing function
+    // callback: key/value deallocating function
+    // callback: key/value copying function
 } *rbtree;
+#pragma pack(pop)
 
 rbtree rbtree_create(BOOL use_dmalloc, const char *struct_name, compare_func compare);
-void rbtree_clear();
+void rbtree_clear(rbtree t);
 void* rbtree_lookup(rbtree t, void* key);
 void rbtree_insert(rbtree t, void* key, void* value);
 void rbtree_delete(rbtree t, void* key);
+void rbtree_deinit(rbtree t);
 
-void rbtree_walk(rbtree t, void (*visitor)(void*, void*));
+// can be also arguments "callback for key" and "callback for value"
+void rbtree_foreach(rbtree t, void (*visitor)(void*, void*));
+
 int compare_size_t(void* leftp, void* rightp);
+
+// can be call_func_for_value().
+void free_value_by_DFREE (void *k, void *v);
+
+struct rbtree_node_t *rbtree_minimum(rbtree t);
+struct rbtree_node_t *rbtree_maximum(rbtree t);
+struct rbtree_node_t *rbtree_succ(struct rbtree_node_t *x);
+struct rbtree_node_t *rbtree_pred(struct rbtree_node_t *x);
+
+void rbtree_copy (rbtree t, rbtree new_t, void* (*key_copier)(void*), void* (*value_copier)(void*));
 
 #ifdef  __cplusplus
 }

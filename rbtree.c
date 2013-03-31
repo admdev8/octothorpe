@@ -1,4 +1,4 @@
-// slightly reworked by Dennis Yurichev
+// reworked by Dennis Yurichev
 
 /* Copyright (c) 2013 the authors listed at the following URL, and/or
 the authors of referenced articles or incorporated external code:
@@ -155,9 +155,31 @@ rbtree rbtree_create(BOOL use_dmalloc, const char *struct_name, compare_func com
     return t;
 }
 
-void rbtree_clear()
+void rbtree_deinit(rbtree t)
 {
-    // TODO
+    rbtree_clear(t);
+
+    if (t->use_dmalloc)
+        DFREE(t);
+    else
+        free(t);
+};
+
+void rbtree_clear_helper(rbtree t, struct rbtree_node_t *n)
+{
+    if (n->right)
+        rbtree_clear_helper(t, n->right);
+    if (n->left)
+        rbtree_clear_helper(t, n->left);
+    if (t->use_dmalloc)
+        DFREE (n);
+    else
+        free(n);
+};
+
+void rbtree_clear(rbtree t)
+{
+    rbtree_clear_helper(t, t->root);
 };
 
 node new_node(rbtree t, void* key, void* value, color node_color, node left, node right) {
@@ -424,19 +446,19 @@ void delete_case6(rbtree t, node n) {
     }
 }
 
-static void rbtree_walk_helper(rbtree_node n, void (*visitor)(void*, void*))
+static void rbtree_foreach_helper(rbtree_node n, void (*visitor)(void*, void*))
 {
-    if (n->right!=NULL)
-        rbtree_walk_helper(n->right, visitor);
-    visitor (n->key, n->value);
     if (n->left!=NULL)
-        rbtree_walk_helper(n->left, visitor);
+        rbtree_foreach_helper(n->left, visitor);
+    visitor (n->key, n->value);
+    if (n->right!=NULL)
+        rbtree_foreach_helper(n->right, visitor);
 };
 
-void rbtree_walk(rbtree t, void (*visitor)(void*, void*))
+void rbtree_foreach(rbtree t, void (*visitor)(void*, void*))
 {
     if (t && t->root)
-        rbtree_walk_helper (t->root, visitor);
+        rbtree_foreach_helper (t->root, visitor);
 };
 
 int compare_size_t(void* leftp, void* rightp)
@@ -453,4 +475,86 @@ int compare_size_t(void* leftp, void* rightp)
         return 0;
     };
 };
+
+void free_value_by_DFREE (void *k, void *v)
+{
+    DFREE(v);
+};
+
+static struct rbtree_node_t *rbtree_minimum_helper(struct rbtree_node_t *n)
+{
+    if (n->left)
+        return rbtree_minimum_helper(n->left);
+    else
+        return n;
+};
+
+struct rbtree_node_t *rbtree_minimum(rbtree t)
+{
+    return rbtree_minimum_helper(t->root);
+};
+
+static struct rbtree_node_t *rbtree_maximum_helper(struct rbtree_node_t *n)
+{
+    if (n->right)
+        return rbtree_maximum_helper(n->right);
+    else
+        return n;
+};
+
+struct rbtree_node_t *rbtree_maximum(rbtree t)
+{
+    return rbtree_maximum_helper(t->root);
+};
+
+struct rbtree_node_t *rbtree_succ(struct rbtree_node_t *x)
+{
+    // algorithm copied from "Introduction to Algorithms" book
+    
+    struct rbtree_node_t *y;
+
+    if (x->right)
+        return rbtree_minimum_helper(x->right);
+
+    y=x->parent;
+    while (y!=NULL && x==y->right)
+    {
+        x=y;
+        y=y->parent;
+    };
+    return y;
+};
+
+struct rbtree_node_t *rbtree_pred(struct rbtree_node_t *x)
+{
+    // algorithm copied from "Introduction to Algorithms" book
+    
+    struct rbtree_node_t *y;
+
+    if (x->left)
+        return rbtree_maximum_helper(x->left);
+
+    y=x->parent;
+    while (y!=NULL && x==y->left)
+    {
+        x=y;
+        y=y->parent;
+    };
+    return y;
+};
+
+void rbtree_copy (rbtree t, rbtree new_t, void* (*key_copier)(void*), void* (*value_copier)(void*))
+{
+    struct rbtree_node_t *i;
+
+    // this can be faster, using rbtree_foreach()
+    for (i=rbtree_minimum(t); i!=NULL; i=rbtree_succ(i))
+    {
+        void *new_k=(*key_copier)(i->key);
+        void *new_v=(*value_copier)(i->value);
+        rbtree_insert(new_t, new_k, new_v);
+    };
+};
+
+
 
