@@ -30,7 +30,7 @@ struct dmalloc_info
 };
 
 #ifdef _DEBUG
-static rbtree tbl;
+static rbtree* tbl;
 #endif
 
 static BOOL tbl_created=FALSE;

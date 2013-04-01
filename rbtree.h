@@ -46,7 +46,7 @@ typedef struct rbtree_node_t {
     // int right_count_of_hits? so to optimize subsequent blocks in memory for cache optimization?
     struct rbtree_node_t* parent;
     enum rbtree_node_color color:8;
-} *rbtree_node;
+} rbtree_node;
 #pragma pack(pop)
 
 typedef int (*compare_func)(void* left, void* right);
@@ -54,7 +54,7 @@ typedef int (*compare_func)(void* left, void* right);
 #pragma pack(push)
 #pragma pack(1)
 typedef struct rbtree_t {
-    rbtree_node root;
+    rbtree_node *root;
     
     // use DMALLOC? if so, pass debug string
     BOOL use_dmalloc:8;
@@ -66,32 +66,32 @@ typedef struct rbtree_t {
     // callback: value comparing function
     // callback: key/value deallocating function
     // callback: key/value copying function
-} *rbtree;
+} rbtree;
 #pragma pack(pop)
 
-rbtree rbtree_create(BOOL use_dmalloc, const char *struct_name, compare_func compare);
-void rbtree_clear(rbtree t);
-void* rbtree_lookup(rbtree t, void* key);
-void rbtree_insert(rbtree t, void* key, void* value);
-void rbtree_delete(rbtree t, void* key);
-void rbtree_deinit(rbtree t);
+rbtree *rbtree_create(BOOL use_dmalloc, const char *struct_name, compare_func compare);
+void rbtree_clear(rbtree* t);
+void* rbtree_lookup(rbtree* t, void* key);
+void rbtree_insert(rbtree* t, void* key, void* value);
+void rbtree_delete(rbtree* t, void* key);
+void rbtree_deinit(rbtree* t);
 
 // can be also arguments "callback for key" and "callback for value"
-void rbtree_foreach(rbtree t, void (*visitor)(void*, void*));
+void rbtree_foreach(rbtree* t, void (*visitor)(void*, void*));
 
 int compare_size_t(void* leftp, void* rightp);
 
 // can be call_func_for_value().
 void free_value_by_DFREE (void *k, void *v);
 
-struct rbtree_node_t *rbtree_minimum(rbtree t); // will return NULL for empty tree
-struct rbtree_node_t *rbtree_maximum(rbtree t); // will return NULL for empty tree
-struct rbtree_node_t *rbtree_succ(struct rbtree_node_t *x);
-struct rbtree_node_t *rbtree_pred(struct rbtree_node_t *x);
+struct rbtree_node_t *rbtree_minimum(rbtree* t); // will return NULL for empty tree
+struct rbtree_node_t *rbtree_maximum(rbtree* t); // will return NULL for empty tree
+struct rbtree_node_t *rbtree_succ(struct rbtree_node_t* x);
+struct rbtree_node_t *rbtree_pred(struct rbtree_node_t* x);
 
-void rbtree_copy (rbtree t, rbtree new_t, void* (*key_copier)(void*), void* (*value_copier)(void*));
+void rbtree_copy (rbtree* t, rbtree* new_t, void* (*key_copier)(void*), void* (*value_copier)(void*));
 
-BOOL rbtree_empty (rbtree t);
+BOOL rbtree_empty (rbtree* t);
 
 #ifdef  __cplusplus
 }

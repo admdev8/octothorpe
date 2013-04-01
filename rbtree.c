@@ -38,43 +38,44 @@ Retrieved from: http://en.literateprograms.org/Red-black_tree_(C)?oldid=18555
 typedef rbtree_node node;
 typedef enum rbtree_node_color color;
 
-static node grandparent(node n);
-static node sibling(node n);
-static node uncle(node n);
-static void verify_properties(rbtree t);
-static void verify_property_1(node root);
-static void verify_property_2(node root);
-static color node_color(node n);
-static void verify_property_4(node root);
-static void verify_property_5(node root);
-static void verify_property_5_helper(node n, int black_count, int* black_count_path);
+static rbtree_node* grandparent(rbtree_node* n);
+static rbtree_node* sibling(rbtree_node* n);
+static rbtree_node* uncle(rbtree_node* n);
+static void verify_properties(rbtree* t);
+static void verify_property_1(node* root);
+static void verify_property_2(node* root);
+static color node_color(node* n);
+static void verify_property_4(node* root);
+static void verify_property_5(node* root);
+static void verify_property_5_helper(node* n, int black_count, int* black_count_path);
 
-static node new_node(rbtree t, void* key, void* value, color node_color, node left, node right);
-static node lookup_node(rbtree t, void* key);
-static void rotate_left(rbtree t, node n);
-static void rotate_right(rbtree t, node n);
+static rbtree_node* new_node(rbtree* t, void* key, void* value, color node_color, node* left, node* right);
+static rbtree_node* lookup_node(rbtree* t, void* key);
+static void rotate_left(rbtree* t, node* n);
+static void rotate_right(rbtree* t, node* n);
 
-static void replace_node(rbtree t, node oldn, node newn);
-static void insert_case1(rbtree t, node n);
-static void insert_case2(rbtree t, node n);
-static void insert_case3(rbtree t, node n);
-static void insert_case4(rbtree t, node n);
-static void insert_case5(rbtree t, node n);
-static node maximum_node(node root);
-static void delete_case1(rbtree t, node n);
-static void delete_case2(rbtree t, node n);
-static void delete_case3(rbtree t, node n);
-static void delete_case4(rbtree t, node n);
-static void delete_case5(rbtree t, node n);
-static void delete_case6(rbtree t, node n);
+static void replace_node(rbtree* t, node* oldn, node* newn);
+static void insert_case1(rbtree* t, node* n);
+static void insert_case2(rbtree* t, node* n);
+static void insert_case3(rbtree* t, node* n);
+static void insert_case4(rbtree* t, node* n);
+static void insert_case5(rbtree* t, node* n);
+static void delete_case1(rbtree* t, node* n);
+static void delete_case2(rbtree* t, node* n);
+static void delete_case3(rbtree* t, node* n);
+static void delete_case4(rbtree* t, node* n);
+static void delete_case5(rbtree* t, node* n);
+static void delete_case6(rbtree* t, node* n);
 
-node grandparent(node n) {
+rbtree_node* grandparent(rbtree_node* n) 
+{
     assert (n != NULL);
     assert (n->parent != NULL); /* Not the root node */
     assert (n->parent->parent != NULL); /* Not child of root */
     return n->parent->parent;
 }
-node sibling(node n) {
+rbtree_node* sibling(rbtree_node* n) 
+{
     assert (n != NULL);
     assert (n->parent != NULL); /* Root node has no sibling */
     if (n == n->parent->left)
@@ -82,13 +83,15 @@ node sibling(node n) {
     else
         return n->parent->left;
 }
-node uncle(node n) {
+rbtree_node* uncle(rbtree_node* n) 
+{
     assert (n != NULL);
     assert (n->parent != NULL); /* Root node has no uncle */
     assert (n->parent->parent != NULL); /* Children of root have no uncle */
     return sibling(n->parent);
 }
-void verify_properties(rbtree t) {
+void verify_properties(rbtree* t) 
+{
 #ifdef VERIFY_RBTREE
     verify_property_1(t->root);
     verify_property_2(t->root);
@@ -97,20 +100,24 @@ void verify_properties(rbtree t) {
     verify_property_5(t->root);
 #endif
 }
-void verify_property_1(node n) {
+void verify_property_1(node* n) {
     assert(node_color(n) == RED || node_color(n) == BLACK);
     if (n == NULL) return;
     verify_property_1(n->left);
     verify_property_1(n->right);
 }
-void verify_property_2(node root) {
+void verify_property_2(node* root) 
+{
     assert(node_color(root) == BLACK);
 }
-color node_color(node n) {
+color node_color(node* n) 
+{
     return n == NULL ? BLACK : n->color;
 }
-void verify_property_4(node n) {
-    if (node_color(n) == RED) {
+void verify_property_4(node* n) 
+{
+    if (node_color(n) == RED) 
+    {
         assert (node_color(n->left)   == BLACK);
         assert (node_color(n->right)  == BLACK);
         assert (node_color(n->parent) == BLACK);
@@ -119,12 +126,14 @@ void verify_property_4(node n) {
     verify_property_4(n->left);
     verify_property_4(n->right);
 }
-void verify_property_5(node root) {
+void verify_property_5(node* root) 
+{
     int black_count_path = -1;
     verify_property_5_helper(root, 0, &black_count_path);
 }
 
-void verify_property_5_helper(node n, int black_count, int* path_black_count) {
+void verify_property_5_helper(node* n, int black_count, int* path_black_count) 
+{
     if (node_color(n) == BLACK) {
         black_count++;
     }
@@ -139,9 +148,18 @@ void verify_property_5_helper(node n, int black_count, int* path_black_count) {
     verify_property_5_helper(n->left,  black_count, path_black_count);
     verify_property_5_helper(n->right, black_count, path_black_count);
 }
-rbtree rbtree_create(BOOL use_dmalloc, const char *struct_name, compare_func compare) 
+
+static struct rbtree_node_t* rbtree_maximum_helper(struct rbtree_node_t* n)
 {
-    rbtree t;
+    if (n->right)
+        return rbtree_maximum_helper(n->right);
+    else
+        return n;
+};
+
+rbtree* rbtree_create(BOOL use_dmalloc, const char *struct_name, compare_func compare) 
+{
+    rbtree* t;
 
     if (use_dmalloc)
         t = DMALLOC(sizeof(struct rbtree_t), struct_name);
@@ -155,7 +173,7 @@ rbtree rbtree_create(BOOL use_dmalloc, const char *struct_name, compare_func com
     return t;
 }
 
-void rbtree_deinit(rbtree t)
+void rbtree_deinit(rbtree* t)
 {
     rbtree_clear(t);
 
@@ -165,7 +183,7 @@ void rbtree_deinit(rbtree t)
         free(t);
 };
 
-void rbtree_clear_helper(rbtree t, struct rbtree_node_t *n)
+static void rbtree_clear_helper(rbtree* t, struct rbtree_node_t *n)
 {
     if (n->right)
         rbtree_clear_helper(t, n->right);
@@ -177,15 +195,16 @@ void rbtree_clear_helper(rbtree t, struct rbtree_node_t *n)
         free(n);
 };
 
-void rbtree_clear(rbtree t)
+void rbtree_clear(rbtree* t)
 {
     if (rbtree_empty(t))
-        return NULL;
+        return;
     rbtree_clear_helper(t, t->root);
 };
 
-node new_node(rbtree t, void* key, void* value, color node_color, node left, node right) {
-    node result;
+rbtree_node* new_node(rbtree* t, void* key, void* value, color node_color, node* left, node* right) 
+{
+    rbtree_node* result;
     if (t->use_dmalloc)
         result = DMALLOC(sizeof(struct rbtree_node_t), t->struct_name);
     else
@@ -201,27 +220,36 @@ node new_node(rbtree t, void* key, void* value, color node_color, node left, nod
     return result;
 };
 
-node lookup_node(rbtree t, void* key) {
-    node n = t->root;
-    while (n != NULL) {
+node* lookup_node(rbtree* t, void* key) 
+{
+    rbtree_node* n = t->root;
+    while (n != NULL) 
+    {
         int comp_result = t->cmp_func(key, n->key);
-        if (comp_result == 0) {
+        if (comp_result == 0) 
+        {
             return n;
-        } else if (comp_result < 0) {
+        } 
+        else if (comp_result < 0) 
+        {
             n = n->left;
-        } else {
+        } 
+        else 
+        {
             assert(comp_result > 0);
             n = n->right;
         }
     }
     return n;
 }
-void* rbtree_lookup(rbtree t, void* key) {
-    node n = lookup_node(t, key);
+void* rbtree_lookup(rbtree* t, void* key) 
+{
+    rbtree_node* n = lookup_node(t, key);
     return n == NULL ? NULL : n->value;
 }
-void rotate_left(rbtree t, node n) {
-    node r = n->right;
+void rotate_left(rbtree* t, node* n) 
+{
+    rbtree_node* r = n->right;
     replace_node(t, n, r);
     n->right = r->left;
     if (r->left != NULL) {
@@ -231,38 +259,51 @@ void rotate_left(rbtree t, node n) {
     n->parent = r;
 }
 
-void rotate_right(rbtree t, node n) {
-    node L = n->left;
+void rotate_right(rbtree* t, node* n) 
+{
+    rbtree_node* L = n->left;
     replace_node(t, n, L);
     n->left = L->right;
-    if (L->right != NULL) {
+    if (L->right != NULL) 
+    {
         L->right->parent = n;
     }
     L->right = n;
     n->parent = L;
 }
-void replace_node(rbtree t, node oldn, node newn) {
-    if (oldn->parent == NULL) {
+void replace_node(rbtree* t, node* oldn, node* newn) 
+{
+    if (oldn->parent == NULL) 
+    {
         t->root = newn;
-    } else {
+    } 
+    else 
+    {
         if (oldn == oldn->parent->left)
             oldn->parent->left = newn;
         else
             oldn->parent->right = newn;
     }
-    if (newn != NULL) {
+    if (newn != NULL) 
+    {
         newn->parent = oldn->parent;
     }
 }
-void rbtree_insert(rbtree t, void* key, void* value) {
-    node inserted_node = new_node(t, key, value, RED, NULL, NULL);
-    if (t->root == NULL) {
+void rbtree_insert(rbtree* t, void* key, void* value) 
+{
+    rbtree_node* inserted_node = new_node(t, key, value, RED, NULL, NULL);
+    if (t->root == NULL) 
+    {
         t->root = inserted_node;
-    } else {
-        node n = t->root;
-        while (1) {
+    } 
+    else 
+    {
+        rbtree_node* n = t->root;
+        while (1) 
+        {
             int comp_result = t->cmp_func(key, n->key);
-            if (comp_result == 0) {
+            if (comp_result == 0) 
+            {
                 n->value = value;
                 /* inserted_node isn't going to be used, don't leak it */
                 if (t->use_dmalloc)
@@ -270,19 +311,29 @@ void rbtree_insert(rbtree t, void* key, void* value) {
                 else
                     free (inserted_node);
                 return;
-            } else if (comp_result < 0) {
-                if (n->left == NULL) {
+            } 
+            else if (comp_result < 0) 
+            {
+                if (n->left == NULL) 
+                {
                     n->left = inserted_node;
                     break;
-                } else {
+                } 
+                else 
+                {
                     n = n->left;
                 }
-            } else {
+            } 
+            else 
+            {
                 assert (comp_result > 0);
-                if (n->right == NULL) {
+                if (n->right == NULL) 
+                {
                     n->right = inserted_node;
                     break;
-                } else {
+                } 
+                else 
+                {
                     n = n->right;
                 }
             }
@@ -292,56 +343,73 @@ void rbtree_insert(rbtree t, void* key, void* value) {
     insert_case1(t, inserted_node);
     verify_properties(t);
 }
-void insert_case1(rbtree t, node n) {
+void insert_case1(rbtree* t, node* n) 
+{
     if (n->parent == NULL)
         n->color = BLACK;
     else
         insert_case2(t, n);
 }
-void insert_case2(rbtree t, node n) {
+void insert_case2(rbtree* t, node* n) 
+{
     if (node_color(n->parent) == BLACK)
         return; /* Tree is still valid */
     else
         insert_case3(t, n);
 }
-void insert_case3(rbtree t, node n) {
-    if (node_color(uncle(n)) == RED) {
+void insert_case3(rbtree* t, node* n) 
+{
+    if (node_color(uncle(n)) == RED) 
+    {
         n->parent->color = BLACK;
         uncle(n)->color = BLACK;
         grandparent(n)->color = RED;
         insert_case1(t, grandparent(n));
-    } else {
+    } 
+    else 
+    {
         insert_case4(t, n);
     }
 }
-void insert_case4(rbtree t, node n) {
-    if (n == n->parent->right && n->parent == grandparent(n)->left) {
+void insert_case4(rbtree* t, node* n) 
+{
+    if (n == n->parent->right && n->parent == grandparent(n)->left) 
+    {
         rotate_left(t, n->parent);
         n = n->left;
-    } else if (n == n->parent->left && n->parent == grandparent(n)->right) {
+    } 
+    else if (n == n->parent->left && n->parent == grandparent(n)->right) 
+    {
         rotate_right(t, n->parent);
         n = n->right;
     }
     insert_case5(t, n);
 }
-void insert_case5(rbtree t, node n) {
+void insert_case5(rbtree* t, node* n) 
+{
     n->parent->color = BLACK;
     grandparent(n)->color = RED;
-    if (n == n->parent->left && n->parent == grandparent(n)->left) {
+    if (n == n->parent->left && n->parent == grandparent(n)->left) 
+    {
         rotate_right(t, grandparent(n));
-    } else {
+    } 
+    else 
+    {
         assert (n == n->parent->right && n->parent == grandparent(n)->right);
         rotate_left(t, grandparent(n));
     }
 }
 
-void rbtree_delete(rbtree t, void* key) {
-    node child;
-    node n = lookup_node(t, key);
-    if (n == NULL) return;  /* Key not found, do nothing */
-    if (n->left != NULL && n->right != NULL) {
+void rbtree_delete(rbtree* t, void* key) 
+{
+    rbtree_node* child;
+    rbtree_node* n = lookup_node(t, key);
+    if (n == NULL) 
+        return;  /* Key not found, do nothing */
+    if (n->left != NULL && n->right != NULL) 
+    {
         /* Copy key/value from predecessor and then delete it instead */
-        node pred = maximum_node(n->left);
+        rbtree_node* pred = rbtree_maximum_helper(n->left);
         n->key   = pred->key;
         n->value = pred->value;
         n = pred;
@@ -349,7 +417,8 @@ void rbtree_delete(rbtree t, void* key) {
 
     assert(n->left == NULL || n->right == NULL);
     child = n->right == NULL ? n->left  : n->right;
-    if (node_color(n) == BLACK) {
+    if (node_color(n) == BLACK) 
+    {
         n->color = node_color(child);
         delete_case1(t, n);
     }
@@ -363,21 +432,30 @@ void rbtree_delete(rbtree t, void* key) {
 
     verify_properties(t);
 }
-static node maximum_node(node n) {
+/*
+ * TODO remove this
+ *
+static rbtree_node* maximum_node(node* n) 
+{
     assert (n != NULL);
-    while (n->right != NULL) {
+    while (n->right != NULL) 
+    {
         n = n->right;
     }
     return n;
 }
-void delete_case1(rbtree t, node n) {
+*/
+void delete_case1(rbtree* t, node* n) 
+{
     if (n->parent == NULL)
         return;
     else
         delete_case2(t, n);
 }
-void delete_case2(rbtree t, node n) {
-    if (node_color(sibling(n)) == RED) {
+void delete_case2(rbtree* t, node* n) 
+{
+    if (node_color(sibling(n)) == RED) 
+    {
         n->parent->color = RED;
         sibling(n)->color = BLACK;
         if (n == n->parent->left)
@@ -387,7 +465,8 @@ void delete_case2(rbtree t, node n) {
     }
     delete_case3(t, n);
 }
-void delete_case3(rbtree t, node n) {
+void delete_case3(rbtree* t, node* n) 
+{
     if (node_color(n->parent) == BLACK &&
         node_color(sibling(n)) == BLACK &&
         node_color(sibling(n)->left) == BLACK &&
@@ -399,7 +478,8 @@ void delete_case3(rbtree t, node n) {
     else
         delete_case4(t, n);
 }
-void delete_case4(rbtree t, node n) {
+void delete_case4(rbtree* t, node* n) 
+{
     if (node_color(n->parent) == RED &&
         node_color(sibling(n)) == BLACK &&
         node_color(sibling(n)->left) == BLACK &&
@@ -411,7 +491,8 @@ void delete_case4(rbtree t, node n) {
     else
         delete_case5(t, n);
 }
-void delete_case5(rbtree t, node n) {
+void delete_case5(rbtree* t, node* n) 
+{
     if (n == n->parent->left &&
         node_color(sibling(n)) == BLACK &&
         node_color(sibling(n)->left) == RED &&
@@ -432,10 +513,12 @@ void delete_case5(rbtree t, node n) {
     }
     delete_case6(t, n);
 }
-void delete_case6(rbtree t, node n) {
+void delete_case6(rbtree* t, node* n) 
+{
     sibling(n)->color = node_color(n->parent);
     n->parent->color = BLACK;
-    if (n == n->parent->left) {
+    if (n == n->parent->left) 
+    {
         assert (node_color(sibling(n)->right) == RED);
         sibling(n)->right->color = BLACK;
         rotate_left(t, n->parent);
@@ -448,7 +531,7 @@ void delete_case6(rbtree t, node n) {
     }
 }
 
-static void rbtree_foreach_helper(rbtree_node n, void (*visitor)(void*, void*))
+static void rbtree_foreach_helper(rbtree_node* n, void (*visitor)(void*, void*))
 {
     if (n->left!=NULL)
         rbtree_foreach_helper(n->left, visitor);
@@ -457,7 +540,7 @@ static void rbtree_foreach_helper(rbtree_node n, void (*visitor)(void*, void*))
         rbtree_foreach_helper(n->right, visitor);
 };
 
-void rbtree_foreach(rbtree t, void (*visitor)(void*, void*))
+void rbtree_foreach(rbtree* t, void (*visitor)(void*, void*))
 {
     if (t && t->root)
         rbtree_foreach_helper (t->root, visitor);
@@ -483,7 +566,7 @@ void free_value_by_DFREE (void *k, void *v)
     DFREE(v);
 };
 
-static struct rbtree_node_t *rbtree_minimum_helper(struct rbtree_node_t *n)
+static struct rbtree_node_t* rbtree_minimum_helper(struct rbtree_node_t* n)
 {
     if (n->left)
         return rbtree_minimum_helper(n->left);
@@ -491,29 +574,21 @@ static struct rbtree_node_t *rbtree_minimum_helper(struct rbtree_node_t *n)
         return n;
 };
 
-struct rbtree_node_t *rbtree_minimum(rbtree t)
+struct rbtree_node_t* rbtree_minimum(rbtree* t)
 {
     if (rbtree_empty(t))
         return NULL;
     return rbtree_minimum_helper(t->root);
 };
 
-static struct rbtree_node_t *rbtree_maximum_helper(struct rbtree_node_t *n)
-{
-    if (n->right)
-        return rbtree_maximum_helper(n->right);
-    else
-        return n;
-};
-
-struct rbtree_node_t *rbtree_maximum(rbtree t)
+struct rbtree_node_t* rbtree_maximum(rbtree* t)
 {
     if (rbtree_empty(t))
         return NULL;
     return rbtree_maximum_helper(t->root);
 };
 
-struct rbtree_node_t *rbtree_succ(struct rbtree_node_t *x)
+struct rbtree_node_t* rbtree_succ(struct rbtree_node_t* x)
 {
     // algorithm copied from "Introduction to Algorithms" book
     
@@ -531,7 +606,7 @@ struct rbtree_node_t *rbtree_succ(struct rbtree_node_t *x)
     return y;
 };
 
-struct rbtree_node_t *rbtree_pred(struct rbtree_node_t *x)
+struct rbtree_node_t* rbtree_pred(struct rbtree_node_t* x)
 {
     // algorithm copied from "Introduction to Algorithms" book
     
@@ -549,7 +624,7 @@ struct rbtree_node_t *rbtree_pred(struct rbtree_node_t *x)
     return y;
 };
 
-void rbtree_copy (rbtree t, rbtree new_t, void* (*key_copier)(void*), void* (*value_copier)(void*))
+void rbtree_copy (rbtree* t, rbtree* new_t, void* (*key_copier)(void*), void* (*value_copier)(void*))
 {
     struct rbtree_node_t *i;
 
@@ -562,7 +637,7 @@ void rbtree_copy (rbtree t, rbtree new_t, void* (*key_copier)(void*), void* (*va
     };
 };
 
-BOOL rbtree_empty (rbtree t)
+BOOL rbtree_empty (rbtree* t)
 {
     return t->root==NULL ? TRUE : FALSE;
 };

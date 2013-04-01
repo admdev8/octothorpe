@@ -24,7 +24,7 @@ void visitor(void* k, void* v)
     printf ("key=%d value=%s\n", (uint32_t)k, v);
 };
 
-void tst_succ_pred(rbtree t)
+void tst_succ_pred(rbtree* t)
 {
     struct rbtree_node_t *i;
 
@@ -50,8 +50,8 @@ void* value_copier(void *v)
 int main() 
 {
     int i;
-    rbtree t = rbtree_create(TRUE, "test", compare_uint32_t);
-    rbtree new_t = rbtree_create(TRUE, "new_test", compare_uint32_t);
+    rbtree* t = rbtree_create(TRUE, "test", compare_uint32_t);
+    rbtree* new_t = rbtree_create(TRUE, "new_test", compare_uint32_t);
 
     printf ("enumerate:\n");
     rbtree_foreach(t, visitor);
