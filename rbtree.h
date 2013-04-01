@@ -84,12 +84,14 @@ int compare_size_t(void* leftp, void* rightp);
 // can be call_func_for_value().
 void free_value_by_DFREE (void *k, void *v);
 
-struct rbtree_node_t *rbtree_minimum(rbtree t);
-struct rbtree_node_t *rbtree_maximum(rbtree t);
+struct rbtree_node_t *rbtree_minimum(rbtree t); // will return NULL for empty tree
+struct rbtree_node_t *rbtree_maximum(rbtree t); // will return NULL for empty tree
 struct rbtree_node_t *rbtree_succ(struct rbtree_node_t *x);
 struct rbtree_node_t *rbtree_pred(struct rbtree_node_t *x);
 
 void rbtree_copy (rbtree t, rbtree new_t, void* (*key_copier)(void*), void* (*value_copier)(void*));
+
+BOOL rbtree_empty (rbtree t);
 
 #ifdef  __cplusplus
 }

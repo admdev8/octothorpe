@@ -179,6 +179,8 @@ void rbtree_clear_helper(rbtree t, struct rbtree_node_t *n)
 
 void rbtree_clear(rbtree t)
 {
+    if (rbtree_empty(t))
+        return NULL;
     rbtree_clear_helper(t, t->root);
 };
 
@@ -491,6 +493,8 @@ static struct rbtree_node_t *rbtree_minimum_helper(struct rbtree_node_t *n)
 
 struct rbtree_node_t *rbtree_minimum(rbtree t)
 {
+    if (rbtree_empty(t))
+        return NULL;
     return rbtree_minimum_helper(t->root);
 };
 
@@ -504,6 +508,8 @@ static struct rbtree_node_t *rbtree_maximum_helper(struct rbtree_node_t *n)
 
 struct rbtree_node_t *rbtree_maximum(rbtree t)
 {
+    if (rbtree_empty(t))
+        return NULL;
     return rbtree_maximum_helper(t->root);
 };
 
@@ -556,5 +562,7 @@ void rbtree_copy (rbtree t, rbtree new_t, void* (*key_copier)(void*), void* (*va
     };
 };
 
-
-
+BOOL rbtree_empty (rbtree t)
+{
+    return t->root==NULL ? TRUE : FALSE;
+};

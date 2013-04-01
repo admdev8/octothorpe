@@ -4,6 +4,8 @@
 #include <stdlib.h>
 #include <assert.h>
 
+#include "stuff.h"
+
 unsigned most_significant_hex_number(uint64_t x)
 {
     uint64_t t=x;
