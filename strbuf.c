@@ -31,8 +31,11 @@ void strbuf_grow (strbuf *sb, size_t size)
     };
 
     new_buf=(char*)DMALLOC(sb->strlen + size + 1, "strbuf"); // FIXME: realloc or DREALLOC should be here for clarity
-    memcpy (new_buf, sb->buf, sb->strlen+1);
-    DFREE(sb->buf);
+    if (sb->buf)
+    {
+        memcpy (new_buf, sb->buf, sb->strlen+1);
+        DFREE(sb->buf);
+    };
     sb->buf=new_buf;
     sb->buflen=sb->strlen + size + 1;
 };
@@ -118,32 +121,8 @@ void strbuf_asmhex(strbuf *out, uint64_t v)
             strbuf_addf (out, "0%llXh", v);
 };
 
-#ifdef TEST
-
-void main()
+void strbuf_puts (strbuf *sb)
 {
-    strbuf s;
-    strbuf_init (&s, 3);
-    printf ("[%s]\n", s.buf);
-    printf ("sb->strlen=%d sb->buflen=%d\n", s.strlen, s.buflen);
-    strbuf_addstr (&s, "string1");
-    printf ("[%s]\n", s.buf);
-    printf ("sb->strlen=%d sb->buflen=%d\n", s.strlen, s.buflen);
-    strbuf_addc(&s, ',');
-    printf ("[%s]\n", s.buf);
-    printf ("sb->strlen=%d sb->buflen=%d\n", s.strlen, s.buflen);
-    strbuf_addstr (&s, "string2");
-    printf ("[%s]\n", s.buf);
-    printf ("sb->strlen=%d sb->buflen=%d\n", s.strlen, s.buflen);
-    strbuf_addc(&s, ',');
-    printf ("[%s]\n", s.buf);
-    printf ("sb->strlen=%d sb->buflen=%d\n", s.strlen, s.buflen);
-    strbuf_addf(&s, "%d %d %d %s", 123, 456, 789, "hello");
-    printf ("[%s]\n", s.buf);
-    printf ("sb->strlen=%d sb->buflen=%d\n", s.strlen, s.buflen);
-    strbuf_deinit(&s);
-    dump_unfreed_blocks();
-    dmalloc_deinit();
+    puts (sb->buf);
 };
 
-#endif
