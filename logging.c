@@ -1,16 +1,11 @@
-/* -*- Mode: C; tab-width: 4; indent-tabs-mode: nil -*- */
-
 #include <assert.h>
 
 #include "logging.h"
-//#include "win32_utils.hpp"
 #include "dmalloc.h"
 #include "rbtree.h"
 #include "strbuf.h"
 
-FILE* file_log=NULL;
-
-//int L_verbose_level=0;
+fds cur_fds={ NULL, NULL };
 
 BOOL L_timestamp=FALSE;
 BOOL L_quiet=FALSE;
@@ -20,47 +15,61 @@ rbtree *once_was_printed=NULL;
 
 void L_deinit(void)
 {
-    if (file_log!=NULL)
+    if (cur_fds.fd2!=NULL)
     {
-        fclose(file_log);
-        file_log=NULL;
+        fclose(cur_fds.fd2);
+        cur_fds.fd2=NULL;
     };
 
     if (once_was_printed)
     {
-        rbtree_foreach(once_was_printed, free_value_by_DFREE);
+        rbtree_foreach(once_was_printed, NULL, dfree, NULL);
         rbtree_deinit(once_was_printed);
+        once_was_printed=NULL;
     };
 };
 
 void L_init (const char* fname)
 {
-    file_log=fopen(fname, "w");
-    if (file_log==NULL)
+    int i;
+
+    cur_fds.fd1=stdout;
+
+    cur_fds.fd2=fopen(fname, "w");
+    if (cur_fds.fd2==NULL)
         die ("Can't create %s for writing.\n", fname);
+    i=setvbuf(cur_fds.fd2, NULL, _IONBF, 0);
+    assert(i==0);
     atexit(L_deinit);
 };
 
 void L_va (const char * fmt, va_list va)
 {
+    L_fds_va(&cur_fds, fmt, va);
+};
+
+void L_fds_va (fds *s, const char * fmt, va_list va)
+{
     SYSTEMTIME t; // win32 only yet
-    
+
     if (L_quiet)
         return;
 
     if (L_timestamp)
     {
         GetLocalTime (&t);
-        fprintf (stdout, "[%04d-%02d-%02d %02d:%02d:%02d:%03d]", 
-                t.wYear, t.wMonth, t.wDay, t.wHour, t.wMinute, t.wSecond, t.wMilliseconds);
-        if (file_log)
-            fprintf (file_log, "[%04d-%02d-%02d %02d:%02d:%02d:%03d]", 
+        if (s->fd1)
+            fprintf (s->fd1, "[%04d-%02d-%02d %02d:%02d:%02d:%03d]", 
+                    t.wYear, t.wMonth, t.wDay, t.wHour, t.wMinute, t.wSecond, t.wMilliseconds);
+        if (s->fd2)
+            fprintf (s->fd2, "[%04d-%02d-%02d %02d:%02d:%02d:%03d]", 
                     t.wYear, t.wMonth, t.wDay, t.wHour, t.wMinute, t.wSecond, t.wMilliseconds);
     };
 
-    vfprintf (stdout, fmt, va);
-    if (file_log)
-        vfprintf (file_log, fmt, va);
+    if (s->fd1)
+        vfprintf (s->fd1, fmt, va);
+    if (s->fd2)
+        vfprintf (s->fd2, fmt, va);
 };
 
 void L (const char * fmt, ...)
@@ -68,7 +77,21 @@ void L (const char * fmt, ...)
     va_list va;
     va_start (va, fmt);
 
-    L_va_list (fmt, va);
+    L_va (fmt, va);
+};
+
+void L_fds (fds *s, const char * fmt, ...)
+{
+    va_list va;
+    va_start (va, fmt);
+
+    L_fds_va (s, fmt, va);
+};
+
+int my_strcmp(char *s1, char *s2)
+{
+    //printf ("my_strcmp: s1=%ss2=%s", s1, s2);
+    return strcmp (s1, s2);
 };
 
 void L_once_va (const char * fmt, va_list va)
@@ -78,11 +101,16 @@ void L_once_va (const char * fmt, va_list va)
     char *s;
 
     if (once_was_printed==NULL)
-        rbtree_create(TRUE, "rbtree: once_was_printed", strcmp);
+        once_was_printed=rbtree_create(TRUE, "rbtree: once_was_printed", my_strcmp);
 
     strbuf_vaddf(&sb, fmt, va);
+    
+    //printf (__FUNCTION__"() sb=");
+    //strbuf_puts (&sb);
+    
     found=rbtree_lookup(once_was_printed, sb.buf);
-    strbuf_deinit(&sb);
+    //printf ("found=0x%p\n", found);
+
     if (found)
     {
         strbuf_deinit(&sb);
@@ -92,7 +120,9 @@ void L_once_va (const char * fmt, va_list va)
     L_va (fmt, va);
 
     s=DSTRDUP(sb.buf, "L_once_va()");
-    rbtree_insert (once_was_printed, s, NULL);
+    //printf ("s=%s\n", s);
+    rbtree_insert (once_was_printed, s, "FIXME"); // here will be 'set' someday
+    strbuf_deinit(&sb);
 };
 
 void L_once (const char * fmt, ...)
