@@ -1,0 +1,216 @@
+/* -*- Mode: C; tab-width: 4; indent-tabs-mode: nil -*- */
+
+#include <assert.h>
+
+#include "logging.h"
+//#include "win32_utils.hpp"
+#include "dmalloc.h"
+#include "rbtree.h"
+#include "strbuf.h"
+
+FILE* file_log=NULL;
+
+//int L_verbose_level=0;
+
+BOOL L_timestamp=FALSE;
+BOOL L_quiet=FALSE;
+
+// set actually is here
+rbtree *once_was_printed=NULL;
+
+void L_deinit(void)
+{
+    if (file_log!=NULL)
+    {
+        fclose(file_log);
+        file_log=NULL;
+    };
+
+    if (once_was_printed)
+    {
+        rbtree_foreach(once_was_printed, free_value_by_DFREE);
+        rbtree_deinit(once_was_printed);
+    };
+};
+
+void L_init (const char* fname)
+{
+    file_log=fopen(fname, "w");
+    if (file_log==NULL)
+        die ("Can't create %s for writing.\n", fname);
+    atexit(L_deinit);
+};
+
+void L_va (const char * fmt, va_list va)
+{
+    SYSTEMTIME t; // win32 only yet
+    
+    if (L_quiet)
+        return;
+
+    if (L_timestamp)
+    {
+        GetLocalTime (&t);
+        fprintf (stdout, "[%04d-%02d-%02d %02d:%02d:%02d:%03d]", 
+                t.wYear, t.wMonth, t.wDay, t.wHour, t.wMinute, t.wSecond, t.wMilliseconds);
+        if (file_log)
+            fprintf (file_log, "[%04d-%02d-%02d %02d:%02d:%02d:%03d]", 
+                    t.wYear, t.wMonth, t.wDay, t.wHour, t.wMinute, t.wSecond, t.wMilliseconds);
+    };
+
+    vfprintf (stdout, fmt, va);
+    if (file_log)
+        vfprintf (file_log, fmt, va);
+};
+
+void L (const char * fmt, ...)
+{
+    va_list va;
+    va_start (va, fmt);
+
+    L_va_list (fmt, va);
+};
+
+void L_once_va (const char * fmt, va_list va)
+{
+    strbuf sb=STRBUF_INIT;
+    void *found;
+    char *s;
+
+    if (once_was_printed==NULL)
+        rbtree_create(TRUE, "rbtree: once_was_printed", strcmp);
+
+    strbuf_vaddf(&sb, fmt, va);
+    found=rbtree_lookup(once_was_printed, sb.buf);
+    strbuf_deinit(&sb);
+    if (found)
+    {
+        strbuf_deinit(&sb);
+        return;
+    };
+
+    L_va (fmt, va);
+
+    s=DSTRDUP(sb.buf, "L_once_va()");
+    rbtree_insert (once_was_printed, s, NULL);
+};
+
+void L_once (const char * fmt, ...)
+{
+    va_list va;
+    va_start (va, fmt);
+
+    L_once_va (fmt, va);
+};
+
+void L_print_buf_ofs (uint8_t *buf, size_t size, size_t ofs)
+{
+    size_t pos=0;
+    unsigned starting_offset=0;
+    unsigned i;
+
+    while (size-pos)
+    {
+        size_t wpn;
+        if ((size-pos)>16)
+            wpn=16;
+        else
+            wpn=size-pos;
+
+#ifdef _WIN64
+        L ("%016I64x: ", starting_offset + pos + ofs);
+#else
+        L ("%08X: ", starting_offset + pos + ofs);
+#endif
+        for (i=0; i<wpn; i++)
+            L ("%02X%c", buf[pos+i], (i==7) ? '-' : ' ');
+
+        if (wpn<16)
+            for (i=0; i<16-wpn; i++)
+                L ("   ");
+
+        L ("\"");
+
+        for (i=0; i<wpn; i++)
+            L ("%c", isprint (buf[pos+i]) ? buf[pos+i] : '.');
+
+        if (wpn<16)
+            for (i=0; i<16-wpn; i++)
+                L (" ");
+
+        L ("\"\n");
+
+        pos+=wpn;
+    };
+};
+
+void L_print_buf (uint8_t *buf, size_t size)
+{
+    L_print_buf_ofs (buf, size, 0);
+};
+
+void L_print_bufs_diff (uint8_t *buf1, uint8_t *buf2, size_t size)
+{
+    size_t pos=0;
+    unsigned starting_offset=0;
+    unsigned i;
+    BOOL dots_printed=FALSE;
+
+    while (size-pos)
+    {
+        size_t wpn;
+        if ((size-pos)>16)
+            wpn=16;
+        else
+            wpn=size-pos;
+
+        if (memcmp (buf1+pos, buf2+pos, wpn)!=0) // any changes in the whole line?
+        {
+#ifdef _WIN64
+            L ("%016I64x: ", starting_offset + pos);
+#else
+            L ("%08X: ", starting_offset + pos);
+#endif
+            for (i=0; i<wpn; i++)
+            {
+                if (buf1[pos+i]!=buf2[pos+i])
+                    L ("%02X", buf2[pos+i]);
+                else
+                    L ("  ");
+                
+                L ("%c", (i==7) ? '-' : ' ');
+            };
+
+            if (wpn<16)
+                for (i=0; i<16-wpn; i++)
+                    L ("   ");
+
+            L ("\"");
+
+            for (i=0; i<wpn; i++)
+            {
+                if (buf1[pos+i]!=buf2[pos+i])
+                    L ("%c", isprint (buf2[pos+i]) ? buf2[pos+i] : '.');
+                else
+                    L (" ");
+            };
+
+            if (wpn<16)
+                for (i=0; i<16-wpn; i++)
+                    L (" ");
+
+            L ("\"\n");
+            dots_printed=FALSE;
+        }
+        else
+        {
+            if (dots_printed==FALSE)
+            {
+                L (" ... \n");
+                dots_printed=TRUE;
+            };
+        };
+        pos+=wpn;
+    };
+};
+

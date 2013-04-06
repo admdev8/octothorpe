@@ -54,7 +54,7 @@ int main()
     rbtree* new_t = rbtree_create(TRUE, "new_test", compare_uint32_t);
 
     printf ("enumerate:\n");
-    rbtree_foreach(t, visitor);
+    rbtree_foreach(t, visitor, NULL, NULL);
 
     rbtree_insert(t, (void*)12345, (void*)"value1");
     assert(strcmp (rbtree_lookup(t, (void*)12345), "value1")==0);
@@ -62,7 +62,7 @@ int main()
     rbtree_insert(t, (void*)12346, (void*)"value2");
 
     printf ("enumerate:\n");
-    rbtree_foreach(t, visitor);
+    rbtree_foreach(t, visitor, NULL, NULL);
 
     rbtree_delete(t, (void*)12345);
 
@@ -71,7 +71,7 @@ int main()
     rbtree_insert(t, (void*)0, (void*)"zero!");
 
     printf ("enumerate:\n");
-    rbtree_foreach(t, visitor);
+    rbtree_foreach(t, visitor, NULL, NULL);
     printf ("minimum: %d\n", rbtree_minimum(t)->key);
     printf ("maximum: %d\n", rbtree_maximum(t)->key);
 
@@ -79,10 +79,10 @@ int main()
 
     rbtree_copy (t, new_t, key_copier, value_copier);
     printf ("enumerate new_t:\n");
-    rbtree_foreach(t, visitor);
+    rbtree_foreach(t, visitor, NULL, NULL);
 
     printf ("freeing:\n");
-    rbtree_foreach(new_t, free_value_by_DFREE);
+    rbtree_foreach(new_t, NULL, NULL, dfree);
 
     rbtree_deinit(t);
     rbtree_deinit(new_t);

@@ -4,10 +4,6 @@
 the authors of referenced articles or incorporated external code:
 http://en.literateprograms.org/Red-black_tree_(C)?action=history&offset=20120524204657
 
-Permission is hereby granted, free of charge, to any person obtaining
-a copy of this software and associated documentation files (the
-"Software"), to deal in the Software without restriction, including
-without limitation the rights to use, copy, modify, merge, publish,
 distribute, sublicense, and/or sell copies of the Software, and to
 permit persons to whom the Software is furnished to do so, subject to
 the following conditions:
@@ -531,19 +527,29 @@ void delete_case6(rbtree* t, node* n)
     }
 }
 
-static void rbtree_foreach_helper(rbtree_node* n, void (*visitor)(void*, void*))
+static void rbtree_foreach_helper(rbtree_node* n, void (*visitor_kv)(void*, void*),
+        void (*visitor_k)(void*), void (*visitor_v)(void*))
 {
     if (n->left!=NULL)
-        rbtree_foreach_helper(n->left, visitor);
-    visitor (n->key, n->value);
+        rbtree_foreach_helper(n->left, visitor_kv, visitor_k, visitor_v);
+    
+    if (visitor_kv)
+        visitor_kv (n->key, n->value);
+
+    if (visitor_k)
+        visitor_k (n->key);
+
+    if (visitor_v)
+        visitor_v (n->value);
+    
     if (n->right!=NULL)
-        rbtree_foreach_helper(n->right, visitor);
+        rbtree_foreach_helper(n->right, visitor_kv, visitor_k, visitor_v);
 };
 
-void rbtree_foreach(rbtree* t, void (*visitor)(void*, void*))
-{
+void rbtree_foreach(rbtree* t, void (*visitor_kv)(void*, void*), 
+        void (*visitor_k)(void*), void (*visitor_v)(void*)){
     if (t && t->root)
-        rbtree_foreach_helper (t->root, visitor);
+        rbtree_foreach_helper (t->root, visitor_kv, visitor_k, visitor_v);
 };
 
 int compare_size_t(void* leftp, void* rightp)
@@ -561,10 +567,12 @@ int compare_size_t(void* leftp, void* rightp)
     };
 };
 
+/*
 void free_value_by_DFREE (void *k, void *v)
 {
     DFREE(v);
 };
+*/
 
 static struct rbtree_node_t* rbtree_minimum_helper(struct rbtree_node_t* n)
 {

@@ -36,9 +36,10 @@ extern "C" {
 
 enum rbtree_node_color { RED, BLACK };
 
-#pragma pack(push)
-#pragma pack(1)
-typedef struct rbtree_node_t {
+//#pragma pack(push)
+//#pragma pack(1)
+typedef struct rbtree_node_t 
+{
     void* key;
     void* value;
     struct rbtree_node_t* left;
@@ -47,13 +48,14 @@ typedef struct rbtree_node_t {
     struct rbtree_node_t* parent;
     enum rbtree_node_color color:8;
 } rbtree_node;
-#pragma pack(pop)
+//#pragma pack(pop)
 
 typedef int (*compare_func)(void* left, void* right);
 
-#pragma pack(push)
-#pragma pack(1)
-typedef struct rbtree_t {
+//#pragma pack(push)
+//#pragma pack(1)
+typedef struct rbtree_t
+{
     rbtree_node *root;
     
     // use DMALLOC? if so, pass debug string
@@ -67,7 +69,7 @@ typedef struct rbtree_t {
     // callback: key/value deallocating function
     // callback: key/value copying function
 } rbtree;
-#pragma pack(pop)
+//#pragma pack(pop)
 
 rbtree *rbtree_create(BOOL use_dmalloc, const char *struct_name, compare_func compare);
 void rbtree_clear(rbtree* t);
@@ -76,13 +78,13 @@ void rbtree_insert(rbtree* t, void* key, void* value);
 void rbtree_delete(rbtree* t, void* key);
 void rbtree_deinit(rbtree* t);
 
-// can be also arguments "callback for key" and "callback for value"
-void rbtree_foreach(rbtree* t, void (*visitor)(void*, void*));
+void rbtree_foreach(rbtree* t, void (*visitor_kv)(void*, void*), 
+        void (*visitor_k)(void*), void (*visitor_v)(void*));
 
 int compare_size_t(void* leftp, void* rightp);
 
 // can be call_func_for_value().
-void free_value_by_DFREE (void *k, void *v);
+//void free_value_by_DFREE (void *k, void *v);
 
 struct rbtree_node_t *rbtree_minimum(rbtree* t); // will return NULL for empty tree
 struct rbtree_node_t *rbtree_maximum(rbtree* t); // will return NULL for empty tree
