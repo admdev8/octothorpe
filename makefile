@@ -16,13 +16,22 @@ strbuf.obj: strbuf.c strbuf.h
 stuff.obj: stuff.c stuff.h
 	cl.exe stuff.c /D_DEBUG /c /Zi
 
-octothorped.lib: dmalloc.obj memutils.obj rbtree.obj rand.obj strbuf.obj stuff.obj
-	lib.exe dmalloc.obj memutils.obj rbtree.obj rand.obj strbuf.obj stuff.obj /OUT:octothorped.lib
+logging.obj: logging.c logging.h
+	cl.exe logging.c /D_DEBUG /c /Zi
+
+octothorped.lib: dmalloc.obj memutils.obj rbtree.obj rand.obj strbuf.obj stuff.obj logging.obj
+	lib.exe dmalloc.obj memutils.obj rbtree.obj rand.obj strbuf.obj stuff.obj logging.obj /OUT:octothorped.lib
 
 testrbtree.exe: testrbtree.c octothorped.lib
-	cl testrbtree.c octothorped.lib
+	cl testrbtree.c /D_DEBUG octothorped.lib
 
-all: octothorped.lib testrbtree.exe
+strbuf_test.exe: strbuf_test.c octothorped.lib
+	cl strbuf_test.c /D_DEBUG octothorped.lib
+
+logging_test.exe: logging_test.c octothorped.lib
+	cl logging_test.c /Zi /D_DEBUG octothorped.lib
+
+all: octothorped.lib testrbtree.exe strbuf_test.exe logging_test.exe
 
 clean:
 	del *.lib *.exe *.obj *.asm

@@ -15,7 +15,7 @@
 
 //BOOL break_on_seq_n=TRUE;
 BOOL break_on_seq_n=FALSE;
-unsigned seq_n_to_break_on=1519;
+unsigned seq_n_to_break_on=14240623;
 
 static unsigned seq_n=0;
 
@@ -132,7 +132,7 @@ void* dmemdup (void *p, size_t s, const char * filename, unsigned line, const ch
 void dump_unfreed_blocks()
 {
 #ifdef _DEBUG    
-    rbtree_foreach(tbl, dump_unfreed_block);
+    rbtree_foreach(tbl, dump_unfreed_block, NULL, NULL);
 #endif    
 };
 

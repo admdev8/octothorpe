@@ -20,9 +20,10 @@ void* dcalloc (size_t size, const char * filename, unsigned line, const char * f
 #define DCALLOC(s, st) (calloc(s, 1))
 #endif
 
+void dfree (void* ptr);
+
 // for symmetry!
 #ifdef _DEBUG
-void dfree (void* ptr);
 #define DFREE(p) (dfree(p))
 #else
 #define DFREE(p) (free(p))

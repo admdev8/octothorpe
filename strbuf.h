@@ -21,6 +21,8 @@ typedef struct _strbuf
     unsigned buflen; // allocated buffer length
 } strbuf;
 
+#define STRBUF_INIT { NULL, 0, 0 }
+
 void strbuf_init (strbuf *sb, size_t size);
 void strbuf_deinit(strbuf *sb);
 void strbuf_grow (strbuf *sb, size_t size);
@@ -29,6 +31,7 @@ void strbuf_addstr (strbuf *sb, const char *s);
 void strbuf_addc (strbuf *sb, char c);
 void strbuf_vaddf (strbuf *sb, const char *fmt, va_list va);
 void strbuf_addf (strbuf *sb, const char *fmt, ...);
+void strbuf_puts (strbuf *sb);
 
 void make_uint32_compact (uint32_t a, strbuf* out);
 void make_uint64_compact (uint64_t a, strbuf* out);
