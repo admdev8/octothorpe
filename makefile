@@ -19,8 +19,14 @@ stuff.obj: stuff.c stuff.h
 logging.obj: logging.c logging.h
 	cl.exe logging.c /D_DEBUG /c /Zi
 
-octothorped.lib: dmalloc.obj memutils.obj rbtree.obj rand.obj strbuf.obj stuff.obj logging.obj
-	lib.exe dmalloc.obj memutils.obj rbtree.obj rand.obj strbuf.obj stuff.obj logging.obj /OUT:octothorped.lib
+x86.obj: x86.c x86.h
+	cl.exe x86.c /D_DEBUG /c /Zi
+
+FPU_stuff_asm.obj: FPU_stuff_asm.asm FPU_stuff_asm.h
+	ml.exe FPU_stuff_asm.asm /c
+
+octothorped.lib: dmalloc.obj memutils.obj rbtree.obj rand.obj strbuf.obj stuff.obj logging.obj FPU_stuff_asm.obj x86.obj
+	lib.exe dmalloc.obj memutils.obj rbtree.obj rand.obj strbuf.obj stuff.obj logging.obj FPU_stuff_asm.obj x86.obj /OUT:octothorped.lib
 
 testrbtree.exe: testrbtree.c octothorped.lib
 	cl testrbtree.c /D_DEBUG octothorped.lib
