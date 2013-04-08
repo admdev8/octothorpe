@@ -4,6 +4,10 @@
 #include <stdint.h>
 #include "bool.h"
 
+#ifdef  __cplusplus
+extern "C" {
+#endif
+
 typedef struct _fds
 {
     FILE* fd1;
@@ -34,3 +38,7 @@ void L_print_buf_ofs (uint8_t *buf, size_t size, size_t ofs);
 void L_print_buf (uint8_t *buf, size_t size);
 void L_print_bufs_diff (uint8_t *buf1, uint8_t *buf2, size_t size);
 void L_deinit (void);
+
+#ifdef  __cplusplus
+}
+#endif

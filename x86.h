@@ -57,3 +57,6 @@ void FSW_to_str (uint16_t a, strbuf *out);
 
 // renamed from dump_XMM
 void XMM_to_strbuf (uint8_t* p, strbuf *sb);
+
+BOOL sse_supported();
+BOOL sse2_supported();

@@ -13,9 +13,8 @@
 
 // TODO: еще нужна ф-ция для вываливания статистики, сколько блоков такого-то типа и сколько места они занимают
 
-//BOOL break_on_seq_n=TRUE;
-BOOL break_on_seq_n=FALSE;
-unsigned seq_n_to_break_on=14240623;
+static BOOL break_on_seq_n=FALSE;
+static unsigned seq_n_to_break_on;
 
 static unsigned seq_n=0;
 
@@ -142,6 +141,12 @@ void dmalloc_deinit()
     rbtree_clear(tbl);
     tbl_created=FALSE;
 #endif    
+};
+
+void dmalloc_break_at_seq_n (unsigned seq_n)
+{
+    break_on_seq_n=TRUE;
+    seq_n_to_break_on=seq_n;
 };
 
 #ifdef TEST

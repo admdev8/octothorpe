@@ -1,3 +1,5 @@
+#include <assert.h>
+
 #include "x86.h"
 
 #include "bitfields.h"
@@ -76,81 +78,81 @@ void dump_DR7 (fds* s, uint32_t DR7)
 
 void MXCSR_to_str (uint32_t a, strbuf *out)
 {
-    if (IS_SET (a, 1<<15)) strbuf_adds(out, "FZ ");
+    if (IS_SET (a, 1<<15)) strbuf_addstr(out, "FZ ");
 
-    if (IS_SET (a, 1<<14)==0 && IS_SET (a, 1<<13)==0) strbuf_adds(out, "RN ");
+    if (IS_SET (a, 1<<14)==0 && IS_SET (a, 1<<13)==0) strbuf_addstr(out, "RN ");
     else
-        if (IS_SET (a, 1<<14)==1 && IS_SET (a, 1<<13)==1) strbuf_adds(out, "RZ ");
+        if (IS_SET (a, 1<<14)==1 && IS_SET (a, 1<<13)==1) strbuf_addstr(out, "RZ ");
         else
-            if (IS_SET (a, 1<<14)) strbuf_adds(out, "R+ ");
+            if (IS_SET (a, 1<<14)) strbuf_addstr(out, "R+ ");
             else
-                if (IS_SET (a, 1<<13)) strbuf_adds(out, "R- ");
+                if (IS_SET (a, 1<<13)) strbuf_addstr(out, "R- ");
 
-    if (IS_SET (a, 1<<12)) strbuf_adds(out, "PM ");
-    if (IS_SET (a, 1<<11)) strbuf_adds(out, "UM ");
-    if (IS_SET (a, 1<<10)) strbuf_adds(out, "OM ");
-    if (IS_SET (a, 1<<9)) strbuf_adds(out, "ZM ");
-    if (IS_SET (a, 1<<8)) strbuf_adds(out, "DM ");
-    if (IS_SET (a, 1<<7)) strbuf_adds(out, "IM ");
-    if (IS_SET (a, 1<<6)) strbuf_adds(out, "DAZ ");
-    if (IS_SET (a, 1<<5)) strbuf_adds(out, "PE ");
-    if (IS_SET (a, 1<<4)) strbuf_adds(out, "UE ");
-    if (IS_SET (a, 1<<3)) strbuf_adds(out, "OE ");
-    if (IS_SET (a, 1<<2)) strbuf_adds(out, "ZE ");
-    if (IS_SET (a, 1<<1)) strbuf_adds(out, "DE ");
-    if (IS_SET (a, 1<<0)) strbuf_adds(out, "IE ");
+    if (IS_SET (a, 1<<12)) strbuf_addstr(out, "PM ");
+    if (IS_SET (a, 1<<11)) strbuf_addstr(out, "UM ");
+    if (IS_SET (a, 1<<10)) strbuf_addstr(out, "OM ");
+    if (IS_SET (a, 1<<9)) strbuf_addstr(out, "ZM ");
+    if (IS_SET (a, 1<<8)) strbuf_addstr(out, "DM ");
+    if (IS_SET (a, 1<<7)) strbuf_addstr(out, "IM ");
+    if (IS_SET (a, 1<<6)) strbuf_addstr(out, "DAZ ");
+    if (IS_SET (a, 1<<5)) strbuf_addstr(out, "PE ");
+    if (IS_SET (a, 1<<4)) strbuf_addstr(out, "UE ");
+    if (IS_SET (a, 1<<3)) strbuf_addstr(out, "OE ");
+    if (IS_SET (a, 1<<2)) strbuf_addstr(out, "ZE ");
+    if (IS_SET (a, 1<<1)) strbuf_addstr(out, "DE ");
+    if (IS_SET (a, 1<<0)) strbuf_addstr(out, "IE ");
 
     // TODO trim right part
 };
 
 void FCW_to_str (uint16_t a, strbuf *out)
 {
-    if (IS_SET (a, 1<<12)) strbuf_adds(out, "IC ");
+    if (IS_SET (a, 1<<12)) strbuf_addstr(out, "IC ");
     switch ((a>>10)&3)
     {
-        case 0: strbuf_adds(out, "RC=NEAR "); break;
-        case 1: strbuf_adds(out, "RC=DOWN "); break;
-        case 2: strbuf_adds(out, "RC=UP "); break;
-        case 3: strbuf_adds(out, "RC=ZERO "); break;
+        case 0: strbuf_addstr(out, "RC=NEAR "); break;
+        case 1: strbuf_addstr(out, "RC=DOWN "); break;
+        case 2: strbuf_addstr(out, "RC=UP "); break;
+        case 3: strbuf_addstr(out, "RC=ZERO "); break;
         default: assert (0);
     };
 
     switch ((a>>8)&3)
     {
-        case 0: strbuf_adds(out, "PC=24bits "); break;
-        case 1: strbuf_adds(out, "PC=?? "); break;
-        case 2: strbuf_adds(out, "PC=53bits "); break;
-        case 3: strbuf_adds(out, "PC=64bits "); break;
+        case 0: strbuf_addstr(out, "PC=24bits "); break;
+        case 1: strbuf_addstr(out, "PC=?? "); break;
+        case 2: strbuf_addstr(out, "PC=53bits "); break;
+        case 3: strbuf_addstr(out, "PC=64bits "); break;
         default: assert (0);
     };
 
-    if (IS_SET (a, 1<<7)) strbuf_adds(out, "IEM ");
-    if (IS_SET (a, 1<<5)) strbuf_adds(out, "PM ");
-    if (IS_SET (a, 1<<4)) strbuf_adds(out, "UM ");
-    if (IS_SET (a, 1<<3)) strbuf_adds(out, "OM ");
-    if (IS_SET (a, 1<<2)) strbuf_adds(out, "ZM ");
-    if (IS_SET (a, 1<<1)) strbuf_adds(out, "DM ");
-    if (IS_SET (a, 1<<0)) strbuf_adds(out, "IM ");
+    if (IS_SET (a, 1<<7)) strbuf_addstr(out, "IEM ");
+    if (IS_SET (a, 1<<5)) strbuf_addstr(out, "PM ");
+    if (IS_SET (a, 1<<4)) strbuf_addstr(out, "UM ");
+    if (IS_SET (a, 1<<3)) strbuf_addstr(out, "OM ");
+    if (IS_SET (a, 1<<2)) strbuf_addstr(out, "ZM ");
+    if (IS_SET (a, 1<<1)) strbuf_addstr(out, "DM ");
+    if (IS_SET (a, 1<<0)) strbuf_addstr(out, "IM ");
 
     // TODO trim right part
 };
 
 void FSW_to_str (uint16_t a, strbuf *out)
 {
-    if (IS_SET (a, 1<<15)) strbuf_adds(out, "B ");
-    if (IS_SET (a, 1<<14)) strbuf_adds(out, "C3 ");
+    if (IS_SET (a, 1<<15)) strbuf_addstr(out, "B ");
+    if (IS_SET (a, 1<<14)) strbuf_addstr(out, "C3 ");
     //L ("TOP=%d ", (ctx->FloatSave.StatusWord>>11)&7);
-    if (IS_SET (a, 1<<10)) strbuf_adds(out, "C2 ");
-    if (IS_SET (a, 1<<9)) strbuf_adds(out, "C1 ");
-    if (IS_SET (a, 1<<8)) strbuf_adds(out, "C0 ");
-    if (IS_SET (a, 1<<7)) strbuf_adds(out, "IR ");
-    if (IS_SET (a, 1<<6)) strbuf_adds(out, "SF ");
-    if (IS_SET (a, 1<<5)) strbuf_adds(out, "P ");
-    if (IS_SET (a, 1<<4)) strbuf_adds(out, "U ");
-    if (IS_SET (a, 1<<3)) strbuf_adds(out, "O ");
-    if (IS_SET (a, 1<<2)) strbuf_adds(out, "Z ");
-    if (IS_SET (a, 1<<1)) strbuf_adds(out, "D ");
-    if (IS_SET (a, 1<<0)) strbuf_adds(out, "I ");
+    if (IS_SET (a, 1<<10)) strbuf_addstr(out, "C2 ");
+    if (IS_SET (a, 1<<9)) strbuf_addstr(out, "C1 ");
+    if (IS_SET (a, 1<<8)) strbuf_addstr(out, "C0 ");
+    if (IS_SET (a, 1<<7)) strbuf_addstr(out, "IR ");
+    if (IS_SET (a, 1<<6)) strbuf_addstr(out, "SF ");
+    if (IS_SET (a, 1<<5)) strbuf_addstr(out, "P ");
+    if (IS_SET (a, 1<<4)) strbuf_addstr(out, "U ");
+    if (IS_SET (a, 1<<3)) strbuf_addstr(out, "O ");
+    if (IS_SET (a, 1<<2)) strbuf_addstr(out, "Z ");
+    if (IS_SET (a, 1<<1)) strbuf_addstr(out, "D ");
+    if (IS_SET (a, 1<<0)) strbuf_addstr(out, "I ");
 
     // TODO trim right part
 };
@@ -161,14 +163,14 @@ void XMM_to_strbuf (uint8_t* p, strbuf *sb)
     int i;
     BYTE a;
 
-    strbuf_adds(sb, "0x");
+    strbuf_addstr(sb, "0x");
     //	double d;
     //	float f;
 
     for (i=0; i<16; i++)
         strbuf_addf (sb, "%02X", *(p+(15-i)));
     // ASCII
-    strbuf_adds(sb, "   \"");
+    strbuf_addstr(sb, "   \"");
     for (i=0; i<16; i++)
     {
         a=*(p+i); // string is in reverse order
@@ -185,4 +187,22 @@ void XMM_to_strbuf (uint8_t* p, strbuf *sb)
 
     //	if (_isnan(d)==0)
     //		rt+=strfmt ("lowpart=%lf", d);
+};
+
+BOOL sse_supported()
+{
+    int b[4];
+    __cpuid(b,1);
+    if (b[3] & (1<<25)) // EDX, bit 25
+        return TRUE;
+    return FALSE;
+};
+
+BOOL sse2_supported()
+{
+    int b[4];
+    __cpuid(b,1);
+    if (b[3] & (1<<26)) // EDX, bit 26
+        return TRUE;
+    return FALSE;
 };

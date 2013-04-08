@@ -45,6 +45,8 @@ void* dmemdup (void *p, size_t s, const char * filename, unsigned line, const ch
 void dump_unfreed_blocks();
 void dmalloc_deinit();
 
+void dmalloc_break_at_seq_n (unsigned seq_n);
+
 #ifdef  __cplusplus
 }
 #endif

@@ -5,6 +5,8 @@
 #include <assert.h>
 #include "stuff.h"
 
+char* strbuf_dummybuf="\x00";
+
 void strbuf_init (strbuf *sb, size_t size)
 {
     sb->buf=(char*)DMALLOC(size, "strbuf");
@@ -15,7 +17,8 @@ void strbuf_init (strbuf *sb, size_t size)
 
 void strbuf_deinit(strbuf *sb)
 {
-    DFREE(sb->buf);
+    if (sb->buf && sb->buf!=strbuf_dummybuf)
+        DFREE(sb->buf);
 };
 
 void strbuf_grow (strbuf *sb, size_t size)
@@ -34,7 +37,8 @@ void strbuf_grow (strbuf *sb, size_t size)
     if (sb->buf)
     {
         memcpy (new_buf, sb->buf, sb->strlen+1);
-        DFREE(sb->buf);
+        if (sb->buf!=strbuf_dummybuf)
+            DFREE(sb->buf);
     };
     sb->buf=new_buf;
     sb->buflen=sb->strlen + size + 1;
@@ -76,10 +80,10 @@ void strbuf_vaddf (strbuf *sb, const char *fmt, va_list va)
 
 void strbuf_addf (strbuf *sb, const char *fmt, ...)
 {
-	va_list va;
-	va_start(va, fmt);
-	strbuf_vaddf(sb, fmt, va);
-	va_end(va);
+    va_list va;
+    va_start(va, fmt);
+    strbuf_vaddf(sb, fmt, va);
+    va_end(va);
 };
 
 void make_uint32_compact (uint32_t a, strbuf* out)
@@ -124,5 +128,43 @@ void strbuf_asmhex(strbuf *out, uint64_t v)
 void strbuf_puts (strbuf *sb)
 {
     puts (sb->buf);
+};
+
+void strbuf_addc_C_escaped (strbuf *s, char c, BOOL treat_any_as_binary)
+{
+    if (treat_any_as_binary)
+        strbuf_addf (s, "\\x%02X", c);
+    else
+    {
+        switch (c)
+        {
+            case '\n':
+                strbuf_addstr (s, "\\n");
+                break;
+            case '\r':
+                strbuf_addstr (s, "\\r");
+                break;
+            case '"':
+                strbuf_addstr (s, "\\\"");
+                break;
+            case '\\':
+                strbuf_addstr (s, "\\\\");
+                break;
+            default:
+                if (c>0 && c<0x20)
+                    strbuf_addf (s, "\\x%02X", c);
+                else
+                    strbuf_addc (s, c);
+                break;
+        };
+    };
+};
+
+void strbuf_cvt_to_C_string (strbuf *s, strbuf *out, BOOL treat_as_binary)
+{
+    size_t i;
+
+    for (i=0; i<s->strlen; i++)
+        strbuf_addc_C_escaped (out, s->buf[i], treat_as_binary);
 };
 

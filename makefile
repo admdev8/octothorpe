@@ -40,4 +40,4 @@ logging_test.exe: logging_test.c octothorped.lib
 all: octothorped.lib testrbtree.exe strbuf_test.exe logging_test.exe
 
 clean:
-	del *.lib *.exe *.obj *.asm
+	del *.lib *.exe *.obj
