@@ -567,13 +567,6 @@ int compare_size_t(void* leftp, void* rightp)
     };
 };
 
-/*
-void free_value_by_DFREE (void *k, void *v)
-{
-    DFREE(v);
-};
-*/
-
 static struct rbtree_node_t* rbtree_minimum_helper(struct rbtree_node_t* n)
 {
     if (n->left)

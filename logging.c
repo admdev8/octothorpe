@@ -5,6 +5,7 @@
 #include "rbtree.h"
 #include "strbuf.h"
 
+// rationale: writting to both stdout and log-file
 fds cur_fds={ NULL, NULL };
 
 BOOL L_timestamp=FALSE;
@@ -88,12 +89,6 @@ void L_fds (fds *s, const char * fmt, ...)
     L_fds_va (s, fmt, va);
 };
 
-int my_strcmp(char *s1, char *s2)
-{
-    //printf ("my_strcmp: s1=%ss2=%s", s1, s2);
-    return strcmp (s1, s2);
-};
-
 void L_once_va (const char * fmt, va_list va)
 {
     strbuf sb=STRBUF_INIT;
@@ -101,7 +96,7 @@ void L_once_va (const char * fmt, va_list va)
     char *s;
 
     if (once_was_printed==NULL)
-        once_was_printed=rbtree_create(TRUE, "rbtree: once_was_printed", my_strcmp);
+        once_was_printed=rbtree_create(TRUE, "rbtree: once_was_printed", strcmp);
 
     strbuf_vaddf(&sb, fmt, va);
     

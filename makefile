@@ -1,43 +1,24 @@
-dmalloc.obj: dmalloc.c dmalloc.h
-	cl.exe dmalloc.c /D_DEBUG /c /Zi
+C_OBJS=dmalloc.obj memutils.obj rbtree.obj rand.obj strbuf.obj stuff.obj logging.obj x86.obj
+GNU_REGEX_C_OBJS=regex.obj regex_internal.obj
+ASM_OBJS=FPU_stuff_asm.obj
+TEST_EXECS=testrbtree.exe strbuf_test.exe logging_test.exe dmalloc_test.exe test-regex.exe
 
-memutils.obj: memutils.c memutils.h
-	cl.exe memutils.c /D_DEBUG /c /Zi
+$(C_OBJS): $(@B).c $(@B).h
+    cl.exe $(@B).c /D_DEBUG /c /Zi
 
-rbtree.obj: rbtree.c rbtree.h
-	cl.exe rbtree.c /D_DEBUG /c /Zi
+$(GNU_REGEX_C_OBJS): $(@B).c
+    cl.exe $(@B).c /D_DEBUG /c /Zi
 
-rand.obj: rand.c rand.h
-	cl.exe rand.c /D_DEBUG /c /Zi
+$(ASM_OBJS): $(@B).asm $(@B).h
+    ml.exe $(@B).asm /c
 
-strbuf.obj: strbuf.c strbuf.h
-	cl.exe strbuf.c /D_DEBUG /c /Zi
+octothorped.lib: $(C_OBJS) $(ASM_OBJS) $(GNU_REGEX_C_OBJS)
+	lib.exe $(C_OBJS) $(ASM_OBJS) $(GNU_REGEX_C_OBJS) /OUT:octothorped.lib
 
-stuff.obj: stuff.c stuff.h
-	cl.exe stuff.c /D_DEBUG /c /Zi
+$(TEST_EXECS): $(@B).c
+    cl $(@B).c /Zi /D_DEBUG octothorped.lib
 
-logging.obj: logging.c logging.h
-	cl.exe logging.c /D_DEBUG /c /Zi
-
-x86.obj: x86.c x86.h
-	cl.exe x86.c /D_DEBUG /c /Zi
-
-FPU_stuff_asm.obj: FPU_stuff_asm.asm FPU_stuff_asm.h
-	ml.exe FPU_stuff_asm.asm /c
-
-octothorped.lib: dmalloc.obj memutils.obj rbtree.obj rand.obj strbuf.obj stuff.obj logging.obj FPU_stuff_asm.obj x86.obj
-	lib.exe dmalloc.obj memutils.obj rbtree.obj rand.obj strbuf.obj stuff.obj logging.obj FPU_stuff_asm.obj x86.obj /OUT:octothorped.lib
-
-testrbtree.exe: testrbtree.c octothorped.lib
-	cl testrbtree.c /D_DEBUG octothorped.lib
-
-strbuf_test.exe: strbuf_test.c octothorped.lib
-	cl strbuf_test.c /D_DEBUG octothorped.lib
-
-logging_test.exe: logging_test.c octothorped.lib
-	cl logging_test.c /Zi /D_DEBUG octothorped.lib
-
-all: octothorped.lib testrbtree.exe strbuf_test.exe logging_test.exe
+all: octothorped.lib $(TEST_EXECS)
 
 clean:
 	del *.lib *.exe *.obj

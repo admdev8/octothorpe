@@ -83,9 +83,6 @@ void rbtree_foreach(rbtree* t, void (*visitor_kv)(void*, void*),
 
 int compare_size_t(void* leftp, void* rightp);
 
-// can be call_func_for_value().
-//void free_value_by_DFREE (void *k, void *v);
-
 struct rbtree_node_t *rbtree_minimum(rbtree* t); // will return NULL for empty tree
 struct rbtree_node_t *rbtree_maximum(rbtree* t); // will return NULL for empty tree
 struct rbtree_node_t *rbtree_succ(struct rbtree_node_t* x);
