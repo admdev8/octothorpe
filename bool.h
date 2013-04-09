@@ -2,6 +2,8 @@
 
 #ifndef _WIN32
 
+// TODO: потом, когда я переколбашу tracer полностью на Си, надо заюзать stdbool вместо этого!
+
 #ifndef BOOL
 #define BOOL unsigned
 #endif
