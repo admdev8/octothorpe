@@ -291,9 +291,13 @@ re_compile_fastmap (bufp)
 weak_alias (__re_compile_fastmap, re_compile_fastmap)
 #endif
 
-//static inline void
-//__attribute__ ((always_inline)) // removed by me
-static void re_set_fastmap (char *fastmap, bool icase, int ch)
+#ifdef _MSC_VER
+static void
+#else
+static inline void
+__attribute__ ((always_inline))
+#endif
+re_set_fastmap (char *fastmap, bool icase, int ch)
 {
   fastmap[ch] = 1;
   if (icase)
@@ -716,7 +720,11 @@ re_comp (s)
 
   if (re_comp_buf.fastmap == NULL)
     {
+#ifdef USE_DMALLOC
+      re_comp_buf.fastmap = DMALLOC (char, SBC_MAX, "char");
+#else
       re_comp_buf.fastmap = (char *) malloc (SBC_MAX);
+#endif
       if (re_comp_buf.fastmap == NULL)
 	return (char *) gettext (__re_error_msgid
 				 + __re_error_msgid_idx[(int) REG_ESPACE]);
@@ -888,7 +896,11 @@ init_dfa (re_dfa_t *dfa, size_t pat_len)
     if (table_size > pat_len)
       break;
 
+#ifdef USE_DMALLOC
+  dfa->state_table = DCALLOC (struct re_state_table_entry, table_size, "struct re_state_table_entry");
+#else
   dfa->state_table = calloc (sizeof (struct re_state_table_entry), table_size);
+#endif
   dfa->state_hash_mask = table_size - 1;
 
   dfa->mb_cur_max = MB_CUR_MAX;
@@ -899,14 +911,14 @@ init_dfa (re_dfa_t *dfa, size_t pat_len)
   dfa->map_notascii = (_NL_CURRENT_WORD (LC_CTYPE, _NL_CTYPE_MAP_TO_NONASCII)
 		       != 0);
 #else
-  /* commented by me
+#ifndef _MSC_VER
   codeset_name = nl_langinfo (CODESET);
   if ((codeset_name[0] == 'U' || codeset_name[0] == 'u')
       && (codeset_name[1] == 'T' || codeset_name[1] == 't')
       && (codeset_name[2] == 'F' || codeset_name[2] == 'f')
       && strcmp (codeset_name + 3 + (codeset_name[3] == '-'), "8") == 0)
     dfa->is_utf8 = 1;
-  */
+#endif
 
   /* We check exhaustively in the loop below if this charset is a
      superset of ASCII.  */
@@ -922,7 +934,11 @@ init_dfa (re_dfa_t *dfa, size_t pat_len)
 	{
 	  int i, j, ch;
 
+#ifdef USE_DMALLOC
+	  dfa->sb_char = (re_bitset_ptr_t) DCALLOC (bitset_t, 1, "bitset_t");
+#else
 	  dfa->sb_char = (re_bitset_ptr_t) calloc (sizeof (bitset_t), 1);
+#endif
 	  if (BE (dfa->sb_char == NULL, 0))
 	    return REG_ESPACE;
 
@@ -1210,7 +1226,11 @@ analyze (regex_t *preg)
 	  break;
       if (i == preg->re_nsub)
 	{
+#ifdef USE_DMALLOC
+	  DFREE (dfa->subexp_map);
+#else
 	  free (dfa->subexp_map);
+#endif
 	  dfa->subexp_map = NULL;
 	}
     }
@@ -3102,9 +3122,17 @@ parse_bracket_exp (re_string_t *regexp, re_dfa_t *dfa, re_token_t *token,
 						   _NL_COLLATE_SYMB_EXTRAMB);
     }
 #endif
+#ifdef USE_DMALLOC
+  sbcset = (re_bitset_ptr_t) DCALLOC (bitset_t, 1, "bitset_t");
+#else
   sbcset = (re_bitset_ptr_t) calloc (sizeof (bitset_t), 1);
+#endif
 #ifdef RE_ENABLE_I18N
+#ifdef USE_DMALLOC
+  mbcset = (re_charset_t *) DCALLOC (re_charset_t, 1, "re_charset_t");
+#else
   mbcset = (re_charset_t *) calloc (sizeof (re_charset_t), 1);
+#endif
 #endif /* RE_ENABLE_I18N */
 #ifdef RE_ENABLE_I18N
   if (BE (sbcset == NULL || mbcset == NULL, 0))
@@ -3650,9 +3678,17 @@ build_charclass_op (re_dfa_t *dfa, RE_TRANSLATE_TYPE trans,
   re_token_t br_token;
   bin_tree_t *tree;
 
+#ifdef USE_DMALLOC
+  sbcset = (re_bitset_ptr_t) DCALLOC (bitset_t, 1, "bitset_t");
+#else
   sbcset = (re_bitset_ptr_t) calloc (sizeof (bitset_t), 1);
+#endif
 #ifdef RE_ENABLE_I18N
+#ifdef USE_DMALLOC
+  mbcset = (re_charset_t *) DCALLOC (re_charset_t, 1, "re_charset_t");
+#else
   mbcset = (re_charset_t *) calloc (sizeof (re_charset_t), 1);
+#endif
 #endif /* RE_ENABLE_I18N */
 
 #ifdef RE_ENABLE_I18N

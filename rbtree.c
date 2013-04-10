@@ -158,7 +158,7 @@ rbtree* rbtree_create(BOOL use_dmalloc, const char *struct_name, compare_func co
     rbtree* t;
 
     if (use_dmalloc)
-        t = DMALLOC(sizeof(struct rbtree_t), struct_name);
+        t = DMALLOC(struct rbtree_t, 1, struct_name);
     else
         t = malloc(sizeof(struct rbtree_t));
     t->root = NULL;
@@ -202,7 +202,7 @@ rbtree_node* new_node(rbtree* t, void* key, void* value, color node_color, node*
 {
     rbtree_node* result;
     if (t->use_dmalloc)
-        result = DMALLOC(sizeof(struct rbtree_node_t), t->struct_name);
+        result = DMALLOC(struct rbtree_node_t, 1, t->struct_name);
     else
         result = malloc(sizeof(struct rbtree_node_t));
     result->key = key;

@@ -26,11 +26,15 @@
 #include <stdlib.h>
 #include <string.h>
 
-//#include <langinfo.h> // removed by me
+#ifndef _MSC_VER
+#include <langinfo.h>
+#endif
+
 #include <locale.h>
 #include <wchar.h>
 #include <wctype.h>
-#include "stdbool.h" // changed by me
+#include "stdbool.h"
+
 #include <stdint.h>
 #if defined _LIBC
 # include <bits/libc-lock.h>
@@ -39,9 +43,6 @@
 # define __libc_lock_lock(NAME) do { } while (0)
 # define __libc_lock_unlock(NAME) do { } while (0)
 #endif
-
-#include "regex.h" // added by me
-//#include "dmalloc.h" // added by me
 
 /* In case that the system doesn't have isblank().  */
 #if !defined _LIBC && ! (defined isblank || (HAVE_ISBLANK && HAVE_DECL_ISBLANK))
@@ -415,19 +416,19 @@ typedef struct re_dfa_t re_dfa_t;
 #endif
 
 #ifndef NOT_IN_libc
-//static reg_errcode_t re_string_realloc_buffers (re_string_t *pstr,
-//						Idx new_buf_len)
-//     internal_function;
+static reg_errcode_t re_string_realloc_buffers (re_string_t *pstr,
+						Idx new_buf_len)
+     internal_function;
 # ifdef RE_ENABLE_I18N
 static void build_wcs_buffer (re_string_t *pstr) internal_function;
 static reg_errcode_t build_wcs_upper_buffer (re_string_t *pstr)
   internal_function;
 # endif /* RE_ENABLE_I18N */
-//static void build_upper_buffer (re_string_t *pstr) internal_function;
-//static void re_string_translate_buffer (re_string_t *pstr) internal_function;
-//static unsigned int re_string_context_at (const re_string_t *input, Idx idx,
-//					  int eflags)
-//     internal_function __attribute__ ((pure));
+static void build_upper_buffer (re_string_t *pstr) internal_function;
+static void re_string_translate_buffer (re_string_t *pstr) internal_function;
+static unsigned int re_string_context_at (const re_string_t *input, Idx idx,
+					  int eflags)
+     internal_function __attribute__ ((pure));
 #endif
 #define re_string_peek_byte(pstr, offset) \
   ((pstr)->mbs[(pstr)->cur_idx + offset])
@@ -478,16 +479,15 @@ static reg_errcode_t build_wcs_upper_buffer (re_string_t *pstr)
 # define MIN(a,b) ((a) < (b) ? (a) : (b))
 #endif
 
+#ifdef USE_DMALLOC
+#define re_malloc(type,size) (DMALLOC(type, size, "regex"))
+#define re_realloc(ptr,type,size) (DREALLOC(ptr, type, size, "regex"))
+#define re_free(ptr) DFREE (ptr)
+#else
 #define re_malloc(t,n) ((t *) malloc ((n) * sizeof (t)))
 #define re_realloc(p,t,n) ((t *) realloc (p, (n) * sizeof (t)))
 #define re_free(p) free (p)
-  
-  // not working properly!
-  /*
-#define re_malloc(t,n) ((t *) DMALLOC ((n) * sizeof (t), "regex"))
-#define re_realloc(p,t,n) ((t *) DREALLOC (p, (n) * sizeof (t), "regex"))
-#define re_free(p) DFREE (p)
-*/
+#endif
 
 struct bin_tree_t
 {
@@ -879,18 +879,5 @@ re_string_elem_size_at (const re_string_t *pstr, Idx idx)
 #else
 # define __attribute_warn_unused_result__ /* empty */
 #endif
-
-// added here by me
-
-static re_dfastate_t * re_acquire_state_context (reg_errcode_t *err, const re_dfa_t *dfa,
-			  const re_node_set *nodes, unsigned int context);
-static re_dfastate_t * re_acquire_state (reg_errcode_t *err, const re_dfa_t *dfa,
-		  const re_node_set *nodes);
-static unsigned int re_string_context_at (const re_string_t *input, Idx idx, int eflags);
-
-static reg_errcode_t re_string_realloc_buffers (re_string_t *pstr, Idx new_buf_len);
-
-static void re_string_translate_buffer (re_string_t *pstr);
-static void build_upper_buffer (re_string_t *pstr);
 
 #endif /*  _REGEX_INTERNAL_H */

@@ -17,9 +17,6 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include "regex.h"
-#include "regex_internal.h"
-
 static void re_string_construct_common (const char *str, Idx len,
 					re_string_t *pstr,
 					RE_TRANSLATE_TYPE trans, bool icase,
@@ -128,9 +125,9 @@ re_string_construct (re_string_t *pstr, const char *str, Idx len,
 
 /* Helper functions for re_string_allocate, and re_string_construct.  */
 
-//static reg_errcode_t
-//internal_function __attribute_warn_unused_result__
-reg_errcode_t re_string_realloc_buffers (re_string_t *pstr, Idx new_buf_len)
+static reg_errcode_t
+internal_function __attribute_warn_unused_result__
+re_string_realloc_buffers (re_string_t *pstr, Idx new_buf_len)
 {
 #ifdef RE_ENABLE_I18N
   if (pstr->mb_cur_max > 1)
@@ -529,9 +526,9 @@ re_string_skip_chars (re_string_t *pstr, Idx new_raw_idx, wint_t *last_wc)
 /* Build the buffer PSTR->MBS, and apply the translation if we need.
    This function is used in case of REG_ICASE.  */
 
-//static void
-//internal_function
-void build_upper_buffer (re_string_t *pstr)
+static void
+internal_function
+build_upper_buffer (re_string_t *pstr)
 {
   Idx char_idx, end_idx;
   end_idx = (pstr->bufs_len > pstr->len) ? pstr->len : pstr->bufs_len;
@@ -552,9 +549,9 @@ void build_upper_buffer (re_string_t *pstr)
 
 /* Apply TRANS to the buffer in PSTR.  */
 
-//static void
-//internal_function
-void re_string_translate_buffer (re_string_t *pstr)
+static void
+internal_function
+re_string_translate_buffer (re_string_t *pstr)
 {
   Idx buf_idx, end_idx;
   end_idx = (pstr->bufs_len > pstr->len) ? pstr->len : pstr->bufs_len;
@@ -925,9 +922,9 @@ re_string_destruct (re_string_t *pstr)
 
 /* Return the context at IDX in INPUT.  */
 
-//static unsigned int
-//internal_function
-unsigned int re_string_context_at (const re_string_t *input, Idx idx, int eflags)
+static unsigned int
+internal_function
+re_string_context_at (const re_string_t *input, Idx idx, int eflags)
 {
   int c;
   if (BE (! REG_VALID_INDEX (idx), 0))
@@ -1476,9 +1473,9 @@ calc_state_hash (const re_node_set *nodes, unsigned int context)
 	 - We never return non-NULL value in case of any errors, it is for
 	   optimization.  */
 
-//static re_dfastate_t *
-//internal_function __attribute_warn_unused_result__
-re_dfastate_t * re_acquire_state (reg_errcode_t *err, const re_dfa_t *dfa,
+static re_dfastate_t *
+internal_function __attribute_warn_unused_result__
+re_acquire_state (reg_errcode_t *err, const re_dfa_t *dfa,
 		  const re_node_set *nodes)
 {
   re_hashval_t hash;
@@ -1524,9 +1521,9 @@ re_dfastate_t * re_acquire_state (reg_errcode_t *err, const re_dfa_t *dfa,
 	 - We never return non-NULL value in case of any errors, it is for
 	   optimization.  */
 
-//static re_dfastate_t *
-//internal_function __attribute_warn_unused_result__
-re_dfastate_t * re_acquire_state_context (reg_errcode_t *err, const re_dfa_t *dfa,
+static re_dfastate_t *
+internal_function __attribute_warn_unused_result__
+re_acquire_state_context (reg_errcode_t *err, const re_dfa_t *dfa,
 			  const re_node_set *nodes, unsigned int context)
 {
   re_hashval_t hash;
@@ -1629,7 +1626,11 @@ create_ci_newstate (const re_dfa_t *dfa, const re_node_set *nodes,
   reg_errcode_t err;
   re_dfastate_t *newstate;
 
+#ifdef USE_DMALLOC
+  newstate = (re_dfastate_t *) DCALLOC (re_dfastate_t, 1, "re_dfastate_t");
+#else
   newstate = (re_dfastate_t *) calloc (sizeof (re_dfastate_t), 1);
+#endif
   if (BE (newstate == NULL, 0))
     return NULL;
   err = re_node_set_init_copy (&newstate->nodes, nodes);
@@ -1679,7 +1680,11 @@ create_cd_newstate (const re_dfa_t *dfa, const re_node_set *nodes,
   reg_errcode_t err;
   re_dfastate_t *newstate;
 
+#ifdef USE_DMALLOC
+  newstate = (re_dfastate_t *) DCALLOC (re_dfastate_t, 1, "re_dfastate_t");
+#else
   newstate = (re_dfastate_t *) calloc (sizeof (re_dfastate_t), 1);
+#endif
   if (BE (newstate == NULL, 0))
     return NULL;
   err = re_node_set_init_copy (&newstate->nodes, nodes);

@@ -1063,9 +1063,13 @@ prune_impossible_nodes (re_match_context_t *mctx)
    We must select appropriate initial state depending on the context,
    since initial states may have constraints like "\<", "^", etc..  */
 
-//static inline re_dfastate_t *
-//__attribute__ ((always_inline)) internal_function // removed by me
-static re_dfastate_t * acquire_init_state_context (reg_errcode_t *err, const re_match_context_t *mctx,
+#ifdef _MSC_VER
+static re_dfastate_t *
+#else
+static inline re_dfastate_t *
+__attribute__ ((always_inline)) internal_function
+#endif
+acquire_init_state_context (reg_errcode_t *err, const re_match_context_t *mctx,
 			    Idx idx)
 {
   const re_dfa_t *const dfa = mctx->dfa;
@@ -2833,8 +2837,13 @@ get_subexp (re_match_context_t *mctx, Idx bkref_node, Idx bkref_str_idx)
 	    continue; /* No.  */
 	  if (sub_top->path == NULL)
 	    {
+#ifdef USE_DMALLOC
+	      sub_top->path = DCALLOC (state_array_t,
+				      sl_str - sub_top->str_idx + 1, "state_array_t");
+#else
 	      sub_top->path = calloc (sizeof (state_array_t),
 				      sl_str - sub_top->str_idx + 1);
+#endif
 	      if (sub_top->path == NULL)
 		return REG_ESPACE;
 	    }
@@ -3398,12 +3407,20 @@ build_trtable (const re_dfa_t *dfa, re_dfastate_t *state)
   if (BE (! REG_VALID_NONZERO_INDEX (ndests), 0))
     {
       if (dests_node_malloced)
+#ifdef USE_DMALLOC
+	DFREE (dests_alloc);
+#else
 	free (dests_alloc);
+#endif
       /* Return false in case of an error, true otherwise.  */
       if (ndests == 0)
 	{
+#ifdef USE_DMALLOC
+	  state->trtable = DCALLOC (re_dfastate_t *, SBC_MAX, "re_dfastate_t *");
+#else
 	  state->trtable = (re_dfastate_t **)
 	    calloc (sizeof (re_dfastate_t *), SBC_MAX);
+#endif
           if (BE (state->trtable == NULL, 0))
             return false;
 	  return true;
@@ -3428,18 +3445,30 @@ build_trtable (const re_dfa_t *dfa, re_dfastate_t *state)
       alloca (ndests * 3 * sizeof (re_dfastate_t *));
   else
     {
+#ifdef USE_DMALLOC
+	dest_states = DMALLOC (re_dfastate_t *, ndests * 3, "re_dfastate_t *");
+#else
       dest_states = (re_dfastate_t **)
 	malloc (ndests * 3 * sizeof (re_dfastate_t *));
+#endif
       if (BE (dest_states == NULL, 0))
 	{
 out_free:
 	  if (dest_states_malloced)
+#ifdef USE_DMALLOC
+	    DFREE (dest_states);
+#else
 	    free (dest_states);
+#endif
 	  re_node_set_free (&follows);
 	  for (i = 0; i < ndests; ++i)
 	    re_node_set_free (dests_node + i);
 	  if (dests_node_malloced)
+#ifdef USE_DMALLOC
+	    DFREE (dests_alloc);
+#else
 	    free (dests_alloc);
+#endif
 	  return false;
 	}
       dest_states_malloced = true;
@@ -3499,7 +3528,11 @@ out_free:
 	 discern by looking at the character code: allocate a
 	 256-entry transition table.  */
       trtable = state->trtable =
+#ifdef USE_DMALLOC
+	DCALLOC (re_dfastate_t *, SBC_MAX, "re_dfastate_t *");
+#else
 	(re_dfastate_t **) calloc (sizeof (re_dfastate_t *), SBC_MAX);
+#endif
       if (BE (trtable == NULL, 0))
 	goto out_free;
 
@@ -3530,7 +3563,11 @@ out_free:
 	 transition tables, one starting at trtable[0] and one
 	 starting at trtable[SBC_MAX].  */
       trtable = state->word_trtable =
+#ifdef USE_DMALLOC
+	DCALLOC (re_dfastate_t *, 2 * SBC_MAX, "re_dfastate_t *");
+#else
 	(re_dfastate_t **) calloc (sizeof (re_dfastate_t *), 2 * SBC_MAX);
+#endif
       if (BE (trtable == NULL, 0))
 	goto out_free;
 
@@ -3570,14 +3607,22 @@ out_free:
     }
 
   if (dest_states_malloced)
+#ifdef USE_DMALLOC
+    DFREE (dest_states);
+#else
     free (dest_states);
+#endif
 
   re_node_set_free (&follows);
   for (i = 0; i < ndests; ++i)
     re_node_set_free (dests_node + i);
 
   if (dests_node_malloced)
+#ifdef USE_DMALLOC
+    DFREE (dests_alloc);
+#else
     free (dests_alloc);
+#endif
 
   return true;
 }
@@ -4248,7 +4293,11 @@ match_ctx_clean (re_match_context_t *mctx)
 	  re_free (top->path->array);
 	  re_free (top->path);
 	}
+#ifdef USE_DMALLOC
+      DFREE (top);
+#else
       free (top);
+#endif
     }
 
   mctx->nsub_tops = 0;
@@ -4363,7 +4412,11 @@ match_ctx_add_subtop (re_match_context_t *mctx, Idx node, Idx str_idx)
       mctx->sub_tops = new_array;
       mctx->asub_tops = new_asub_tops;
     }
+#ifdef USE_DMALLOC
+  mctx->sub_tops[mctx->nsub_tops] = DCALLOC (re_sub_match_top_t, 1, "re_sub_match_top_t");
+#else
   mctx->sub_tops[mctx->nsub_tops] = calloc (1, sizeof (re_sub_match_top_t));
+#endif
   if (BE (mctx->sub_tops[mctx->nsub_tops] == NULL, 0))
     return REG_ESPACE;
   mctx->sub_tops[mctx->nsub_tops]->node = node;
@@ -4390,7 +4443,11 @@ match_ctx_add_sublast (re_sub_match_top_t *subtop, Idx node, Idx str_idx)
       subtop->lasts = new_array;
       subtop->alasts = new_alasts;
     }
+#ifdef USE_DMALLOC
+  new_entry = DCALLOC (re_sub_match_last_t, 1, "re_sub_match_last_t");
+#else
   new_entry = calloc (1, sizeof (re_sub_match_last_t));
+#endif
   if (BE (new_entry != NULL, 1))
     {
       subtop->lasts[subtop->nlasts] = new_entry;

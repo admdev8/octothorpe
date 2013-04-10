@@ -21,12 +21,16 @@
 #ifndef _REGEX_H
 #define _REGEX_H 1
 
-#define __USE_GNU // added by me
-
-
-#include <stdio.h> // added by me
-
 #include <sys/types.h>
+
+#ifdef _MSC_VER
+#define __USE_GNU
+#include <stdio.h>
+#endif
+
+#ifdef USE_DMALLOC
+#include "dmalloc.h"
+#endif
 
 /* Allow the use in C++ code.  */
 #ifdef __cplusplus

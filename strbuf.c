@@ -9,7 +9,7 @@ char* strbuf_dummybuf="\x00";
 
 void strbuf_init (strbuf *sb, size_t size)
 {
-    sb->buf=(char*)DMALLOC(size, "strbuf");
+    sb->buf=DMALLOC(char, size, "strbuf");
     sb->buf[0]=0;
     sb->strlen=0;
     sb->buflen=size;
@@ -33,7 +33,7 @@ void strbuf_grow (strbuf *sb, size_t size)
         return; // we have space already
     };
 
-    new_buf=(char*)DMALLOC(sb->strlen + size + 1, "strbuf"); // FIXME: realloc or DREALLOC should be here for clarity
+    new_buf=DMALLOC(char, sb->strlen + size + 1, "strbuf"); // FIXME: realloc or DREALLOC should be here for clarity
     if (sb->buf)
     {
         memcpy (new_buf, sb->buf, sb->strlen+1);

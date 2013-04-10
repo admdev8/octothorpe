@@ -1,17 +1,18 @@
 #include "dmalloc.h"
+#include <stdint.h>
 
 void main()
 {
-    void* t1=DMALLOC(123, "block123");
-    void* t2=DMALLOC(124, "block124");
-    void* t3=DMALLOC(12,  "block12");
-    void* t4=DMALLOC(555, "block555");
-    void* t5=DMALLOC(666, "block666");
-    void* t6=DMALLOC(777, "block777");
+    uint8_t* t1=DMALLOC(uint8_t, 123, "block123");
+    uint8_t* t2=DMALLOC(uint8_t, 124, "block124");
+    uint8_t* t3=DMALLOC(uint8_t, 12,  "block12");
+    uint8_t* t4=DMALLOC(uint8_t, 555, "block555");
+    uint8_t* t5=DMALLOC(uint8_t, 666, "block666");
+    uint8_t* t6=DMALLOC(uint8_t, 777, "block777");
 
     char *s=DSTRDUP ("hahaha", "s");
 
-    t6=DREALLOC(t6, 888, "new size for block777");
+    t6=DREALLOC(t6, uint8_t, 888, "new size for block777");
 
     DFREE(t1);
     DFREE(t5);
