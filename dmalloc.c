@@ -9,6 +9,12 @@
 #include <intrin.h>
 
 //#define LOGGING
+#define GUARDS
+
+#ifdef GUARDS
+static uint32_t guard1=0x44332211;
+static uint32_t guard2=0x88776655;
+#endif
 
 // !!! Idea: он может строить статистку наболее часто выделяемых блоков!
 
@@ -24,13 +30,14 @@ static unsigned seq_n=0;
 struct dmalloc_info
 {
     unsigned seq_n;
-    size_t size;
+    size_t user_size;
     const char *filename;
     unsigned line;
     const char *function;
     const char *structname;
 };
 
+// in GUARDS case, ptr and size stored here is from user's perspective...
 #ifdef _DEBUG
 static rbtree* tbl;
 #endif
@@ -38,14 +45,14 @@ static rbtree* tbl;
 static BOOL tbl_created=FALSE;
 
 #ifdef _DEBUG
-void store_info (void* ptr, size_t size, const char * filename, unsigned line, const char * function, 
+void store_info (void* user_ptr, size_t user_size, const char * filename, unsigned line, const char * function, 
         const char * structname)
 {
     struct dmalloc_info *tmp;
     tmp=(struct dmalloc_info*)calloc(1, sizeof(struct dmalloc_info));
     tmp->seq_n=seq_n;
     seq_n++;
-    tmp->size=size;
+    tmp->user_size=user_size;
     tmp->filename=filename;
     tmp->line=line;
     tmp->function=function;
@@ -56,9 +63,21 @@ void store_info (void* ptr, size_t size, const char * filename, unsigned line, c
         tbl=rbtree_create(FALSE, NULL, compare_size_t);
         tbl_created=TRUE;
     };
-    rbtree_insert (tbl, ptr, tmp);
+    rbtree_insert (tbl, user_ptr, tmp);
 };
+
+static void dump_blk_info (struct dmalloc_info *i)
+{
+    printf ("seq_n:%d, size: %d, filename: %s:%d, func: %s, struct: %s\n", i->seq_n, i->user_size, i->filename, i->line, i->function, i->structname);
+};
+
 #endif
+
+static void add_guards (void *user_ptr, size_t user_size)
+{
+    memcpy ((uint8_t*)user_ptr-4, &guard1, 4);
+    memcpy ((uint8_t*)user_ptr+user_size, &guard2, 4);
+};
 
 void* dmalloc (size_t size, const char * filename, unsigned line, const char * function, const char * structname)
 {
@@ -71,18 +90,26 @@ void* dmalloc (size_t size, const char * filename, unsigned line, const char * f
     if (break_on_seq_n && (seq_n==seq_n_to_break_on))
         __debugbreak();
 
+#ifdef GUARDS
+    rt=(uint8_t*)malloc (size+8)+4;
+#else    
     rt=malloc (size);
+#endif    
     
     if (rt==NULL)
         die(__FUNCTION__"() can't allocate size %d for %s (%s:%d)\n", size, structname, filename, line);
 
-#ifdef _DEBUG    
+#ifdef GUARDS
+    add_guards (rt, size);
+#endif    
+
+#ifdef _DEBUG
     store_info (rt, size, filename, line, function, structname);
 #endif
 
 #ifdef LOGGING
     fprintf (stderr, "returning 0x%p\n", rt);
-#endif
+#endif    
     return rt;
 };
 
@@ -106,10 +133,18 @@ void* drealloc (void* ptr, size_t size, const char * filename, unsigned line, co
     };
 
 #ifdef _DEBUG    
+#ifdef GUARDS    
+    newptr=(uint8_t*)realloc ((uint8_t*)ptr-4, size+8)+4;
+#else    
     newptr=realloc (ptr, size);
+#endif    
 
     if (newptr==NULL)
         die(__FUNCTION__"() can't allocate size %d for %s (%s:%d)\n", size, structname, filename, line);
+
+#ifdef GUARDS    
+    add_guards(newptr, size);
+#endif    
 
     if (newptr!=ptr)
     {
@@ -124,7 +159,7 @@ void* drealloc (void* ptr, size_t size, const char * filename, unsigned line, co
     {
         tmp=rbtree_lookup(tbl, ptr);
         assert(tmp && "drealloc(ptr): ptr isn't present in our records"); // ensure it's present
-        tmp->size=size; // set new size
+        tmp->user_size=size; // set new size
     };
 #else
     newptr=realloc (ptr, size);
@@ -157,6 +192,41 @@ char* dstrdup (const char *s, const char * filename, unsigned line, const char *
     return newp;
 };
 
+#ifdef GUARDS
+static void chk_guards (void *ptr, struct dmalloc_info *i)
+{
+    int r1, r2;
+    size_t size=i->user_size;
+
+    r1=memcmp ((uint8_t*)ptr-4, &guard1, 4);
+    r2=memcmp ((uint8_t*)ptr+size, &guard2, 4);
+
+    if (r1!=0 || r2!=0)
+    {
+        printf (__FUNCTION__"(): %s %s overwritten for block:", 
+                r1!=0 ? "guard1" : "",
+                r2!=0 ? "guard2" : "");
+        dump_blk_info (i);
+        if (r1!=0) 
+            printf ("guard1=%08X, should be=%08X\n", *(uint32_t*)((uint8_t*)ptr-4), guard1);
+        if (r2!=0) 
+            printf ("guard2=%08X, should be=%08X\n", *(uint32_t*)((uint8_t*)ptr+size), guard2);
+        L_init("tmp");
+        L ("block with both guards:\n");
+        L_print_buf((uint8_t*)ptr-4, size+8);
+        die ("exiting\n");
+    };
+};
+#endif
+
+static void chk_all_guards()
+{
+#ifdef LOGGING
+    fprintf (stderr, __FUNCTION__"()\n");
+#endif
+    rbtree_foreach(tbl, chk_guards, NULL, NULL);
+};
+
 void dfree (void* ptr)
 {
 #ifdef _DEBUG
@@ -167,12 +237,17 @@ void dfree (void* ptr)
     fprintf (stderr, __FUNCTION__"(ptr=0x%p)\n", ptr);
 #endif    
 
+#ifdef GUARDS
+    chk_all_guards();
+#endif
+
     if (ptr==NULL)
         return;
 
 #ifdef _DEBUG    
     //printf ("dfree (0x%p)\n", ptr);
     tmp=rbtree_lookup(tbl, ptr);
+
     //assert(tmp && "dfree(ptr): ptr isn't present in our records"); // ensure it's present
     if (tmp==NULL)
         fprintf (stderr, __FUNCTION__"(0x%p): ptr isn't present in our records\n", ptr);
@@ -180,16 +255,21 @@ void dfree (void* ptr)
         free(tmp);
     rbtree_delete(tbl, ptr);
 #endif
+
+#ifdef GUARDS
+    free ((uint8_t*)ptr-4);
+#else
     free (ptr);
+#endif    
 };
+
 
 #ifdef _DEBUG
 static void dump_unfreed_block(void *k, struct dmalloc_info *i)
 {    
     assert(k!=NULL);
     assert(i!=NULL);
-    printf ("seq_n:%d, size: %d, filename: %s:%d, func: %s, struct: %s\n", 
-            i->seq_n, i->size, i->filename, i->line, i->function, i->structname);
+    dump_blk_info (i);
 };
 #endif
 
