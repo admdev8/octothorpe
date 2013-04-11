@@ -8,6 +8,7 @@ $(C_OBJS): $(@B).c $(@B).h
 
 $(GNU_REGEX_C_OBJS): $(@B).c
     cl.exe $(@B).c /D_DEBUG /DUSE_DMALLOC /c /Zi
+#    cl.exe $(@B).c /D_DEBUG /c /Zi
 
 $(ASM_OBJS): $(@B).asm $(@B).h
     ml.exe $(@B).asm /c

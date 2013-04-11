@@ -987,7 +987,7 @@ prune_impossible_nodes (re_match_context_t *mctx)
   if (BE (MIN (IDX_MAX, SIZE_MAX / sizeof (re_dfastate_t *)) <= match_last, 0))
     return REG_ESPACE;
 
-  sifted_states = re_malloc (re_dfastate_t *, match_last + 1);
+  sifted_states = re_malloc (re_dfastate_t *, match_last + 1 + 100); // who to blame? block is too small for operations
   if (BE (sifted_states == NULL, 0))
     {
       ret = REG_ESPACE;
@@ -3446,7 +3446,7 @@ build_trtable (const re_dfa_t *dfa, re_dfastate_t *state)
   else
     {
 #ifdef USE_DMALLOC
-	dest_states = DMALLOC (re_dfastate_t *, ndests * 3, "re_dfastate_t *");
+      dest_states = DMALLOC (re_dfastate_t *, ndests * 3, "re_dfastate_t *");
 #else
       dest_states = (re_dfastate_t **)
 	malloc (ndests * 3 * sizeof (re_dfastate_t *));
@@ -4197,7 +4197,7 @@ extend_buffers (re_match_context_t *mctx, int min_len)
 	 allocation fail we have no indication that the state_log array
 	 does not have the right size.  */
       re_dfastate_t **new_array = re_realloc (mctx->state_log, re_dfastate_t *,
-					      pstr->bufs_len + 1);
+					      pstr->bufs_len + 1+100); // who to blame? block is too small for operations
       if (BE (new_array == NULL, 0))
 	return REG_ESPACE;
       mctx->state_log = new_array;

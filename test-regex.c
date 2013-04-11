@@ -1,11 +1,40 @@
 #include "regex.h"
 #include "dmalloc.h"
 
-void print_string_range (char *s, int b, int e)
+void print_string_range (const char *s, int b, int e)
 {
     int i;
     for (i=b; i<e; i++)
         putc(s[i], stdout);
+};
+
+void tst2()
+{
+    const char* CFG_PAT="^trace_skip=([^!; ]*)!([^!; ]*)!([^!; ]*)([[:space:]])?(;.*)?$";
+    regex_t trace_skip_pat;
+    const char* buf=//"trace_skip=.*!netbios.dll!.* ; comment here\n";
+    "trace_skip=\\%SystemRoot%\\System32.*!.*dll!.* ; skip all functions in 64-bit system DLLs\n";
+    regmatch_t matches[4];
+    int i;
+
+    if (regcomp(&trace_skip_pat, CFG_PAT, REG_EXTENDED | REG_ICASE | REG_NEWLINE))
+        die("failed regcomp() for pattern '%s'", CFG_PAT);
+
+    printf ("dummy regexec() call -> %d\n", regexec (&trace_skip_pat, "\n", 4, matches, 0));
+    printf ("dummy regexec() call -> %d\n", regexec (&trace_skip_pat, "", 4, matches, 0));
+
+    if (regexec (&trace_skip_pat, buf, 4, matches, 0)==0)
+    {
+        for (i=0; i<4; i++)
+        {
+            printf ("%d %d [", matches[i].rm_so, matches[i].rm_eo); 
+            print_string_range(buf, matches[i].rm_so, matches[i].rm_eo); 
+            printf ("]\n");
+        };
+        //printf ("\n");
+    };
+
+    regfree (&trace_skip_pat);
 };
 
 int main(int argc, char **argv)
@@ -31,6 +60,8 @@ int main(int argc, char **argv)
 
     //printf ("r=0x%p\n", &r);
     regfree (&r);
+
+    tst2();
 
     dump_unfreed_blocks();
     dmalloc_deinit();
