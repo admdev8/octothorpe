@@ -1,12 +1,6 @@
 #include "regex.h"
 #include "dmalloc.h"
-
-void print_string_range (const char *s, int b, int e)
-{
-    int i;
-    for (i=b; i<e; i++)
-        putc(s[i], stdout);
-};
+#include "stuff.h"
 
 void tst2()
 {

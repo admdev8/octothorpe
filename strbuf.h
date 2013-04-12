@@ -33,10 +33,12 @@ void strbuf_grow (strbuf *sb, size_t size);
 void strbuf_addstr_range (strbuf *sb, const char *s, int len);
 // idea: could be renamed to strbuf_adds()
 void strbuf_addstr (strbuf *sb, const char *s);
+void strbuf_addstr_range_be (strbuf *sb, const char *s, unsigned begin, unsigned end);
 void strbuf_addc (strbuf *sb, char c);
 void strbuf_vaddf (strbuf *sb, const char *fmt, va_list va);
 void strbuf_addf (strbuf *sb, const char *fmt, ...);
 void strbuf_puts (strbuf *sb);
+BOOL strbuf_replace_if_possible (strbuf *sb, const char *s1, const char *s2);
 
 void make_uint32_compact (uint32_t a, strbuf* out);
 void make_uint64_compact (uint64_t a, strbuf* out);
@@ -46,6 +48,7 @@ void strbuf_asmhex(strbuf *out, uint64_t v);
 
 void strbuf_addc_C_escaped (strbuf *s, char c, BOOL treat_any_as_binary);
 void strbuf_cvt_to_C_string (strbuf *s, strbuf *out, BOOL treat_as_binary);
+void env_vars_expansion(strbuf *sb);
 
 // TODO: BOOL strbuf_eq
 

@@ -295,6 +295,7 @@ void dmalloc_deinit()
 #ifdef _DEBUG    
     if (tbl_created)
     {
+        rbtree_foreach (tbl, NULL, NULL, free);
         rbtree_clear(tbl);
         tbl_created=FALSE;
     };

@@ -44,3 +44,9 @@ void* memdup (void *p, size_t s)
     return rt;
 };
 
+void print_string_range (char *s, int b, int e)
+{
+    int i;
+    for (i=b; i<e; i++)
+        putc(s[i], stdout);
+};

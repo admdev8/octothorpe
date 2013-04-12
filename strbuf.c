@@ -9,8 +9,17 @@ char* strbuf_dummybuf="\x00";
 
 void strbuf_init (strbuf *sb, size_t size)
 {
+    // beware: sb->buf may contain some garbage like 0xcccccccc
+#if 0
+    if (sb->buf && sb->buf!=strbuf_dummybuf)
+    {
+        //DFREE (sb->buf); // do not do this. existing strbuf shouldn't be reinitialized!
+        assert(!"strbuf is already have something");
+    };
+#endif
     sb->buf=DMALLOC(char, size, "strbuf");
-    sb->buf[0]=0;
+    if (size>0)
+        sb->buf[0]=0;
     sb->strlen=0;
     sb->buflen=size;
 };
@@ -46,6 +55,7 @@ void strbuf_grow (strbuf *sb, size_t size)
 
 void strbuf_addstr_range (strbuf *sb, const char *s, int len)
 {
+    // FIXME: rework this function using strbuf_addstr_range_be()
     strbuf_grow (sb, len+1);
     memcpy (sb->buf + sb->strlen, s, len);
     sb->strlen+=len;
@@ -57,12 +67,58 @@ void strbuf_addstr (strbuf *sb, const char *s)
     strbuf_addstr_range (sb, s, strlen(s));
 };
 
+void strbuf_addstr_range_be (strbuf *sb, const char *s, unsigned begin, unsigned end)
+{
+    int i;
+
+    assert (begin<end);
+   
+    // FIXME: to be optimized
+ 
+    for (i=begin; i<end; i++)
+        strbuf_addc (sb, s[i]); 
+};
+
 void strbuf_addc (strbuf *sb, char c)
 {
     strbuf_grow(sb, 1);
     sb->buf[sb->strlen]=c;
     sb->strlen++;
     sb->buf[sb->strlen]=0;
+};
+
+BOOL strbuf_replace_if_possible (strbuf *sb, const char *s1, const char *s2)
+{
+    char *t=strstr (sb->buf, s1);
+    char *newbuf;
+    unsigned newbuf_cursize=0, newbuf_newsize;
+
+    if (t==NULL)
+        return FALSE;
+    
+    // now rebuild buf
+
+    newbuf_newsize=sb->strlen-strlen(s1)+strlen(s2)+1;
+    newbuf=DMALLOC(char, newbuf_newsize, "strbuf::buf"); // C++ style naming? haha
+
+    // 1st part
+    newbuf_cursize=t-sb->buf;
+    memcpy (newbuf, sb->buf, newbuf_cursize);
+
+    // 2nd part
+    memcpy (newbuf+newbuf_cursize, s2, strlen(s2));
+    newbuf_cursize+=strlen(s2);
+
+    // 3rd part
+    memcpy (newbuf+newbuf_cursize, t+strlen(s1), newbuf_newsize-newbuf_cursize);
+    newbuf[newbuf_newsize-1]=0;
+    
+    DFREE (sb->buf);
+    sb->buf=newbuf;
+    sb->buflen=newbuf_newsize;
+    sb->strlen=newbuf_newsize-1;
+
+    return TRUE;
 };
 
 void strbuf_vaddf (strbuf *sb, const char *fmt, va_list va)
@@ -166,5 +222,27 @@ void strbuf_cvt_to_C_string (strbuf *s, strbuf *out, BOOL treat_as_binary)
 
     for (i=0; i<s->strlen; i++)
         strbuf_addc_C_escaped (out, s->buf[i], treat_as_binary);
+};
+
+// replace %substring% to environment variable, if possible
+void env_vars_expansion(strbuf *sb)
+{
+    int i=0;
+    while (environ[i])
+    {
+        char *s=DSTRDUP (environ[i], "env");
+        char *s1=strtok (s, "=");
+        char *s2=strtok (NULL, "=");
+        strbuf percented_env_var=STRBUF_INIT;
+        strbuf_addc (&percented_env_var, '%');
+        strbuf_addstr (&percented_env_var, s1);
+        strbuf_addc (&percented_env_var, '%');
+
+        strbuf_replace_if_possible (sb, percented_env_var.buf, s2);
+
+        strbuf_deinit(&percented_env_var);
+        DFREE(s);
+        i++;
+    };
 };
 
