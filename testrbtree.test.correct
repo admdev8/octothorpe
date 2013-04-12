@@ -1,0 +1,41 @@
+enumerate:
+enumerate:
+key=12345 value=value1
+key=12346 value=value2
+enumerate:
+key=0 value=zero!
+key=666 value=666
+key=12346 value=value2
+key=12347 value=value3
+minimum: 0
+maximum: 12347
+ascending order:
+0
+666
+12346
+12347
+descending order:
+12347
+12346
+666
+0
+enumerate new_t:
+key=0 value=zero!
+key=666 value=666
+key=12346 value=value2
+key=12347 value=value3
+freeing:
+test 2 (lower/upper bounds)
+enumerate t2:
+key=50 value=value 50
+key=99 value=value 99
+key=101 value=value 101
+key=500 value=value 500
+key=12200 value=value 12200
+key=12301 value=value 12301
+key=50000 value=value 50000
+key=60000 value=value 60000
+while looking for 10, key_lower_bound=0, value_lower_bound=(null), key_upper_bound=50, value_upper_bound=value 50
+while looking for 100, key_lower_bound=99, value_lower_bound=value 99, key_upper_bound=101, value_upper_bound=value 101
+while looking for 12300, key_lower_bound=12200, value_lower_bound=value 12200, key_upper_bound=12301, value_upper_bound=value 12301
+while looking for 99999, key_lower_bound=60000, value_lower_bound=value 60000, key_upper_bound=0, value_upper_bound=value 12301

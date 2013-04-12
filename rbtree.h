@@ -73,7 +73,17 @@ typedef struct rbtree_t
 
 rbtree *rbtree_create(BOOL use_dmalloc, const char *struct_name, compare_func compare);
 void rbtree_clear(rbtree* t);
+
 void* rbtree_lookup(rbtree* t, void* key);
+
+// extended version
+// output_(lower|upper)_bound_(k|v) are set if key not found. 
+// they may be NULL if results are not needed
+void* rbtree_lookup2(rbtree* t, void* key, 
+        void** output_lower_bound_k, void** output_lower_bound_v,
+        void** output_upper_bound_k, void** output_upper_bound_v);
+
+
 void rbtree_insert(rbtree* t, void* key, void* value);
 void rbtree_delete(rbtree* t, void* key);
 void rbtree_deinit(rbtree* t);

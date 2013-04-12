@@ -46,7 +46,9 @@ static void verify_property_5(node* root);
 static void verify_property_5_helper(node* n, int black_count, int* black_count_path);
 
 static rbtree_node* new_node(rbtree* t, void* key, void* value, color node_color, node* left, node* right);
-static rbtree_node* lookup_node(rbtree* t, void* key);
+static rbtree_node* lookup_node2(rbtree* tree, rbtree_node* n, void* key, 
+        void** output_lower_bound_k, void** output_lower_bound_v,
+        void** output_upper_bound_k, void** output_upper_bound_v);
 static void rotate_left(rbtree* t, node* n);
 static void rotate_right(rbtree* t, node* n);
 
@@ -215,7 +217,8 @@ rbtree_node* new_node(rbtree* t, void* key, void* value, color node_color, node*
     result->parent = NULL;
     return result;
 };
-
+#if 0
+// old, non-recursive version
 node* lookup_node(rbtree* t, void* key) 
 {
     rbtree_node* n = t->root;
@@ -238,11 +241,120 @@ node* lookup_node(rbtree* t, void* key)
     }
     return n;
 }
+#endif
+
+static void find_lower_and_upper_bounds (rbtree_node* n, void* key, 
+        void** output_lower_bound_k, void** output_lower_bound_v,
+        void** output_upper_bound_k, void** output_upper_bound_v)
+{
+    if (key < n->key)
+    {
+        if (output_lower_bound_k)
+        {
+            rbtree_node *p=rbtree_pred(n);
+            assert(output_lower_bound_v);
+            if (p)
+            {
+                *output_lower_bound_k=p->key;
+                *output_lower_bound_v=p->value;
+            }
+            else
+                *output_lower_bound_k=*output_lower_bound_v=NULL;
+        };
+
+        if (output_upper_bound_k)
+        {
+            assert(output_upper_bound_v);
+            *output_upper_bound_k=n->key;
+            *output_upper_bound_v=n->value;
+        };
+    }
+    else
+    { // key > n->key
+        if (output_upper_bound_k)
+        {
+            rbtree_node *p=rbtree_succ(n);
+            assert(output_upper_bound_v);
+            if (p)
+            {
+                *output_upper_bound_k=p->key;
+                *output_upper_bound_v=p->value;
+            }
+            else
+                *output_upper_bound_k=*output_lower_bound_v=NULL;
+        };
+
+        if (output_lower_bound_k)
+        {
+            assert(output_lower_bound_v);
+            *output_lower_bound_k=n->key;
+            *output_lower_bound_v=n->value;
+        };
+    };
+};
+
+node* lookup_node2(rbtree *tree, rbtree_node* n, void* key, 
+        void** output_lower_bound_k, void** output_lower_bound_v,
+        void** output_upper_bound_k, void** output_upper_bound_v) 
+{
+    int comp_result = tree->cmp_func(key, n->key);
+
+    if (comp_result == 0) 
+        return n;
+    else if (comp_result<0)
+    {
+        if (n->left)
+            return lookup_node2(tree, n->left, key, 
+                    output_lower_bound_k, output_lower_bound_v, 
+                    output_upper_bound_k, output_upper_bound_v);
+        else
+        {
+            // key not found
+            find_lower_and_upper_bounds (n, key, 
+                    output_lower_bound_k, output_lower_bound_v, 
+                    output_upper_bound_k, output_upper_bound_v);
+            return NULL;
+        };
+    }
+    else
+    {
+        if (n->right)
+            return lookup_node2(tree, n->right, key, 
+                    output_lower_bound_k, output_lower_bound_v,
+                    output_upper_bound_k, output_upper_bound_v);
+        else
+        {
+            // key not found
+            find_lower_and_upper_bounds (n, key, 
+                    output_lower_bound_k, output_lower_bound_v,
+                    output_upper_bound_k, output_upper_bound_v);
+            return NULL;
+        };
+    };
+};
+#if 0
 void* rbtree_lookup(rbtree* t, void* key) 
 {
     rbtree_node* n = lookup_node(t, key);
     return n == NULL ? NULL : n->value;
 }
+#endif
+
+void* rbtree_lookup2(rbtree* t, void* key, 
+        void** output_lower_bound_k, void** output_lower_bound_v,
+        void** output_upper_bound_k, void** output_upper_bound_v) 
+{
+    rbtree_node* n = lookup_node2(t, t->root, key, 
+            output_lower_bound_k, output_lower_bound_v,
+            output_upper_bound_k, output_upper_bound_v);
+    return n == NULL ? NULL : n->value;
+}
+
+void* rbtree_lookup(rbtree* t, void* key)
+{
+    return rbtree_lookup2(t, key, NULL, NULL, NULL, NULL);
+};
+
 void rotate_left(rbtree* t, node* n) 
 {
     rbtree_node* r = n->right;
@@ -399,7 +511,7 @@ void insert_case5(rbtree* t, node* n)
 void rbtree_delete(rbtree* t, void* key) 
 {
     rbtree_node* child;
-    rbtree_node* n = lookup_node(t, key);
+    rbtree_node* n = lookup_node2(t, t->root, key, NULL, NULL, NULL, NULL);
     if (n == NULL) 
         return;  /* Key not found, do nothing */
     if (n->left != NULL && n->right != NULL) 
