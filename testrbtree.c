@@ -53,7 +53,7 @@ int main()
     rbtree* t = rbtree_create(TRUE, "test", compare_uint32_t);
     rbtree* new_t = rbtree_create(TRUE, "new_test", compare_uint32_t);
     rbtree* t2;
-    void *key_lower_bound, *value_lower_bound, *key_upper_bound, *value_upper_bound;
+    void *key_prev, *value_prev, *key_next, *value_next;
 
     printf ("enumerate:\n");
     rbtree_foreach(t, visitor, NULL, NULL);
@@ -106,17 +106,20 @@ int main()
     printf ("enumerate t2:\n");
     rbtree_foreach(t2, visitor, NULL, NULL);
 
-    rbtree_lookup2(t2, (void*)10, &key_lower_bound, &value_lower_bound, &key_upper_bound, &value_upper_bound);
-    printf ("while looking for 10, key_lower_bound=%d, value_lower_bound=%s, key_upper_bound=%d, value_upper_bound=%s\n", key_lower_bound, value_lower_bound, key_upper_bound, value_upper_bound);
+    rbtree_lookup2(t2, (void*)10, &key_prev, &value_prev, &key_next, &value_next);
+    printf ("while looking for 10, key_prev=%d, value_prev=%s, key_next=%d, value_next=%s\n", key_prev, value_prev, key_next, value_next);
 
-    rbtree_lookup2(t2, (void*)100, &key_lower_bound, &value_lower_bound, &key_upper_bound, &value_upper_bound);
-    printf ("while looking for 100, key_lower_bound=%d, value_lower_bound=%s, key_upper_bound=%d, value_upper_bound=%s\n", key_lower_bound, value_lower_bound, key_upper_bound, value_upper_bound);
+    rbtree_lookup2(t2, (void*)100, &key_prev, &value_prev, &key_next, &value_next);
+    printf ("while looking for 100, key_prev=%d, value_prev=%s, key_next=%d, value_next=%s\n", key_prev, value_prev, key_next, value_next);
 
-    rbtree_lookup2(t2, (void*)12300, &key_lower_bound, &value_lower_bound, &key_upper_bound, &value_upper_bound);
-    printf ("while looking for 12300, key_lower_bound=%d, value_lower_bound=%s, key_upper_bound=%d, value_upper_bound=%s\n", key_lower_bound, value_lower_bound, key_upper_bound, value_upper_bound);
+    rbtree_lookup2(t2, (void*)101, &key_prev, &value_prev, &key_next, &value_next);
+    printf ("while looking for 101, key_prev=%d, value_prev=%s, key_next=%d, value_next=%s\n", key_prev, value_prev, key_next, value_next);
 
-    rbtree_lookup2(t2, (void*)99999, &key_lower_bound, &value_lower_bound, &key_upper_bound, &value_upper_bound);
-    printf ("while looking for 99999, key_lower_bound=%d, value_lower_bound=%s, key_upper_bound=%d, value_upper_bound=%s\n", key_lower_bound, value_lower_bound, key_upper_bound, value_upper_bound);
+    rbtree_lookup2(t2, (void*)12300, &key_prev, &value_prev, &key_next, &value_next);
+    printf ("while looking for 12300, key_prev=%d, value_prev=%s, key_next=%d, value_next=%s\n", key_prev, value_prev, key_next, value_next);
+
+    rbtree_lookup2(t2, (void*)99999, &key_prev, &value_prev, &key_next, &value_next);
+    printf ("while looking for 99999, key_prev=%d, value_prev=%s, key_next=%d, value_next=%s\n", key_prev, value_prev, key_next, value_next);
 
     rbtree_deinit(t2);
 
