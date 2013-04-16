@@ -9,9 +9,15 @@
 #include <intrin.h>
 
 //#define LOGGING
-#define GUARDS
 
-#ifdef GUARDS
+#define ADD_GUARDS
+
+#define DREE_CHK_ONLY_GUARD_BEING_FREED
+
+//this is slow!
+//#define DFREE_CHK_ALL_GUARDS
+
+#ifdef ADD_GUARDS
 static uint32_t guard1=0x44332211;
 static uint32_t guard2=0x88776655;
 #endif
@@ -37,7 +43,7 @@ struct dmalloc_info
     const char *structname;
 };
 
-// in GUARDS case, ptr and size stored here is from user's perspective...
+// in ADD_GUARDS case, ptr and size stored here is from user's perspective...
 #ifdef _DEBUG
 static rbtree* tbl;
 #endif
@@ -90,7 +96,7 @@ void* dmalloc (size_t size, const char * filename, unsigned line, const char * f
     if (break_on_seq_n && (seq_n==seq_n_to_break_on))
         __debugbreak();
 
-#ifdef GUARDS
+#ifdef ADD_GUARDS
     rt=(uint8_t*)malloc (size+8)+4;
 #else    
     rt=malloc (size);
@@ -99,7 +105,7 @@ void* dmalloc (size_t size, const char * filename, unsigned line, const char * f
     if (rt==NULL)
         die(__FUNCTION__"() can't allocate size %d for %s (%s:%d)\n", size, structname, filename, line);
 
-#ifdef GUARDS
+#ifdef ADD_GUARDS
     add_guards (rt, size);
 #endif    
 
@@ -133,18 +139,18 @@ void* drealloc (void* ptr, size_t size, const char * filename, unsigned line, co
     };
 
 #ifdef _DEBUG    
-#ifdef GUARDS    
+#ifdef ADD_GUARDS    
     newptr=(uint8_t*)realloc ((uint8_t*)ptr-4, size+8)+4;
 #else    
     newptr=realloc (ptr, size);
-#endif    
+#endif 
 
     if (newptr==NULL)
         die(__FUNCTION__"() can't allocate size %d for %s (%s:%d)\n", size, structname, filename, line);
 
-#ifdef GUARDS    
+#ifdef ADD_GUARDS    
     add_guards(newptr, size);
-#endif    
+#endif 
 
     if (newptr!=ptr)
     {
@@ -192,8 +198,8 @@ char* dstrdup (const char *s, const char * filename, unsigned line, const char *
     return newp;
 };
 
-#ifdef GUARDS
-static void chk_guards (void *ptr, struct dmalloc_info *i)
+#ifdef ADD_GUARDS
+static void chk_guard (void *ptr, struct dmalloc_info *i)
 {
     int r1, r2;
     size_t size=i->user_size;
@@ -224,7 +230,7 @@ static void chk_all_guards()
 #ifdef LOGGING
     fprintf (stderr, __FUNCTION__"()\n");
 #endif
-    rbtree_foreach(tbl, chk_guards, NULL, NULL);
+    rbtree_foreach(tbl, chk_guard, NULL, NULL);
 };
 
 void dfree (void* ptr)
@@ -236,13 +242,18 @@ void dfree (void* ptr)
 #ifdef LOGGING 
     fprintf (stderr, __FUNCTION__"(ptr=0x%p)\n", ptr);
 #endif    
+    
+    if (ptr==NULL)
+        return;
 
-#ifdef GUARDS
+#ifdef DFREE_CHK_ALL_GUARDS
     chk_all_guards();
 #endif
 
-    if (ptr==NULL)
-        return;
+#ifdef DREE_CHK_ONLY_GUARD_BEING_FREED
+    tmp=rbtree_lookup(tbl, ptr);
+    chk_guard (ptr, tmp);
+#endif
 
 #ifdef _DEBUG    
     //printf ("dfree (0x%p)\n", ptr);
@@ -256,7 +267,7 @@ void dfree (void* ptr)
     rbtree_delete(tbl, ptr);
 #endif
 
-#ifdef GUARDS
+#ifdef ADD_GUARDS
     free ((uint8_t*)ptr-4);
 #else
     free (ptr);

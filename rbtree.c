@@ -297,7 +297,12 @@ node* lookup_node2(rbtree *tree, rbtree_node* n, void* key,
         void** out_prev_k, void** out_prev_v,
         void** out_next_k, void** out_next_v) 
 {
-    int comp_result = tree->cmp_func(key, n->key);
+    int comp_result;
+    
+    if (n==NULL) // empty node
+        return NULL;
+
+    comp_result = tree->cmp_func(key, n->key);
 
     if (comp_result == 0) // key found
     {
