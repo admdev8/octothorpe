@@ -14,7 +14,7 @@
 
 #define DREE_CHK_ONLY_GUARD_BEING_FREED
 
-//this is slow!
+//this is slow! use it only for heavy debugging!
 //#define DFREE_CHK_ALL_GUARDS
 
 #ifdef ADD_GUARDS
@@ -252,7 +252,10 @@ void dfree (void* ptr)
 
 #ifdef DREE_CHK_ONLY_GUARD_BEING_FREED
     tmp=rbtree_lookup(tbl, ptr);
-    chk_guard (ptr, tmp);
+    if (tmp==NULL)
+        fprintf (stderr, __FUNCTION__"(0x%p): ptr isn't present in our records\n", ptr);
+    else
+        chk_guard (ptr, tmp);
 #endif
 
 #ifdef _DEBUG    

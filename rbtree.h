@@ -85,7 +85,7 @@ void* rbtree_lookup2(rbtree* t, void* key,
 
 
 void rbtree_insert(rbtree* t, void* key, void* value);
-void rbtree_delete(rbtree* t, void* key);
+void rbtree_delete(rbtree* t, void* key); // FIXME: this fn do lookup first. there should be function for deleting by ptr to value!
 void rbtree_deinit(rbtree* t);
 
 void rbtree_foreach(rbtree* t, void (*visitor_kv)(void*, void*), 

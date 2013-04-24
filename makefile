@@ -1,7 +1,7 @@
-C_OBJS=dmalloc.obj memutils.obj rbtree.obj rand.obj strbuf.obj stuff.obj logging.obj x86.obj
+C_OBJS=dmalloc.obj memutils.obj rbtree.obj rand.obj strbuf.obj stuff.obj logging.obj x86.obj string_list.obj
 GNU_REGEX_C_OBJS=regex.obj
 ASM_OBJS=FPU_stuff_asm.obj
-TEST_EXECS=testrbtree.exe strbuf_test.exe logging_test.exe dmalloc_test.exe test-regex.exe
+TEST_EXECS=testrbtree.exe strbuf_test.exe logging_test.exe dmalloc_test.exe test-regex.exe string_list_test.exe
 
 $(C_OBJS): $(@B).c $(@B).h
     cl.exe $(@B).c /D_DEBUG /c /Zi

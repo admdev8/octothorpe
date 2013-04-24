@@ -29,6 +29,7 @@ extern char* strbuf_dummybuf;
 
 void strbuf_init (strbuf *sb, size_t size);
 void strbuf_deinit(strbuf *sb);
+void strbuf_reinit(strbuf *sb, size_t size);
 void strbuf_grow (strbuf *sb, size_t size);
 void strbuf_addstr_range (strbuf *sb, const char *s, int len);
 // idea: could be renamed to strbuf_adds()

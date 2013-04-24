@@ -281,7 +281,7 @@ static void find_prev_and_next_nodes (rbtree_node* n, void* key,
                 *out_next_v=p->value;
             }
             else
-                *out_next_k=*out_prev_v=NULL;
+                *out_next_k=*out_next_v=NULL;
         };
 
         if (out_prev_k)

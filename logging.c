@@ -89,6 +89,11 @@ void L_fds (fds *s, const char * fmt, ...)
     L_fds_va (s, fmt, va);
 };
 
+void L_fds_strbuf (fds *s, strbuf *sb)
+{
+    L_fds (s, "%s", sb->buf);
+};
+
 void L_once_va (const char * fmt, va_list va)
 {
     strbuf sb=STRBUF_INIT;

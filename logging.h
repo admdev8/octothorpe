@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <stdint.h>
 #include "bool.h"
+#include "strbuf.h"
 
 #ifdef  __cplusplus
 extern "C" {
@@ -30,6 +31,7 @@ void L_va (const char * fmt, va_list va);
 void L_fds_va (fds *s, const char * fmt, va_list va);
 void L (const char * fmt, ...);
 void L_fds (fds *s, const char * fmt, ...);
+void L_fds_strbuf (fds *s, strbuf *sb);
 //void L (int level, string s);
 //void L (string s);
 void L_once_va (const char * fmt, va_list va);

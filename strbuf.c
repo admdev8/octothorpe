@@ -30,6 +30,12 @@ void strbuf_deinit(strbuf *sb)
         DFREE(sb->buf);
 };
 
+void strbuf_reinit(strbuf *sb, size_t size)
+{
+    strbuf_deinit (sb);
+    strbuf_init (sb, size);
+};
+
 void strbuf_grow (strbuf *sb, size_t size)
 {
     char* new_buf;
