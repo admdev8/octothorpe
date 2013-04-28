@@ -2,7 +2,7 @@ CC=gcc
 CFLAGS=-Wall -D_DEBUG -g
 COMPILE_ONLY_CFLAGS=-c -Wall -D_DEBUG -g
 LDFLAGS=
-SOURCES=dmalloc.c memutils.c rbtree.c rand.c strbuf.c stuff.c logging.c x86.c string_list.c
+SOURCES=dmalloc.c memutils.c rbtree.c rand.c strbuf.c stuff.c logging.c x86.c string_list.c elf.c
 TEST_SOURCES=testrbtree.c strbuf_test.c logging_test.c dmalloc_test.c test-regex.c string_list_test.c
 OBJECTS=$(SOURCES:.c=.o)
 TEST_OBJECTS=$(TEST_SOURCES:.c=.o)

@@ -1,5 +1,8 @@
 #include "elf.h"
 
+#include "stuff.h"
+#include "bitfields.h"
+
 bool elf_chk_header(uint8_t *buf)
 {
     Elf32_Ehdr *hdr=elf_get_ptr_to_hdr(buf);
@@ -70,7 +73,6 @@ char *elf_get_str_from_strtab(uint8_t* buf,int sect_n,int idx)
 
 Elf32_Half elf_find_symtab_section (uint8_t *buf)
 {
-    Elf32_Ehdr *hdr=elf_get_ptr_to_hdr(buf);
     Elf32_Half i;
 
     // enumerate sections to find symbol table
@@ -308,7 +310,6 @@ uint8_t *elf_get_ptr_to_symbol_start(uint8_t* buf, Elf32_Sym *s)
 uint8_t *elf_get_ptr_to_symbol_start_by_name(uint8_t* buf, const char *name)
 {
     Elf32_Sym *s;
-    uint32_t r;
 
     s=elf_find_symbol_by_name(buf, name);
     if (s==NULL)
