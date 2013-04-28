@@ -3,6 +3,26 @@
 #include "stuff.h"
 #include "bitfields.h"
 
+// Offsets within the Ehdr e_ident field.
+
+const int EI_MAG0 = 0;
+const int EI_MAG1 = 1;
+const int EI_MAG2 = 2;
+const int EI_MAG3 = 3;
+const int EI_CLASS = 4;
+const int EI_DATA = 5;
+const int EI_VERSION = 6;
+const int EI_OSABI = 7;
+const int EI_ABIVERSION = 8;
+const int EI_PAD = 9;
+
+// The valid values found in Ehdr e_ident[EI_MAG0 through EI_MAG3].
+
+const int ELFMAG0 = 0x7f;
+const int ELFMAG1 = 'E';
+const int ELFMAG2 = 'L';
+const int ELFMAG3 = 'F';
+
 bool elf_chk_header(uint8_t *buf)
 {
     Elf32_Ehdr *hdr=elf_get_ptr_to_hdr(buf);
@@ -369,16 +389,16 @@ Elf32_Rel *elf_find_reloc_for_sect_and_ofs_in_buf (uint8_t* buf, int sect_n, uin
     return rt;
 };
 
-char *elf_can_this_tetrabyte_be_ptr_to (uint8_t *buf, int this_sect_n, uint8_t* point)
+char *elf_can_this_tetrabyte_be_ptr_to (uint8_t *buf, int this_sect_n, uint32_t* point)
 {
     Elf32_Rel *r;
     Elf32_Sym *sym;
 
-    r=elf_find_reloc_for_sect_and_ofs_in_buf (buf, this_sect_n, point, &sym); 
+    r=elf_find_reloc_for_sect_and_ofs_in_buf (buf, this_sect_n, (uint8_t*)point, &sym); 
     if (r==NULL) // no reloc here
         return NULL; // yet
 
     assert (ELF32_R_TYPE(r->r_info)==R_386_32);
 
-    return elf_get_ptr_to_symbol_start (buf, sym) + *(uint32_t*)point;
+    return elf_get_ptr_to_symbol_start (buf, sym) + *point;
 };

@@ -56,26 +56,6 @@ typedef struct {
 
 #pragma pack(pop)
 
-// Offsets within the Ehdr e_ident field.
-
-const int EI_MAG0 = 0;
-const int EI_MAG1 = 1;
-const int EI_MAG2 = 2;
-const int EI_MAG3 = 3;
-const int EI_CLASS = 4;
-const int EI_DATA = 5;
-const int EI_VERSION = 6;
-const int EI_OSABI = 7;
-const int EI_ABIVERSION = 8;
-const int EI_PAD = 9;
-
-// The valid values found in Ehdr e_ident[EI_MAG0 through EI_MAG3].
-
-const int ELFMAG0 = 0x7f;
-const int ELFMAG1 = 'E';
-const int ELFMAG2 = 'L';
-const int ELFMAG3 = 'F';
-
 // The valid values found in Ehdr e_ident[EI_CLASS].
 
 enum

@@ -45,7 +45,7 @@ uint8_t *elf_get_ptr_to_symbol_start_by_name(uint8_t* buf, const char *name);
 uint32_t elf_get_uint32_from_symbol_or_die(uint8_t* buf, const char *name);
 Elf32_Rel* elf_find_reloc_for_sect_and_ofs (uint8_t* buf, int sect_n, Elf32_Addr offset);
 Elf32_Rel *elf_find_reloc_for_sect_and_ofs_in_buf (uint8_t* buf, int sect_n, uint8_t *ofs_in_buf, Elf32_Sym **outsym);
-char *elf_can_this_tetrabyte_be_ptr_to (uint8_t *buf, int this_sect_n, uint8_t* point);
+char *elf_can_this_tetrabyte_be_ptr_to (uint8_t *buf, int this_sect_n, uint32_t* point);
 
 #ifdef  __cplusplus
 }
