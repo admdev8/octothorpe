@@ -9,8 +9,8 @@
 
 #include <stdio.h>
 #include <stdint.h>
-
-#include "bool.h"
+#include <stdarg.h>
+#include <stdbool.h>
 
 #ifdef  __cplusplus
 extern "C" {
@@ -39,7 +39,7 @@ void strbuf_addc (strbuf *sb, char c);
 void strbuf_vaddf (strbuf *sb, const char *fmt, va_list va);
 void strbuf_addf (strbuf *sb, const char *fmt, ...);
 void strbuf_puts (strbuf *sb);
-BOOL strbuf_replace_if_possible (strbuf *sb, const char *s1, const char *s2);
+bool strbuf_replace_if_possible (strbuf *sb, const char *s1, const char *s2);
 
 void make_uint32_compact (uint32_t a, strbuf* out);
 void make_uint64_compact (uint64_t a, strbuf* out);
@@ -47,11 +47,11 @@ void make_SIZE_T_compact (size_t a, strbuf* out);
 
 void strbuf_asmhex(strbuf *out, uint64_t v);
 
-void strbuf_addc_C_escaped (strbuf *s, char c, BOOL treat_any_as_binary);
-void strbuf_cvt_to_C_string (strbuf *s, strbuf *out, BOOL treat_as_binary);
+void strbuf_addc_C_escaped (strbuf *s, char c, bool treat_any_as_binary);
+void strbuf_cvt_to_C_string (strbuf *s, strbuf *out, bool treat_as_binary);
 void env_vars_expansion(strbuf *sb);
 
-// TODO: BOOL strbuf_eq
+// TODO: bool strbuf_eq
 
 #ifdef  __cplusplus
 }

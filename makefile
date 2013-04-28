@@ -1,25 +1,39 @@
-C_OBJS=dmalloc.obj memutils.obj rbtree.obj rand.obj strbuf.obj stuff.obj logging.obj x86.obj string_list.obj
-GNU_REGEX_C_OBJS=regex.obj
-ASM_OBJS=FPU_stuff_asm.obj
-TEST_EXECS=testrbtree.exe strbuf_test.exe logging_test.exe dmalloc_test.exe test-regex.exe string_list_test.exe
+CC=gcc
+CFLAGS=-Wall -D_DEBUG -g
+COMPILE_ONLY_CFLAGS=-c -Wall -D_DEBUG -g
+LDFLAGS=
+SOURCES=dmalloc.c memutils.c rbtree.c rand.c strbuf.c stuff.c logging.c x86.c string_list.c
+TEST_SOURCES=testrbtree.c strbuf_test.c logging_test.c dmalloc_test.c test-regex.c string_list_test.c
+OBJECTS=$(SOURCES:.c=.o)
+TEST_OBJECTS=$(TEST_SOURCES:.c=.o)
+TEST_EXECS=$(TEST_SOURCES:.c=.exe)
+LIBRARY=octothorped.a
 
-$(C_OBJS): $(@B).c $(@B).h
-    cl.exe $(@B).c /D_DEBUG /c /Zi
-
-$(GNU_REGEX_C_OBJS): $(@B).c
-    cl.exe $(@B).c /D_DEBUG /DUSE_DMALLOC /c /Zi
-#    cl.exe $(@B).c /D_DEBUG /c /Zi
-
-$(ASM_OBJS): $(@B).asm $(@B).h
-    ml.exe $(@B).asm /c
-
-octothorped.lib: $(C_OBJS) $(ASM_OBJS) $(GNU_REGEX_C_OBJS)
-	lib.exe $(C_OBJS) $(ASM_OBJS) $(GNU_REGEX_C_OBJS) /OUT:octothorped.lib
-
-$(TEST_EXECS): $(@B).c
-    cl $(@B).c /Zi /D_DEBUG octothorped.lib
-
-all: octothorped.lib $(TEST_EXECS)
-
+all: $(LIBRARY) $(TEST_EXECS)
+	
 clean:
-	del *.lib *.exe *.obj
+	rm *.o
+	rm *.a
+	rm *.exe
+
+$(LIBRARY): $(OBJECTS) regex.o
+	ar -mc $(LIBRARY) $(OBJECTS) regex.o
+
+regex.o: regex.c
+	$(CC) $(COMPILE_ONLY_CFLAGS) regex.c -DUSE_DMALLOC -o $@
+
+.c.o:
+	$(CC) $(COMPILE_ONLY_CFLAGS) $< -o $@
+
+testrbtree.exe:
+	$(CC) $(CFLAGS) testrbtree.c $(LIBRARY) -o $@
+strbuf_test.exe:
+	$(CC) $(CFLAGS) strbuf_test.c $(LIBRARY) -o $@
+logging_test.exe:
+	$(CC) $(CFLAGS) logging_test.c $(LIBRARY) -o $@
+dmalloc_test.exe:
+	$(CC) $(CFLAGS) dmalloc_test.c $(LIBRARY) -o $@
+test-regex.exe:
+	$(CC) $(CFLAGS) test-regex.c $(LIBRARY) -o $@
+string_list_test.exe:
+	$(CC) $(CFLAGS) string_list_test.c $(LIBRARY) -o $@

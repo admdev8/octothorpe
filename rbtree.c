@@ -155,7 +155,7 @@ static struct rbtree_node_t* rbtree_maximum_helper(struct rbtree_node_t* n)
         return n;
 };
 
-rbtree* rbtree_create(BOOL use_dmalloc, const char *struct_name, compare_func compare) 
+rbtree* rbtree_create(bool use_dmalloc, const char *struct_name, compare_func compare) 
 {
     rbtree* t;
 
@@ -763,7 +763,7 @@ void rbtree_copy (rbtree* t, rbtree* new_t, void* (*key_copier)(void*), void* (*
     };
 };
 
-BOOL rbtree_empty (rbtree* t)
+bool rbtree_empty (rbtree* t)
 {
-    return t->root==NULL ? TRUE : FALSE;
+    return t->root==NULL ? true : false;
 };

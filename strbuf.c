@@ -1,8 +1,10 @@
-#include "strbuf.h"
-#include "dmalloc.h"
 #include <stdarg.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <assert.h>
+
+#include "strbuf.h"
+#include "dmalloc.h"
 #include "stuff.h"
 
 char* strbuf_dummybuf="\x00";
@@ -40,7 +42,7 @@ void strbuf_grow (strbuf *sb, size_t size)
 {
     char* new_buf;
 
-    //printf (__FUNCTION__"() size=%d\n", size);
+    //printf (__func__"() size=%d\n", size);
 
     if (size < (sb->buflen - sb->strlen))
     {
@@ -93,14 +95,14 @@ void strbuf_addc (strbuf *sb, char c)
     sb->buf[sb->strlen]=0;
 };
 
-BOOL strbuf_replace_if_possible (strbuf *sb, const char *s1, const char *s2)
+bool strbuf_replace_if_possible (strbuf *sb, const char *s1, const char *s2)
 {
     char *t=strstr (sb->buf, s1);
     char *newbuf;
     unsigned newbuf_cursize=0, newbuf_newsize;
 
     if (t==NULL)
-        return FALSE;
+        return false;
     
     // now rebuild buf
 
@@ -124,16 +126,20 @@ BOOL strbuf_replace_if_possible (strbuf *sb, const char *s1, const char *s2)
     sb->buflen=newbuf_newsize;
     sb->strlen=newbuf_newsize-1;
 
-    return TRUE;
+    return true;
 };
 
 void strbuf_vaddf (strbuf *sb, const char *fmt, va_list va)
 {
-   size_t sz=_vscprintf (fmt, va); // MSVC-specific
+   size_t sz=_vscprintf (fmt, va); // MSVC-specific?
 
    strbuf_grow(sb, sz);
-   
+
+#ifdef _MSC_VER   
    if (vsnprintf_s (sb->buf + sb->strlen, sz+1, sz, fmt, va)==-1) // MSVC-specific
+#else
+   if (vsnprintf (sb->buf + sb->strlen, sz, fmt, va)==-1)
+#endif
    {
        assert(0);
    };
@@ -192,7 +198,7 @@ void strbuf_puts (strbuf *sb)
     puts (sb->buf);
 };
 
-void strbuf_addc_C_escaped (strbuf *s, char c, BOOL treat_any_as_binary)
+void strbuf_addc_C_escaped (strbuf *s, char c, bool treat_any_as_binary)
 {
     if (treat_any_as_binary)
         strbuf_addf (s, "\\x%02X", c);
@@ -222,7 +228,7 @@ void strbuf_addc_C_escaped (strbuf *s, char c, BOOL treat_any_as_binary)
     };
 };
 
-void strbuf_cvt_to_C_string (strbuf *s, strbuf *out, BOOL treat_as_binary)
+void strbuf_cvt_to_C_string (strbuf *s, strbuf *out, bool treat_as_binary)
 {
     size_t i;
 

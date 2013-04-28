@@ -27,7 +27,7 @@
 #include <string.h>
 
 #ifndef _MSC_VER
-#include <langinfo.h>
+//#include <langinfo.h>
 #endif
 
 #include <locale.h>

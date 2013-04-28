@@ -1,15 +1,18 @@
 #include <assert.h>
+#include <memory.h>
+#include <stdlib.h>
 
 #include "logging.h"
 #include "dmalloc.h"
 #include "rbtree.h"
 #include "strbuf.h"
+#include "stuff.h"
 
 // rationale: writting to both stdout and log-file
 fds cur_fds={ NULL, NULL };
 
-BOOL L_timestamp=FALSE;
-BOOL L_quiet=FALSE;
+bool L_timestamp=false;
+bool L_quiet=false;
 
 // set actually is here
 rbtree *once_was_printed=NULL;
@@ -51,13 +54,16 @@ void L_va (const char * fmt, va_list va)
 
 void L_fds_va (fds *s, const char * fmt, va_list va)
 {
+#ifdef _MSC_VER
     SYSTEMTIME t; // win32 only yet
+#endif
 
     if (L_quiet)
         return;
 
     if (L_timestamp)
     {
+#ifdef _MSC_VER
         GetLocalTime (&t);
         if (s->fd1)
             fprintf (s->fd1, "[%04d-%02d-%02d %02d:%02d:%02d:%03d]", 
@@ -65,6 +71,9 @@ void L_fds_va (fds *s, const char * fmt, va_list va)
         if (s->fd2)
             fprintf (s->fd2, "[%04d-%02d-%02d %02d:%02d:%02d:%03d]", 
                     t.wYear, t.wMonth, t.wDay, t.wHour, t.wMinute, t.wSecond, t.wMilliseconds);
+#else
+       assert(!"to be implemented!");
+#endif
     };
 
     if (s->fd1)
@@ -101,11 +110,11 @@ void L_once_va (const char * fmt, va_list va)
     char *s;
 
     if (once_was_printed==NULL)
-        once_was_printed=rbtree_create(TRUE, "rbtree: once_was_printed", strcmp);
+        once_was_printed=rbtree_create(true, "rbtree: once_was_printed", strcmp);
 
     strbuf_vaddf(&sb, fmt, va);
     
-    //printf (__FUNCTION__"() sb=");
+    //printf (__func__"() sb=");
     //strbuf_puts (&sb);
     
     found=rbtree_lookup(once_was_printed, sb.buf);
@@ -184,7 +193,7 @@ void L_print_bufs_diff (uint8_t *buf1, uint8_t *buf2, size_t size)
     size_t pos=0;
     unsigned starting_offset=0;
     unsigned i;
-    BOOL dots_printed=FALSE;
+    bool dots_printed=false;
 
     while (size-pos)
     {
@@ -230,14 +239,14 @@ void L_print_bufs_diff (uint8_t *buf1, uint8_t *buf2, size_t size)
                     L (" ");
 
             L ("\"\n");
-            dots_printed=FALSE;
+            dots_printed=false;
         }
         else
         {
-            if (dots_printed==FALSE)
+            if (dots_printed==false)
             {
                 L (" ... \n");
-                dots_printed=TRUE;
+                dots_printed=true;
             };
         };
         pos+=wpn;

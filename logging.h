@@ -2,7 +2,9 @@
 
 #include <stdio.h>
 #include <stdint.h>
-#include "bool.h"
+#include <stdarg.h>
+#include <stdbool.h>
+
 #include "strbuf.h"
 
 #ifdef  __cplusplus
@@ -20,8 +22,8 @@ typedef struct _fds
 // taken from z3\src\util\util.h
 //#define IF_VERBOSE(LVL, CODE) { if (L_verbose_level >= LVL) { CODE } } ((void) 0)
 
-extern BOOL L_timestamp;
-extern BOOL L_quiet;
+extern bool L_timestamp;
+extern bool L_quiet;
 extern fds cur_fds;
 
 //string gen_timestamp();

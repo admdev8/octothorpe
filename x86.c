@@ -1,8 +1,13 @@
 #include <assert.h>
+#include <stdint.h>
 
 #include "x86.h"
-
+#include <ctype.h>
 #include "bitfields.h"
+
+#ifdef __GNUC__ 
+#include <cpuid.h>
+#endif
 
 void flags_to_str (uint32_t flags, strbuf *out)
 {
@@ -161,7 +166,7 @@ void FSW_to_str (uint16_t a, strbuf *out)
 void XMM_to_strbuf (uint8_t* p, strbuf *sb)
 {
     int i;
-    BYTE a;
+    uint8_t a;
 
     strbuf_addstr(sb, "0x");
     //	double d;
@@ -189,20 +194,34 @@ void XMM_to_strbuf (uint8_t* p, strbuf *sb)
     //		rt+=strfmt ("lowpart=%lf", d);
 };
 
-BOOL sse_supported()
+bool sse_supported()
 {
+#ifdef _MSC_VER
     int b[4];
     __cpuid(b,1);
     if (b[3] & (1<<25)) // EDX, bit 25
-        return TRUE;
-    return FALSE;
+        return true;
+#else
+    int a, b, c, d;
+    __cpuid(1, a, b, c, d);
+    if (c & (1<<25)) // EDX, bit 25
+        return true;
+#endif
+    return false;
 };
 
-BOOL sse2_supported()
+bool sse2_supported()
 {
+#ifdef _MSC_VER
     int b[4];
     __cpuid(b,1);
     if (b[3] & (1<<26)) // EDX, bit 26
-        return TRUE;
-    return FALSE;
+        return true;
+#else
+    int a, b, c, d;
+    __cpuid(1, a, b, c, d);
+    if (c & (1<<26)) // EDX, bit 26
+        return true;
+#endif
+    return false;
 };

@@ -19,7 +19,7 @@
 
 #ifndef _LIBC
 #ifndef _MSC_VER
-# include <config.h>
+//# include <config.h>
 #endif
 
 # if (__GNUC__ == 4 && 6 <= __GNUC_MINOR__) || 4 < __GNUC__

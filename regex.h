@@ -23,10 +23,10 @@
 
 #include <sys/types.h>
 
-#ifdef _MSC_VER
+//#ifdef _MSC_VER
 #define __USE_GNU
 #include <stdio.h>
-#endif
+//#endif
 
 #ifdef USE_DMALLOC
 #include "dmalloc.h"

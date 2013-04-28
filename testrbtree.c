@@ -1,9 +1,10 @@
-#include "rbtree.h"
 #include <stdio.h>
 #include <assert.h>
 #include <stdlib.h> /* rand() */
 #include <stdint.h>
+
 #include "dmalloc.h"
+#include "rbtree.h"
 
 int compare_uint32_t(void* leftp, void* rightp) 
 {
@@ -50,8 +51,8 @@ void* value_copier(void *v)
 int main() 
 {
     int i;
-    rbtree* t = rbtree_create(TRUE, "test", compare_uint32_t);
-    rbtree* new_t = rbtree_create(TRUE, "new_test", compare_uint32_t);
+    rbtree* t = rbtree_create(true, "test", compare_uint32_t);
+    rbtree* new_t = rbtree_create(true, "new_test", compare_uint32_t);
     rbtree* t2;
     void *key_prev, *value_prev, *key_next, *value_next;
 
@@ -92,7 +93,7 @@ int main()
     // test 2
     printf ("test 2 (lower/upper bounds)\n");
 
-    t2=rbtree_create(TRUE, "test", compare_uint32_t);
+    t2=rbtree_create(true, "test", compare_uint32_t);
 
     //rbtree_insert (t2, (void*)0, "");
     rbtree_insert (t2, (void*)50, "value 50");

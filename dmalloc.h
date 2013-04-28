@@ -11,21 +11,21 @@ extern "C" {
 
 #ifdef _DEBUG
 void* dmalloc (size_t size, const char * filename, unsigned line, const char * function, const char * structname);
-#define DMALLOC(type, size, comment) ((type*)dmalloc(sizeof(type)*size, __FILE__, __LINE__, __FUNCTION__, comment))
+#define DMALLOC(type, size, comment) ((type*)dmalloc(sizeof(type)*size, __FILE__, __LINE__, __func__, comment))
 #else
 #define DMALLOC(type, size, comment) ((type*)malloc(sizeof(type)*size))
 #endif
 
 #ifdef _DEBUG
 void* drealloc (void* ptr, size_t size, const char * filename, unsigned line, const char * function, const char * structname);
-#define DREALLOC(ptr, type, size, comment) ((type*)drealloc(ptr, sizeof(type)*size, __FILE__, __LINE__, __FUNCTION__, comment))
+#define DREALLOC(ptr, type, size, comment) ((type*)drealloc(ptr, sizeof(type)*size, __FILE__, __LINE__, __func__, comment))
 #else
 #define DREALLOC(ptr, type, size, comment) ((type*)drealloc(ptr, sizeof(type)*size))
 #endif
 
 #ifdef _DEBUG
 void* dcalloc (size_t size, const char * filename, unsigned line, const char * function, const char * structname);
-#define DCALLOC(type, size, comment) ((type*)dcalloc(sizeof(type)*size, __FILE__, __LINE__, __FUNCTION__, comment))
+#define DCALLOC(type, size, comment) ((type*)dcalloc(sizeof(type)*size, __FILE__, __LINE__, __func__, comment))
 #else
 #define DCALLOC(type, size, comment) ((type*)calloc(size, sizeof(type)))
 #endif
@@ -41,14 +41,14 @@ void dfree (void* ptr);
 
 #ifdef _DEBUG
 char* dstrdup (const char *s, const char * filename, unsigned line, const char * function, const char * structname);
-#define DSTRDUP(size,comment) (dstrdup(size, __FILE__, __LINE__, __FUNCTION__, comment))
+#define DSTRDUP(size,comment) (dstrdup(size, __FILE__, __LINE__, __func__, comment))
 #else
 #define DSTRDUP(size,comment) (strdup(size))
 #endif
 
 void* dmemdup (void *p, size_t s, const char * filename, unsigned line, const char * function, const char * structname);
 
-#define DMEMDUP(ptr,size,comment) (dmemdup(ptr, size, __FILE__, __LINE__, __FUNCTION__, comment))
+#define DMEMDUP(ptr,size,comment) (dmemdup(ptr, size, __FILE__, __LINE__, __func__, comment))
 
 void dump_unfreed_blocks();
 void dmalloc_deinit();

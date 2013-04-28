@@ -28,11 +28,11 @@ Retrieved from: http://en.literateprograms.org/Red-black_tree_(C)?oldid=18555
 
 #pragma once
 
-#include "bool.h"
-
 #ifdef  __cplusplus
 extern "C" {
 #endif
+
+#include <stdbool.h>
 
 enum rbtree_node_color { RED, BLACK };
 
@@ -59,7 +59,7 @@ typedef struct rbtree_t
     rbtree_node *root;
     
     // use DMALLOC? if so, pass debug string
-    BOOL use_dmalloc:8;
+    bool use_dmalloc/*:8*/;
     const char *struct_name;
 
     compare_func cmp_func;
@@ -71,7 +71,7 @@ typedef struct rbtree_t
 } rbtree;
 //#pragma pack(pop)
 
-rbtree *rbtree_create(BOOL use_dmalloc, const char *struct_name, compare_func compare);
+rbtree *rbtree_create(bool use_dmalloc, const char *struct_name, compare_func compare);
 void rbtree_clear(rbtree* t);
 
 void* rbtree_lookup(rbtree* t, void* key);
@@ -100,7 +100,7 @@ struct rbtree_node_t *rbtree_pred(struct rbtree_node_t* x);
 
 void rbtree_copy (rbtree* t, rbtree* new_t, void* (*key_copier)(void*), void* (*value_copier)(void*));
 
-BOOL rbtree_empty (rbtree* t);
+bool rbtree_empty (rbtree* t);
 
 #ifdef  __cplusplus
 }

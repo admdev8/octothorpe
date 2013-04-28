@@ -2,7 +2,7 @@
 #include "dmalloc.h"
 #include <stdio.h>
 
-void main()
+int main()
 {
     //strbuf s;
     //strbuf_init (&s, 3);
@@ -47,4 +47,6 @@ void main()
     strbuf_deinit(&s);
     dump_unfreed_blocks();
     dmalloc_deinit();
+
+    return 0;
 };
