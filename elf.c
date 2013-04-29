@@ -384,7 +384,7 @@ Elf32_Rel *elf_find_reloc_for_sect_and_ofs_in_buf (byte* buf, int sect_n, byte *
     
     rt=elf_find_reloc_for_sect_and_ofs (buf, sect_n, ofs);
 
-    if (outsym)
+    if (rt && outsym)
         *outsym=elf_get_n_symbol (buf, ELF32_R_SYM(rt->r_info));
     return rt;
 };
@@ -401,4 +401,15 @@ char *elf_can_this_tetrabyte_be_ptr_to (byte *buf, int this_sect_n, tetrabyte* p
     assert (ELF32_R_TYPE(r->r_info)==R_386_32);
 
     return elf_get_ptr_to_symbol_start (buf, sym) + *point;
+};
+
+// used for qsort()
+int elf_cmp_sizes(const void *_p1, const void *_p2)
+{
+    const Elf32_Sym *p1=(const Elf32_Sym*)_p1;
+    const Elf32_Sym *p2=(const Elf32_Sym*)_p2;
+
+    if (p1->st_size==p2->st_size) return 0;
+    if (p1->st_size>p2->st_size) return -1;
+    if (p1->st_size<p2->st_size) return 1;
 };
