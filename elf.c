@@ -83,12 +83,13 @@ void elf_dump_hdr (byte *buf)
 
 byte* elf_get_ptr_to_section_start(byte* buf, int n)
 {
+    assert (n < elf_get_sections_total(buf));
     return buf + elf_get_ptr_to_section_struc (buf, n)->sh_offset;
 };
 
 char *elf_get_str_from_strtab(byte* buf,int sect_n,int idx)
 {
-    return elf_get_ptr_to_section_start(buf,sect_n) + idx;
+    return (char*)(elf_get_ptr_to_section_start(buf,sect_n) + idx);
 };
 
 Elf32_Half elf_find_symtab_section (byte *buf)
@@ -109,6 +110,7 @@ Elf32_Half elf_find_symtab_section (byte *buf)
     };
 
     die ("symbol table is not found!\n");
+    return 0; // make compiler happy
 };
 
 char* elf_get_str_from_shstr(byte* buf, int idx)
@@ -283,6 +285,28 @@ Elf32_Sym *elf_find_symbol_by_name (byte* buf, const char *name)
     return NULL;
 };
 
+Elf32_Sym *elf_find_symbol_by_sect_and_offset (byte* buf, int sect_n, byte* point)
+{
+    int i;
+    Elf32_Sym * s;
+    Elf32_Addr value_should_be=point - elf_get_ptr_to_section_start(buf, sect_n); 
+    unsigned symbols_total=elf_get_symbols_total(buf);
+    unsigned sections_total=elf_get_sections_total(buf);
+#if 0
+    printf ("%s() value_should_be=0x%x\n", __func__, value_should_be);
+    printf ("point=0x%x, buf=0x%x, elf_get_ptr_to_section_start()=0x%x sect_n=%d\n",
+            point, buf, elf_get_ptr_to_section_start(buf, sect_n), sect_n);
+#endif
+    for (i=0,s=elf_get_first_symbol(buf); i<symbols_total; i++, s++)
+        if ((s->st_shndx < sections_total) &&
+                (s->st_shndx==sect_n) &&
+                (s->st_value==value_should_be))
+            return s;
+
+    // not found
+    return NULL;
+};
+
 void elf_dump_all_sections(byte *buf)
 {
     int i;
@@ -389,7 +413,7 @@ Elf32_Rel *elf_find_reloc_for_sect_and_ofs_in_buf (byte* buf, int sect_n, byte *
     return rt;
 };
 
-char *elf_can_this_tetrabyte_be_ptr_to (byte *buf, int this_sect_n, tetrabyte* point)
+byte *elf_can_this_tetrabyte_be_ptr_to (byte *buf, int this_sect_n, tetrabyte* point)
 {
     Elf32_Rel *r;
     Elf32_Sym *sym;
@@ -409,12 +433,34 @@ int elf_cmp_sizes_asc(const void *_p1, const void *_p2)
     const Elf32_Sym *p1=(const Elf32_Sym*)_p1;
     const Elf32_Sym *p2=(const Elf32_Sym*)_p2;
 
-    if (p1->st_size==p2->st_size) return 0;
     if (p1->st_size>p2->st_size) return 1;
     if (p1->st_size<p2->st_size) return -1;
+    return 0;
 };
 
 int elf_cmp_sizes_desc(const void *_p1, const void *_p2)
 {
-    elf_cmp_sizes_asc(_p2, _p1);
+    return elf_cmp_sizes_asc(_p2, _p1);
+};
+
+static const char *rel_type[]=
+{
+    "R_386_NONE",
+    "R_386_32",
+    "R_386_PC32",
+    "R_386_GOT32",
+    "R_386_PLT32",
+    "R_386_COPY",
+    "R_386_GLOB_DAT",
+    "R_386_JMP_SLOT",
+    "R_386_RELATIVE",
+    "R_386_GOTOFF",
+    "R_386_GOTPC",
+    "R_386_NUM"
+};
+const char *elf_rel_type_to_string(int t)
+{
+    if (t>R_386_NUM)
+        return "?";
+    return rel_type[t];
 };
