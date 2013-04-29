@@ -49,7 +49,8 @@ Elf32_Rel *elf_find_reloc_for_sect_and_ofs_in_buf (byte* buf, int sect_n, byte *
 char *elf_can_this_tetrabyte_be_ptr_to (byte *buf, int this_sect_n, tetrabyte* point);
 
 // used for qsort()
-int elf_cmp_sizes(const void *_p1, const void *_p2);
+int elf_cmp_sizes_asc(const void *_p1, const void *_p2);
+int elf_cmp_sizes_desc(const void *_p1, const void *_p2);
 
 #ifdef  __cplusplus
 }

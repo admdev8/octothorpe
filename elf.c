@@ -404,12 +404,17 @@ char *elf_can_this_tetrabyte_be_ptr_to (byte *buf, int this_sect_n, tetrabyte* p
 };
 
 // used for qsort()
-int elf_cmp_sizes(const void *_p1, const void *_p2)
+int elf_cmp_sizes_asc(const void *_p1, const void *_p2)
 {
     const Elf32_Sym *p1=(const Elf32_Sym*)_p1;
     const Elf32_Sym *p2=(const Elf32_Sym*)_p2;
 
     if (p1->st_size==p2->st_size) return 0;
-    if (p1->st_size>p2->st_size) return -1;
-    if (p1->st_size<p2->st_size) return 1;
+    if (p1->st_size>p2->st_size) return 1;
+    if (p1->st_size<p2->st_size) return -1;
+};
+
+int elf_cmp_sizes_desc(const void *_p1, const void *_p2)
+{
+    elf_cmp_sizes_asc(_p2, _p1);
 };
