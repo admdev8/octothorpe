@@ -1,5 +1,6 @@
 #include <assert.h>
-#include <stdint.h>
+
+#include "datatypes.h"
 
 #include "x86.h"
 #include <ctype.h>
@@ -9,7 +10,7 @@
 #include <cpuid.h>
 #endif
 
-void flags_to_str (uint32_t flags, strbuf *out)
+void flags_to_str (tetrabyte flags, strbuf *out)
 {
     u_EFLAGS uf;
     uf.flags=flags;
@@ -38,7 +39,7 @@ void flags_to_str (uint32_t flags, strbuf *out)
     // TODO trim right part
 };
 
-void dump_flags (fds *s, uint32_t flags)
+void dump_flags (fds *s, tetrabyte flags)
 {
     strbuf sb = STRBUF_INIT;
     flags_to_str(flags, &sb);
@@ -48,7 +49,7 @@ void dump_flags (fds *s, uint32_t flags)
     strbuf_deinit (&sb);
 };
 
-void DR7_to_str (uint32_t DR7, strbuf* out)
+void DR7_to_str (tetrabyte DR7, strbuf* out)
 {
     strbuf_addf(out, "%s%s%s%s%s%s%s%s%s%s%sR/W0=%d%d LEN0=%d%d R/W1=%d%d LEN1=%d%d R/W2=%d%d LEN2=%d%d R/W3=%d%d LEN3=%d%d", 
             IS_SET (DR7, 1<<0) ? "L0 " : "   ",
@@ -73,7 +74,7 @@ void DR7_to_str (uint32_t DR7, strbuf* out)
             IS_SET (DR7, 1<<30) ? 1 : 0, IS_SET (DR7, 1<<31) ? 1 : 0); // LEN3
 };
 
-void dump_DR7 (fds* s, uint32_t DR7)
+void dump_DR7 (fds* s, tetrabyte DR7)
 {
     strbuf sb=STRBUF_INIT;
     DR7_to_str(DR7, &sb);
@@ -81,7 +82,7 @@ void dump_DR7 (fds* s, uint32_t DR7)
     strbuf_deinit(&sb);
 };
 
-void MXCSR_to_str (uint32_t a, strbuf *out)
+void MXCSR_to_str (tetrabyte a, strbuf *out)
 {
     if (IS_SET (a, 1<<15)) strbuf_addstr(out, "FZ ");
 
@@ -163,10 +164,10 @@ void FSW_to_str (uint16_t a, strbuf *out)
 };
 
 // old dump_XMM
-void XMM_to_strbuf (uint8_t* p, strbuf *sb)
+void XMM_to_strbuf (byte* p, strbuf *sb)
 {
     int i;
-    uint8_t a;
+    byte a;
 
     strbuf_addstr(sb, "0x");
     //	double d;

@@ -5,25 +5,25 @@
 
 // Offsets within the Ehdr e_ident field.
 
-const int EI_MAG0 = 0;
-const int EI_MAG1 = 1;
-const int EI_MAG2 = 2;
-const int EI_MAG3 = 3;
-const int EI_CLASS = 4;
-const int EI_DATA = 5;
-const int EI_VERSION = 6;
-const int EI_OSABI = 7;
-const int EI_ABIVERSION = 8;
-const int EI_PAD = 9;
+#define EI_MAG0 0
+#define EI_MAG1 1
+#define EI_MAG2 2
+#define EI_MAG3 3
+#define EI_CLASS 4
+#define EI_DATA 5
+#define EI_VERSION 6
+#define EI_OSABI 7
+#define EI_ABIVERSION 8
+#define EI_PAD 9
 
 // The valid values found in Ehdr e_ident[EI_MAG0 through EI_MAG3].
 
-const int ELFMAG0 = 0x7f;
-const int ELFMAG1 = 'E';
-const int ELFMAG2 = 'L';
-const int ELFMAG3 = 'F';
+#define ELFMAG0 0x7f
+#define ELFMAG1 'E'
+#define ELFMAG2 'L'
+#define ELFMAG3 'F'
 
-bool elf_chk_header(uint8_t *buf)
+bool elf_chk_header(byte *buf)
 {
     Elf32_Ehdr *hdr=elf_get_ptr_to_hdr(buf);
 
@@ -65,7 +65,7 @@ bool elf_chk_header(uint8_t *buf)
     return true;
 };
 
-void elf_dump_hdr (uint8_t *buf)
+void elf_dump_hdr (byte *buf)
 {
     Elf32_Ehdr *hdr=elf_get_ptr_to_hdr(buf);
 
@@ -81,17 +81,17 @@ void elf_dump_hdr (uint8_t *buf)
     printf ("hdr->e_shstrndx=%d\n",  hdr->e_shstrndx);
 };
 
-uint8_t* elf_get_ptr_to_section_start(uint8_t* buf, int n)
+byte* elf_get_ptr_to_section_start(byte* buf, int n)
 {
     return buf + elf_get_ptr_to_section_struc (buf, n)->sh_offset;
 };
 
-char *elf_get_str_from_strtab(uint8_t* buf,int sect_n,int idx)
+char *elf_get_str_from_strtab(byte* buf,int sect_n,int idx)
 {
     return elf_get_ptr_to_section_start(buf,sect_n) + idx;
 };
 
-Elf32_Half elf_find_symtab_section (uint8_t *buf)
+Elf32_Half elf_find_symtab_section (byte *buf)
 {
     Elf32_Half i;
 
@@ -111,12 +111,12 @@ Elf32_Half elf_find_symtab_section (uint8_t *buf)
     die ("symbol table is not found!\n");
 };
 
-char* elf_get_str_from_shstr(uint8_t* buf, int idx)
+char* elf_get_str_from_shstr(byte* buf, int idx)
 {
     return elf_get_str_from_strtab (buf, elf_get_ptr_to_hdr(buf)->e_shstrndx, idx);
 };
 
-void elf_dump_section (uint8_t* buf, Elf32_Shdr *sect)
+void elf_dump_section (byte* buf, Elf32_Shdr *sect)
 {
     printf ("sect->sh_name=%s\n", elf_get_str_from_shstr (buf, sect->sh_name));
     printf ("sect->sh_type=");
@@ -175,13 +175,13 @@ void elf_dump_section (uint8_t* buf, Elf32_Shdr *sect)
     printf ("sect->sh_entsize=%d\n", sect->sh_entsize);
 };
 
-Elf32_Sym *elf_get_n_symbol(uint8_t* buf, int n)
+Elf32_Sym *elf_get_n_symbol(byte* buf, int n)
 {
     assert (n < elf_get_symbols_total(buf));
     return (Elf32_Sym *)elf_get_first_symbol(buf) + n;
 };
 
-void elf_dump_sym (uint8_t* buf, Elf32_Sym *sym)
+void elf_dump_sym (byte* buf, Elf32_Sym *sym)
 {
     char *bnd_s;
     char *typ_s;
@@ -270,7 +270,7 @@ void elf_dump_sym (uint8_t* buf, Elf32_Sym *sym)
             bnd_s, typ_s, sym->st_other, sym->st_shndx);
 };
 
-Elf32_Sym *elf_find_symbol_by_name (uint8_t* buf, const char *name)
+Elf32_Sym *elf_find_symbol_by_name (byte* buf, const char *name)
 {
     int i;
     Elf32_Sym * s;
@@ -283,7 +283,7 @@ Elf32_Sym *elf_find_symbol_by_name (uint8_t* buf, const char *name)
     return NULL;
 };
 
-void elf_dump_all_sections(uint8_t *buf)
+void elf_dump_all_sections(byte *buf)
 {
     int i;
     Elf32_Shdr *s;
@@ -295,7 +295,7 @@ void elf_dump_all_sections(uint8_t *buf)
     };
 };
 
-Elf32_Shdr* elf_find_rel_section_for_section(uint8_t *buf, int sect_n)
+Elf32_Shdr* elf_find_rel_section_for_section(byte *buf, int sect_n)
 {
     int i;
     Elf32_Shdr *s;
@@ -312,7 +312,7 @@ Elf32_Shdr* elf_find_rel_section_for_section(uint8_t *buf, int sect_n)
     return NULL; // rel section not found
 };
 
-void elf_dump_all_symbols (uint8_t *buf)
+void elf_dump_all_symbols (byte *buf)
 {
     int i;
     Elf32_Sym * s;
@@ -322,12 +322,12 @@ void elf_dump_all_symbols (uint8_t *buf)
         elf_dump_sym(buf, s);
 };
 
-uint8_t *elf_get_ptr_to_symbol_start(uint8_t* buf, Elf32_Sym *s)
+byte *elf_get_ptr_to_symbol_start(byte* buf, Elf32_Sym *s)
 {
     return elf_get_ptr_to_section_start(buf, s->st_shndx) + s->st_value;
 };
 
-uint8_t *elf_get_ptr_to_symbol_start_by_name(uint8_t* buf, const char *name)
+byte *elf_get_ptr_to_symbol_start_by_name(byte* buf, const char *name)
 {
     Elf32_Sym *s;
 
@@ -340,18 +340,18 @@ uint8_t *elf_get_ptr_to_symbol_start_by_name(uint8_t* buf, const char *name)
     return elf_get_ptr_to_symbol_start (buf, s);
 };
 
-uint32_t elf_get_uint32_from_symbol_or_die(uint8_t* buf, const char *name)
+tetrabyte elf_get_uint32_from_symbol_or_die(byte* buf, const char *name)
 {
-    uint8_t *s;
+    byte *s;
 
     s=elf_get_ptr_to_symbol_start_by_name(buf, name);
     if (s==0)
         die ("Can't find symbol %s\n", name);
 
-    return *(uint32_t*)s;
+    return *(tetrabyte*)s;
 };
 
-Elf32_Rel* elf_find_reloc_for_sect_and_ofs (uint8_t* buf, int sect_n, Elf32_Addr offset)
+Elf32_Rel* elf_find_reloc_for_sect_and_ofs (byte* buf, int sect_n, Elf32_Addr offset)
 {
     Elf32_Shdr *rel_section;
     int relocs_total, i;
@@ -372,9 +372,9 @@ Elf32_Rel* elf_find_reloc_for_sect_and_ofs (uint8_t* buf, int sect_n, Elf32_Addr
     return NULL;
 };
 
-Elf32_Rel *elf_find_reloc_for_sect_and_ofs_in_buf (uint8_t* buf, int sect_n, uint8_t *ofs_in_buf, Elf32_Sym **outsym)
+Elf32_Rel *elf_find_reloc_for_sect_and_ofs_in_buf (byte* buf, int sect_n, byte *ofs_in_buf, Elf32_Sym **outsym)
 {
-    uint8_t *sect_start;
+    byte *sect_start;
     Elf32_Addr ofs;
     Elf32_Rel *rt;
 
@@ -389,12 +389,12 @@ Elf32_Rel *elf_find_reloc_for_sect_and_ofs_in_buf (uint8_t* buf, int sect_n, uin
     return rt;
 };
 
-char *elf_can_this_tetrabyte_be_ptr_to (uint8_t *buf, int this_sect_n, uint32_t* point)
+char *elf_can_this_tetrabyte_be_ptr_to (byte *buf, int this_sect_n, tetrabyte* point)
 {
     Elf32_Rel *r;
     Elf32_Sym *sym;
 
-    r=elf_find_reloc_for_sect_and_ofs_in_buf (buf, this_sect_n, (uint8_t*)point, &sym); 
+    r=elf_find_reloc_for_sect_and_ofs_in_buf (buf, this_sect_n, (byte*)point, &sym); 
     if (r==NULL) // no reloc here
         return NULL; // yet
 

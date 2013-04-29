@@ -1,19 +1,19 @@
-#include <stdint.h>
 #include <stdarg.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <memory.h>
 #include <assert.h>
 
+#include "datatypes.h"
 #include "stuff.h"
 
 #ifdef _MSC_VER
 #include <intrin.h>
 #endif
 
-unsigned most_significant_hex_number(uint64_t x)
+unsigned most_significant_hex_number(octabyte x)
 {
-    uint64_t t=x;
+    octabyte t=x;
     int i;
 
     // _BitScanReverse64 can be used here, probably (?)
@@ -56,9 +56,9 @@ void print_string_range (char *s, int b, int e)
         putc(s[i], stdout);
 };
 
-uint8_t* load_file_or_die (const char* fname, size_t *fsize)
+byte* load_file_or_die (const char* fname, size_t *fsize)
 {
-    uint8_t* rt;
+    byte* rt;
     FILE* f;
 
     f=fopen (fname, "rb");
@@ -70,7 +70,7 @@ uint8_t* load_file_or_die (const char* fname, size_t *fsize)
 
     *fsize=ftell (f);
     //printf ("*fsize=%d\n", *fsize);
-    rt=(uint8_t*)malloc (*fsize);
+    rt=(byte*)malloc (*fsize);
 
     if (fseek (f, 0, SEEK_SET)!=0)
         die ("fseek()\n");

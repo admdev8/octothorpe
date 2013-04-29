@@ -1,12 +1,13 @@
 #pragma once
 
-#include <stdint.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <memory.h>
 #include <assert.h>
 #include <stdarg.h>
+
+#include "datatypes.h"
 
 #include "elf_structures.h"
 
@@ -27,25 +28,25 @@
 extern "C" {
 #endif
 
-bool elf_chk_header(uint8_t *buf);
-void elf_dump_hdr (uint8_t *buf);
-uint8_t* elf_get_ptr_to_section_start(uint8_t* buf, int n);
-char *elf_get_str_from_strtab(uint8_t* buf,int sect_n,int idx);
-Elf32_Half elf_find_symtab_section (uint8_t *buf);
-char* elf_get_str_from_shstr(uint8_t* buf, int idx);
-void elf_dump_section (uint8_t* buf, Elf32_Shdr *sect);
-Elf32_Sym *elf_get_n_symbol(uint8_t* buf, int n);
-void elf_dump_sym (uint8_t* buf, Elf32_Sym *sym);
-Elf32_Sym *elf_find_symbol_by_name (uint8_t* buf, const char *name);
-void elf_dump_all_sections(uint8_t *buf);
-Elf32_Shdr* elf_find_rel_section_for_section(uint8_t *buf, int sect_n);
-void elf_dump_all_symbols (uint8_t *buf);
-uint8_t *elf_get_ptr_to_symbol_start(uint8_t* buf, Elf32_Sym *s);
-uint8_t *elf_get_ptr_to_symbol_start_by_name(uint8_t* buf, const char *name);
-uint32_t elf_get_uint32_from_symbol_or_die(uint8_t* buf, const char *name);
-Elf32_Rel* elf_find_reloc_for_sect_and_ofs (uint8_t* buf, int sect_n, Elf32_Addr offset);
-Elf32_Rel *elf_find_reloc_for_sect_and_ofs_in_buf (uint8_t* buf, int sect_n, uint8_t *ofs_in_buf, Elf32_Sym **outsym);
-char *elf_can_this_tetrabyte_be_ptr_to (uint8_t *buf, int this_sect_n, uint32_t* point);
+bool elf_chk_header(byte *buf);
+void elf_dump_hdr (byte *buf);
+byte* elf_get_ptr_to_section_start(byte* buf, int n);
+char *elf_get_str_from_strtab(byte* buf,int sect_n,int idx);
+Elf32_Half elf_find_symtab_section (byte *buf);
+char* elf_get_str_from_shstr(byte* buf, int idx);
+void elf_dump_section (byte* buf, Elf32_Shdr *sect);
+Elf32_Sym *elf_get_n_symbol(byte* buf, int n);
+void elf_dump_sym (byte* buf, Elf32_Sym *sym);
+Elf32_Sym *elf_find_symbol_by_name (byte* buf, const char *name);
+void elf_dump_all_sections(byte *buf);
+Elf32_Shdr* elf_find_rel_section_for_section(byte *buf, int sect_n);
+void elf_dump_all_symbols (byte *buf);
+byte *elf_get_ptr_to_symbol_start(byte* buf, Elf32_Sym *s);
+byte *elf_get_ptr_to_symbol_start_by_name(byte* buf, const char *name);
+tetrabyte elf_get_uint32_from_symbol_or_die(byte* buf, const char *name);
+Elf32_Rel* elf_find_reloc_for_sect_and_ofs (byte* buf, int sect_n, Elf32_Addr offset);
+Elf32_Rel *elf_find_reloc_for_sect_and_ofs_in_buf (byte* buf, int sect_n, byte *ofs_in_buf, Elf32_Sym **outsym);
+char *elf_can_this_tetrabyte_be_ptr_to (byte *buf, int this_sect_n, tetrabyte* point);
 
 #ifdef  __cplusplus
 }

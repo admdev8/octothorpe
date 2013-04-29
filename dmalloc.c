@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include <stdint.h>
+#include "datatypes.h"
 #include <assert.h>
 #include <memory.h>
 #include <stdlib.h>
@@ -20,15 +20,9 @@
 //#define DFREE_CHK_ALL_GUARDS
 
 #ifdef ADD_GUARDS
-static uint32_t guard1=0x44332211;
-static uint32_t guard2=0x88776655;
+static tetrabyte guard1=0x44332211;
+static tetrabyte guard2=0x88776655;
 #endif
-
-// !!! Idea: он может строить статистку наболее часто выделяемых блоков!
-
-// TODO: а еще тут может быть slab allocator! http://en.wikipedia.org/wiki/Slab_allocation
-
-// TODO: еще нужна ф-ция для вываливания статистики, сколько блоков такого-то типа и сколько места они занимают
 
 static bool break_on_seq_n=false;
 static unsigned seq_n_to_break_on;
@@ -83,8 +77,8 @@ static void dump_blk_info (struct dmalloc_info *i)
 
 static void add_guards (void *user_ptr, size_t user_size)
 {
-    memcpy ((uint8_t*)user_ptr-4, &guard1, 4);
-    memcpy ((uint8_t*)user_ptr+user_size, &guard2, 4);
+    memcpy ((byte*)user_ptr-4, &guard1, 4);
+    memcpy ((byte*)user_ptr+user_size, &guard2, 4);
 };
 
 void* dmalloc (size_t size, const char * filename, unsigned line, const char * function, const char * structname)
@@ -99,7 +93,7 @@ void* dmalloc (size_t size, const char * filename, unsigned line, const char * f
         debugger_breakpoint();
 
 #ifdef ADD_GUARDS
-    rt=(uint8_t*)malloc (size+8)+4;
+    rt=(byte*)malloc (size+8)+4;
 #else    
     rt=malloc (size);
 #endif    
@@ -142,7 +136,7 @@ void* drealloc (void* ptr, size_t size, const char * filename, unsigned line, co
 
 #ifdef _DEBUG    
 #ifdef ADD_GUARDS    
-    newptr=(uint8_t*)realloc ((uint8_t*)ptr-4, size+8)+4;
+    newptr=(byte*)realloc ((byte*)ptr-4, size+8)+4;
 #else    
     newptr=realloc (ptr, size);
 #endif 
@@ -205,8 +199,8 @@ static void chk_guard (void *ptr, struct dmalloc_info *i)
     int r1, r2;
     size_t size=i->user_size;
 
-    r1=memcmp ((uint8_t*)ptr-4, &guard1, 4);
-    r2=memcmp ((uint8_t*)ptr+size, &guard2, 4);
+    r1=memcmp ((byte*)ptr-4, &guard1, 4);
+    r2=memcmp ((byte*)ptr+size, &guard2, 4);
 
     if (r1!=0 || r2!=0)
     {
@@ -216,12 +210,12 @@ static void chk_guard (void *ptr, struct dmalloc_info *i)
                 r2!=0 ? "guard2" : "");
         dump_blk_info (i);
         if (r1!=0) 
-            printf ("guard1=%08X, should be=%08X\n", *(uint32_t*)((uint8_t*)ptr-4), guard1);
+            printf ("guard1=%08X, should be=%08X\n", *(tetrabyte*)((byte*)ptr-4), guard1);
         if (r2!=0) 
-            printf ("guard2=%08X, should be=%08X\n", *(uint32_t*)((uint8_t*)ptr+size), guard2);
+            printf ("guard2=%08X, should be=%08X\n", *(tetrabyte*)((byte*)ptr+size), guard2);
         L_init("tmp");
         L ("block with both guards:\n");
-        L_print_buf((uint8_t*)ptr-4, size+8);
+        L_print_buf((byte*)ptr-4, size+8);
         die ("exiting\n");
     };
 };
@@ -273,7 +267,7 @@ void dfree (void* ptr)
 #endif
 
 #ifdef ADD_GUARDS
-    free ((uint8_t*)ptr-4);
+    free ((byte*)ptr-4);
 #else
     free (ptr);
 #endif    
@@ -296,8 +290,6 @@ void* dmemdup (void *p, size_t s, const char * filename, unsigned line, const ch
     memcpy(rt, p, s);
     return rt;
 };
-
-// TODO: void dump_statistics(); // как в Oracle
 
 void dump_unfreed_blocks()
 {

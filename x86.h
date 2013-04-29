@@ -1,6 +1,6 @@
 #pragma once
 
-#include <stdint.h>
+#include "datatypes.h"
 
 #include "strbuf.h"
 #include "logging.h"
@@ -43,20 +43,20 @@ typedef struct _s_EFLAGS
 
 typedef union _u_EFLAGS
 {
-    uint32_t flags;
+    tetrabyte flags;
     s_EFLAGS s;
 } u_EFLAGS;
 
-void flags_to_str (uint32_t flags, strbuf *out);
-void dump_flags (fds *s, uint32_t flags);
-void DR7_to_str (uint32_t DR7, strbuf* out);
-void dump_DR7 (fds* s, uint32_t DR7);
-void MXCSR_to_str (uint32_t a, strbuf *out);
+void flags_to_str (tetrabyte flags, strbuf *out);
+void dump_flags (fds *s, tetrabyte flags);
+void DR7_to_str (tetrabyte DR7, strbuf* out);
+void dump_DR7 (fds* s, tetrabyte DR7);
+void MXCSR_to_str (tetrabyte a, strbuf *out);
 void FCW_to_str (uint16_t a, strbuf *out);
 void FSW_to_str (uint16_t a, strbuf *out);
 
 // renamed from dump_XMM
-void XMM_to_strbuf (uint8_t* p, strbuf *sb);
+void XMM_to_strbuf (byte* p, strbuf *sb);
 
 bool sse_supported();
 bool sse2_supported();

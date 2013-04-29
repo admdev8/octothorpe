@@ -154,7 +154,7 @@ void strbuf_addf (strbuf *sb, const char *fmt, ...)
     va_end(va);
 };
 
-void make_uint32_compact (uint32_t a, strbuf* out)
+void make_uint32_compact (tetrabyte a, strbuf* out)
 {
     if (a<10)
         strbuf_addf(out, "%d", a);
@@ -162,7 +162,7 @@ void make_uint32_compact (uint32_t a, strbuf* out)
         strbuf_addf(out, "0x%x", a);
 };
 
-void make_uint64_compact (uint64_t a, strbuf* out)
+void make_uint64_compact (octabyte a, strbuf* out)
 {
     if (a<10)
         strbuf_addf (out, "%I64lld", a);
@@ -172,9 +172,9 @@ void make_uint64_compact (uint64_t a, strbuf* out)
 
 void make_SIZE_T_compact (size_t a, strbuf* out)
 {
-    if (sizeof(size_t)==sizeof(uint64_t))
+    if (sizeof(size_t)==sizeof(octabyte))
         make_uint64_compact (a, out);
-    else if (sizeof(size_t)==sizeof(uint32_t))
+    else if (sizeof(size_t)==sizeof(tetrabyte))
         make_uint32_compact (a, out);
     else
     {
@@ -182,7 +182,7 @@ void make_SIZE_T_compact (size_t a, strbuf* out)
     };
 };
 
-void strbuf_asmhex(strbuf *out, uint64_t v)
+void strbuf_asmhex(strbuf *out, octabyte v)
 {
     if (v<10)
         strbuf_addf(out, "%d", v);

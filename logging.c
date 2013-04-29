@@ -2,6 +2,7 @@
 #include <memory.h>
 #include <stdlib.h>
 
+#include "datatypes.h"
 #include "logging.h"
 #include "dmalloc.h"
 #include "rbtree.h"
@@ -142,7 +143,7 @@ void L_once (const char * fmt, ...)
     L_once_va (fmt, va);
 };
 
-void L_print_buf_ofs (uint8_t *buf, size_t size, size_t ofs)
+void L_print_buf_ofs (byte *buf, size_t size, size_t ofs)
 {
     size_t pos=0;
     unsigned starting_offset=0;
@@ -183,12 +184,12 @@ void L_print_buf_ofs (uint8_t *buf, size_t size, size_t ofs)
     };
 };
 
-void L_print_buf (uint8_t *buf, size_t size)
+void L_print_buf (byte *buf, size_t size)
 {
     L_print_buf_ofs (buf, size, 0);
 };
 
-void L_print_bufs_diff (uint8_t *buf1, uint8_t *buf2, size_t size)
+void L_print_bufs_diff (byte *buf1, byte *buf2, size_t size)
 {
     size_t pos=0;
     unsigned starting_offset=0;

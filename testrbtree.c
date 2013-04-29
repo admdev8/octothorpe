@@ -6,10 +6,10 @@
 #include "dmalloc.h"
 #include "rbtree.h"
 
-int compare_uint32_t(void* leftp, void* rightp) 
+int compare_tetrabyte(void* leftp, void* rightp) 
 {
-    uint32_t left = (uint32_t)leftp;
-    uint32_t right = (uint32_t)rightp;
+    tetrabyte left = (tetrabyte)leftp;
+    tetrabyte right = (tetrabyte)rightp;
     if (left < right) 
         return -1;
     else if (left > right)
@@ -22,7 +22,7 @@ int compare_uint32_t(void* leftp, void* rightp)
 
 void visitor(void* k, void* v)
 {
-    printf ("key=%d value=%s\n", (uint32_t)k, v);
+    printf ("key=%d value=%s\n", (tetrabyte)k, v);
 };
 
 void tst_succ_pred(rbtree* t)
@@ -51,8 +51,8 @@ void* value_copier(void *v)
 int main() 
 {
     int i;
-    rbtree* t = rbtree_create(true, "test", compare_uint32_t);
-    rbtree* new_t = rbtree_create(true, "new_test", compare_uint32_t);
+    rbtree* t = rbtree_create(true, "test", compare_tetrabyte);
+    rbtree* new_t = rbtree_create(true, "new_test", compare_tetrabyte);
     rbtree* t2;
     void *key_prev, *value_prev, *key_next, *value_next;
 
@@ -93,7 +93,7 @@ int main()
     // test 2
     printf ("test 2 (lower/upper bounds)\n");
 
-    t2=rbtree_create(true, "test", compare_uint32_t);
+    t2=rbtree_create(true, "test", compare_tetrabyte);
 
     //rbtree_insert (t2, (void*)0, "");
     rbtree_insert (t2, (void*)50, "value 50");

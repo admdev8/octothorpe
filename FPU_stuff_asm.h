@@ -1,6 +1,6 @@
 #pragma once
 
-#include <stdint.h>
+#include "datatypes.h"
 
 #ifdef  __cplusplus
 extern "C" {
@@ -8,13 +8,13 @@ extern "C" {
 
 #ifdef _WIN64
 
-double cvt80to64 (uint8_t *p);
-void cvt64to80 (double in, uint8_t *out);
+double cvt80to64 (byte *p);
+void cvt64to80 (double in, byte *out);
 
 #else
 
-double __cdecl cvt80to64 (uint8_t *p);
-void __cdecl cvt64to80 (double in, uint8_t *out);
+double __cdecl cvt80to64 (byte *p);
+void __cdecl cvt64to80 (double in, byte *out);
 
 #endif
 
