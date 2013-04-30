@@ -3,6 +3,7 @@
 #include <stdlib.h> /* rand() */
 #include <stdint.h>
 
+#include "datatypes.h"
 #include "dmalloc.h"
 #include "rbtree.h"
 

@@ -22,7 +22,7 @@
 // The section header index of the associated string table.
 #define elf_get_strtable_of_symtab(buf) (elf_get_symtab_section(buf)->sh_link)
 
-#define elf_get_symbol_name(buf, s) (elf_get_str_from_strtab ((buf), elf_get_strtable_of_symtab (buf), (s)->st_name))
+char *elf_get_symbol_name(byte *buf, Elf32_Sym *s);
 
 #ifdef  __cplusplus
 extern "C" {
@@ -30,8 +30,7 @@ extern "C" {
 
 bool elf_chk_header(byte *buf);
 void elf_dump_hdr (byte *buf);
-byte* elf_get_ptr_to_section_start(byte* buf, int n);
-char *elf_get_str_from_strtab(byte* buf,int sect_n,int idx);
+byte* elf_get_ptr_to_section_start(byte* buf, int sect_n);
 Elf32_Half elf_find_symtab_section (byte *buf);
 char* elf_get_str_from_shstr(byte* buf, int idx);
 void elf_dump_section (byte* buf, Elf32_Shdr *sect);
@@ -44,16 +43,20 @@ Elf32_Shdr* elf_find_rel_section_for_section(byte *buf, int sect_n);
 void elf_dump_all_symbols (byte *buf);
 byte *elf_get_ptr_to_symbol_start(byte* buf, Elf32_Sym *s);
 byte *elf_get_ptr_to_symbol_start_by_name(byte* buf, const char *name);
-tetrabyte elf_get_uint32_from_symbol_or_die(byte* buf, const char *name);
+tetrabyte elf_get_tetrabyte_from_symbol_by_name_or_die(byte* buf, const char *name);
 Elf32_Rel* elf_find_reloc_for_sect_and_ofs (byte* buf, int sect_n, Elf32_Addr offset);
-Elf32_Rel *elf_find_reloc_for_sect_and_ofs_in_buf (byte* buf, int sect_n, byte *ofs_in_buf, Elf32_Sym **outsym);
-byte *elf_can_this_tetrabyte_be_ptr_to (byte *buf, int this_sect_n, tetrabyte* point);
+Elf32_Rel *elf_find_reloc_for_ofs_in_buf (byte* buf, byte *ofs_in_buf, Elf32_Sym **outsym);
+byte *elf_dereference_tetrabyte_in_buf (byte *buf, tetrabyte* point);
 
 // used for qsort()
 int elf_cmp_sizes_asc(const void *_p1, const void *_p2);
 int elf_cmp_sizes_desc(const void *_p1, const void *_p2);
 
 const char *elf_rel_type_to_string(int t);
+void elf_dump_biggest_data_objects(byte *buf, int n);
+Elf32_Shdr *elf_find_section_for_point_in_buf (byte *buf, byte *point, Elf32_Half *out_sect_n);
+Elf32_Sym *elf_get_symbol_of_tetrabyte_in_buf (byte* buf, tetrabyte* point);
+char *elf_get_symbol_name_of_tetrabyte_in_buf_or_NULL(byte *buf, tetrabyte* point);
 
 #ifdef  __cplusplus
 }

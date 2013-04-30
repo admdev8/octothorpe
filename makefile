@@ -1,5 +1,6 @@
 CC=gcc
-CFLAGS=-Wall -D_DEBUG -g
+CPPFLAGS=-D_DEBUG
+CFLAGS=-Wall -g $(CPPFLAGS)
 COMPILE_ONLY_CFLAGS=-c -Wall -D_DEBUG -g
 LDFLAGS=
 SOURCES=dmalloc.c memutils.c rbtree.c rand.c strbuf.c stuff.c logging.c x86.c string_list.c elf.c
@@ -24,7 +25,7 @@ regex.o: regex.c
 
 .c.o:
 	$(CC) $(COMPILE_ONLY_CFLAGS) $< -o $@
-
+    
 testrbtree.exe:
 	$(CC) $(CFLAGS) testrbtree.c $(LIBRARY) -o $@
 strbuf_test.exe:
