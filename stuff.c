@@ -90,3 +90,12 @@ void debugger_breakpoint()
    __asm__("int $3");
 #endif
 };
+
+char* str_trim_one_char_right (char *in)
+{
+    if (strlen(in)==0)
+        return in;
+
+    in[strlen(in)-1]=0;
+    return in;
+};
