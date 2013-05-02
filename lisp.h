@@ -19,6 +19,7 @@ typedef struct _obj_opaque
 {
     void* ptr;
     void (*dumper_fn) (void*); // may be NULL
+    void (*free_fn) (void*); // may be NULL
 } obj_opaque;
 
 typedef struct _obj
@@ -45,8 +46,10 @@ obj* obj_double (double i);
 obj* obj_int_n_times (int i, int t);
 obj* obj_cstring (const char *s);
 obj* cons (obj* head, obj* tail);
-obj* create_obj_opaque(void* ptr, void (*dumper_fn) (void*));
+obj* create_obj_opaque(void* ptr, void (*dumper_fn) (void*), void (*free_fn) (void*));
 bool obj_is_list(obj *o);
 void obj_dump_as_list(obj *o);
 void obj_dump(obj *o);
 obj *nconc (obj *l1, obj *l2);
+void obj_free(obj* o);
+

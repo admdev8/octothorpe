@@ -3,6 +3,7 @@
 #include <assert.h>
 #include <stdlib.h>
 #include <string.h>
+#include "dmalloc.h"
 
 #include "lisp.h"
 
@@ -13,7 +14,7 @@ obj* obj_int (int i)
 {
     obj* rt;
     //fprintf (FILE_OUT, "obj_int(%d)", i);
-    rt=calloc (1, sizeof(obj));
+    rt=DCALLOC (obj, 1, "obj");
     rt->t=OBJ_INTEGER;
     rt->u.i=i;
     return rt;
@@ -22,7 +23,7 @@ obj* obj_int (int i)
 obj* obj_double (double d)
 {
     obj* rt;
-    rt=calloc (1, sizeof(obj));
+    rt=DCALLOC (obj, 1, "obj");
     rt->t=OBJ_DOUBLE;
     rt->u.d=d;
     return rt;
@@ -37,7 +38,7 @@ obj* obj_int_n_times (int i, int t)
 
 obj* obj_cstring (const char *s)
 {
-    obj* rt=calloc (1, sizeof(obj));
+    obj* rt=DCALLOC (obj, 1, "obj");
     rt->t=OBJ_CSTRING;
     rt->u.s=strdup (s);
     return rt;
@@ -56,8 +57,8 @@ obj* cons (obj* head, obj* tail)
     fprintf(FILE_OUT, ")");
 #endif
 
-    rt=calloc (1, sizeof(obj));
-    new_cell=calloc (1, sizeof(cons_cell));
+    rt=DCALLOC (obj, 1, "obj");
+    new_cell=DCALLOC (cons_cell, 1, "cons_cell");
     
     new_cell->head=head;
     new_cell->tail=tail;
@@ -67,13 +68,14 @@ obj* cons (obj* head, obj* tail)
     return rt;
 };
 
-obj* create_obj_opaque(void* ptr, void (*dumper_fn) (void *))
+obj* create_obj_opaque(void* ptr, void (*dumper_fn) (void *), void (*free_fn) (void*))
 {
-    obj_opaque *op=calloc(1, sizeof(obj_opaque));
-    obj *o=calloc(1, sizeof(obj));
+    obj_opaque *op=DCALLOC(obj_opaque, 1, "obj_opaque");
+    obj *o=DCALLOC(obj, 1, "obj");
 
     op->ptr=ptr;
     op->dumper_fn=dumper_fn;
+    op->free_fn=free_fn;
     o->t=OBJ_OPAQUE;
     o->u.o=op;
 
@@ -181,3 +183,26 @@ obj* nconc (obj *l1, obj *l2)
     last->u.c->tail=l2;
     return l1;
 };
+
+void obj_free(obj* o)
+{
+    switch (o->t)
+    {
+        case OBJ_CSTRING:
+            DFREE (o->u.s);
+            break;
+        case OBJ_CONS:
+            if (o->u.c->head) obj_free (o->u.c->head);
+            if (o->u.c->tail) obj_free (o->u.c->tail);
+            DFREE(o->u.c);
+            break;
+        case OBJ_OPAQUE:
+            if (o->u.o->free_fn) (*o->u.o->free_fn)(o->u.o->ptr);
+            DFREE(o->u.o);
+            break;
+        default:
+            break;
+    };
+    DFREE(o);
+};
+

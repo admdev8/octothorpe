@@ -9,8 +9,10 @@
 #include "rbtree.h"
 #include "stuff.h"
 #include "memutils.h"
+#include "stuff.h"
 
 //#define LOGGING
+//#define BREAK_ON_UNKNOWN_BLOCK_BEING_FREED
 
 #ifdef _DEBUG
 #define ADD_GUARDS
@@ -251,9 +253,7 @@ void dfree (void* ptr)
 
 #ifdef DREE_CHK_ONLY_GUARD_BEING_FREED
     tmp=rbtree_lookup(tbl, ptr);
-    if (tmp==NULL)
-        fprintf (stderr, "%s(0x%p): ptr isn't present in our records\n", __FUNCTION__, ptr);
-    else
+    if (tmp)
         chk_guard (ptr, tmp);
 #endif
 
@@ -263,7 +263,12 @@ void dfree (void* ptr)
 
     //assert(tmp && "dfree(ptr): ptr isn't present in our records"); // ensure it's present
     if (tmp==NULL)
+    {
         fprintf (stderr, "%s(0x%p): ptr isn't present in our records\n", __FUNCTION__, ptr);
+#ifdef BREAK_ON_UNKNOWN_BLOCK_BEING_FREED
+        debugger_breakpoint();
+#endif
+    }
     else
         free(tmp);
     rbtree_delete(tbl, ptr);
