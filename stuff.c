@@ -82,15 +82,6 @@ byte* load_file_or_die (const char* fname, size_t *fsize)
     return rt;
 };
 
-void debugger_breakpoint()
-{
-#ifdef _MSC_VER
-    __debugbreak();
-#else
-   __asm__("int $3");
-#endif
-};
-
 char* str_trim_one_char_right (char *in)
 {
     if (strlen(in)==0)
@@ -98,4 +89,13 @@ char* str_trim_one_char_right (char *in)
 
     in[strlen(in)-1]=0;
     return in;
+};
+
+void debugger_breakpoint()
+{
+#ifdef _MSC_VER
+    __debugbreak();
+#else
+   __asm__("int $3");
+#endif
 };

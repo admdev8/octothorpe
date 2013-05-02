@@ -139,7 +139,7 @@ void strbuf_vaddf (strbuf *sb, const char *fmt, va_list va)
 #ifdef _MSC_VER   
    if (vsnprintf_s (sb->buf + sb->strlen, sz+1, sz, fmt, va)==-1) // MSVC-specific
 #else
-   if (vsnprintf (sb->buf + sb->strlen, sz, fmt, va)==-1)
+   if (vsnprintf (sb->buf + sb->strlen, sz+1, fmt, va)==-1)
 #endif
    {
        assert(0);

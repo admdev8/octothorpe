@@ -1,6 +1,7 @@
 #include "strbuf.h"
 #include "dmalloc.h"
 #include <stdio.h>
+#include <limits.h>
 
 int main()
 {
@@ -41,6 +42,24 @@ int main()
     strbuf_init (&s2, 0);
     strbuf_addstr (&s2, "three words here");
     strbuf_replace_if_possible (&s2, "here", "not here");
+    strbuf_puts (&s2);
+    strbuf_deinit (&s2);
+
+    strbuf_init (&s2, 0);
+    strbuf_addf(&s2, "%d", 12345);
+    strbuf_addc(&s2, ' ');
+    strbuf_addf(&s2, "%d", 12345);
+    strbuf_addc(&s2, ' ');
+    strbuf_addf(&s2, "%d", 12345);
+    strbuf_puts (&s2);
+    strbuf_deinit (&s2);
+
+    strbuf_init (&s2, 0);
+    strbuf_asmhex(&s2, LONG_LONG_MAX);
+    strbuf_addc(&s2, ' ');
+    strbuf_asmhex(&s2, LONG_LONG_MAX);
+    strbuf_addc(&s2, ' ');
+    strbuf_asmhex(&s2, LONG_LONG_MAX);
     strbuf_puts (&s2);
     strbuf_deinit (&s2);
     
