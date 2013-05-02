@@ -9,10 +9,14 @@ void tst2()
     const char* buf=//"trace_skip=.*!netbios.dll!.* ; comment here\n";
     "trace_skip=\\%SystemRoot%\\System32.*!.*dll!.* ; skip all functions in 64-bit system DLLs\n";
     regmatch_t matches[4];
-    int i;
+    int i, rc;
+    char buffer[100];
 
-    if (regcomp(&trace_skip_pat, CFG_PAT, REG_EXTENDED | REG_ICASE | REG_NEWLINE))
-        die("failed regcomp() for pattern '%s'", CFG_PAT);
+    if ((rc=regcomp(&trace_skip_pat, CFG_PAT, REG_EXTENDED | REG_ICASE | REG_NEWLINE))!=0)
+    {
+        regerror(rc, &trace_skip_pat, buffer, 100);
+        die("failed regcomp() for pattern '%s' (%s)", CFG_PAT, buffer);
+    };
 
     printf ("dummy regexec() call -> %d\n", regexec (&trace_skip_pat, "\n", 4, matches, 0));
     printf ("dummy regexec() call -> %d\n", regexec (&trace_skip_pat, "", 4, matches, 0));
@@ -35,12 +39,17 @@ int main(int argc, char **argv)
 {
     char *pat = "^config=([^;]*)(;.*)?$";
     char *str = "config=asdasdasd; comment";
+    int  rc;
+    char buffer[100];
     
     regex_t r;
     regmatch_t m[2];
 
-    if (regcomp(&r, pat, REG_EXTENDED | REG_NEWLINE))
-        die("failed regcomp() for pattern '%s'", pat);
+    if ((rc=regcomp(&r, pat, REG_EXTENDED | REG_NEWLINE))!=0)
+    {
+        regerror(rc, &r, buffer, 100);
+        die("failed regcomp() for pattern '%s' (%s)", pat, buffer);
+    }
     if (regexec(&r, str, 2, m, 0))
         die("no match of pattern '%s' to string '%s'", pat, str);
     else

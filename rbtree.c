@@ -38,12 +38,14 @@ static rbtree_node* grandparent(rbtree_node* n);
 static rbtree_node* sibling(rbtree_node* n);
 static rbtree_node* uncle(rbtree_node* n);
 static void verify_properties(rbtree* t);
+#ifdef VERIFY_RBTREE
 static void verify_property_1(node* root);
 static void verify_property_2(node* root);
-static color node_color(node* n);
 static void verify_property_4(node* root);
 static void verify_property_5(node* root);
 static void verify_property_5_helper(node* n, int black_count, int* black_count_path);
+#endif
+static color node_color(node* n);
 
 static rbtree_node* new_node(rbtree* t, void* key, void* value, color node_color, node* left, node* right);
 static rbtree_node* lookup_node2(rbtree* tree, rbtree_node* n, void* key, 
@@ -98,6 +100,7 @@ void verify_properties(rbtree* t)
     verify_property_5(t->root);
 #endif
 }
+#ifdef VERIFY_RBTREE
 void verify_property_1(node* n) {
     assert(node_color(n) == RED || node_color(n) == BLACK);
     if (n == NULL) return;
@@ -108,10 +111,12 @@ void verify_property_2(node* root)
 {
     assert(node_color(root) == BLACK);
 }
+#endif
 color node_color(node* n) 
 {
     return n == NULL ? BLACK : n->color;
 }
+#ifdef VERIFY_RBTREE
 void verify_property_4(node* n) 
 {
     if (node_color(n) == RED) 
@@ -146,6 +151,7 @@ void verify_property_5_helper(node* n, int black_count, int* path_black_count)
     verify_property_5_helper(n->left,  black_count, path_black_count);
     verify_property_5_helper(n->right, black_count, path_black_count);
 }
+#endif
 
 static struct rbtree_node_t* rbtree_maximum_helper(struct rbtree_node_t* n)
 {

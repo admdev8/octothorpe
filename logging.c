@@ -1,6 +1,7 @@
 #include <assert.h>
 #include <memory.h>
 #include <stdlib.h>
+#include <ctype.h>
 
 #include "datatypes.h"
 #include "logging.h"
@@ -111,7 +112,7 @@ void L_once_va (const char * fmt, va_list va)
     char *s;
 
     if (once_was_printed==NULL)
-        once_was_printed=rbtree_create(true, "rbtree: once_was_printed", strcmp);
+        once_was_printed=rbtree_create(true, "rbtree: once_was_printed", (int (*)(void*,void*))strcmp);
 
     strbuf_vaddf(&sb, fmt, va);
     

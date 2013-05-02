@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <string.h> // strcmp
 #include <assert.h>
 #include <stdlib.h> /* rand() */
 #include <stdint.h>
@@ -23,7 +24,7 @@ int compare_tetrabyte(void* leftp, void* rightp)
 
 void visitor(void* k, void* v)
 {
-    printf ("key=%d value=%s\n", (tetrabyte)k, v);
+    printf ("key=%d value=%s\n", (tetrabyte)k, (char*)v);
 };
 
 void tst_succ_pred(rbtree* t)
@@ -32,14 +33,14 @@ void tst_succ_pred(rbtree* t)
 
     printf ("ascending order:\n");
     for (i=rbtree_minimum(t); i!=NULL; i=rbtree_succ(i))
-        printf ("%d\n", i->key);
+        printf ("%d\n", (int)i->key);
 
     printf ("descending order:\n");
     for (i=rbtree_maximum(t); i!=NULL; i=rbtree_pred(i))
-        printf ("%d\n", i->key);
+        printf ("%d\n", (int)i->key);
 };
 
-void* key_copier(void *i)
+void* key_copier(void *i)                             
 {
     return i;
 };
@@ -51,11 +52,11 @@ void* value_copier(void *v)
 
 int main() 
 {
-    int i;
     rbtree* t = rbtree_create(true, "test", compare_tetrabyte);
     rbtree* new_t = rbtree_create(true, "new_test", compare_tetrabyte);
     rbtree* t2;
-    void *key_prev, *value_prev, *key_next, *value_next;
+    int key_prev, key_next;
+    char *value_prev, *value_next;
 
     printf ("enumerate:\n");
     rbtree_foreach(t, visitor, NULL, NULL);
@@ -76,8 +77,8 @@ int main()
 
     printf ("enumerate:\n");
     rbtree_foreach(t, visitor, NULL, NULL);
-    printf ("minimum: %d\n", rbtree_minimum(t)->key);
-    printf ("maximum: %d\n", rbtree_maximum(t)->key);
+    printf ("minimum: %d\n", (int)rbtree_minimum(t)->key);
+    printf ("maximum: %d\n", (int)rbtree_maximum(t)->key);
 
     tst_succ_pred(t);
 
@@ -108,19 +109,19 @@ int main()
     printf ("enumerate t2:\n");
     rbtree_foreach(t2, visitor, NULL, NULL);
 
-    rbtree_lookup2(t2, (void*)10, &key_prev, &value_prev, &key_next, &value_next);
+    rbtree_lookup2(t2, (void*)10, (void**)&key_prev, (void**)&value_prev, (void**)&key_next, (void**)&value_next);
     printf ("while looking for 10, key_prev=%d, value_prev=%s, key_next=%d, value_next=%s\n", key_prev, value_prev, key_next, value_next);
 
-    rbtree_lookup2(t2, (void*)100, &key_prev, &value_prev, &key_next, &value_next);
+    rbtree_lookup2(t2, (void*)100, (void**)&key_prev, (void**)&value_prev, (void**)&key_next, (void**)&value_next);
     printf ("while looking for 100, key_prev=%d, value_prev=%s, key_next=%d, value_next=%s\n", key_prev, value_prev, key_next, value_next);
 
-    rbtree_lookup2(t2, (void*)101, &key_prev, &value_prev, &key_next, &value_next);
+    rbtree_lookup2(t2, (void*)101, (void**)&key_prev, (void**)&value_prev, (void**)&key_next, (void**)&value_next);
     printf ("while looking for 101, key_prev=%d, value_prev=%s, key_next=%d, value_next=%s\n", key_prev, value_prev, key_next, value_next);
 
-    rbtree_lookup2(t2, (void*)12300, &key_prev, &value_prev, &key_next, &value_next);
+    rbtree_lookup2(t2, (void*)12300, (void**)&key_prev, (void**)&value_prev, (void**)&key_next, (void**)&value_next);
     printf ("while looking for 12300, key_prev=%d, value_prev=%s, key_next=%d, value_next=%s\n", key_prev, value_prev, key_next, value_next);
 
-    rbtree_lookup2(t2, (void*)99999, &key_prev, &value_prev, &key_next, &value_next);
+    rbtree_lookup2(t2, (void*)99999, (void**)&key_prev, (void**)&value_prev, (void**)&key_next, (void**)&value_next);
     printf ("while looking for 99999, key_prev=%d, value_prev=%s, key_next=%d, value_next=%s\n", key_prev, value_prev, key_next, value_next);
 
     rbtree_deinit(t2);

@@ -5,9 +5,9 @@ extern "C" {
 #endif
 
 #include <stdio.h>
-
-// Idea: нужно ли кому-то знать, сколько выделено байт по такому-то адресу? 
-// тут такое можно реализовать
+#include <stdlib.h>
+#include <string.h>
+#include <memory.h>
 
 #ifdef _DEBUG
 void* dmalloc (size_t size, const char * filename, unsigned line, const char * function, const char * structname);
@@ -20,7 +20,7 @@ void* dmalloc (size_t size, const char * filename, unsigned line, const char * f
 void* drealloc (void* ptr, size_t size, const char * filename, unsigned line, const char * function, const char * structname);
 #define DREALLOC(ptr, type, size, comment) ((type*)drealloc(ptr, sizeof(type)*size, __FILE__, __LINE__, __func__, comment))
 #else
-#define DREALLOC(ptr, type, size, comment) ((type*)drealloc(ptr, sizeof(type)*size))
+#define DREALLOC(ptr, type, size, comment) ((type*)realloc(ptr, sizeof(type)*size))
 #endif
 
 #ifdef _DEBUG

@@ -1,7 +1,7 @@
 #include "logging.h"
 #include "dmalloc.h"
 
-void main()
+int main()
 {
     L_init("logging_test.log");
     L_once("#1 should be printed once\n");
@@ -16,4 +16,5 @@ void main()
     L_deinit();
 
     dump_unfreed_blocks();
+    return 0;
 };

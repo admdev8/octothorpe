@@ -12,9 +12,11 @@
 
 //#define LOGGING
 
+#ifdef _DEBUG
 #define ADD_GUARDS
-
 #define DREE_CHK_ONLY_GUARD_BEING_FREED
+#endif
+
 
 //this is slow! use it only for heavy debugging!
 //#define DFREE_CHK_ALL_GUARDS
@@ -42,11 +44,9 @@ struct dmalloc_info
 // in ADD_GUARDS case, ptr and size stored here is from user's perspective...
 #ifdef _DEBUG
 static rbtree* tbl;
-#endif
 
 static bool tbl_created=false;
 
-#ifdef _DEBUG
 void store_info (void* user_ptr, size_t user_size, const char * filename, unsigned line, const char * function, 
         const char * structname)
 {
@@ -73,20 +73,22 @@ static void dump_blk_info (struct dmalloc_info *i)
     printf ("seq_n:%d, size: %d, filename: %s:%d, func: %s, struct: %s\n", i->seq_n, i->user_size, i->filename, i->line, i->function, i->structname);
 };
 
-#endif
+#endif // _DEBUG
 
+#ifdef ADD_GUARDS
 static void add_guards (void *user_ptr, size_t user_size)
 {
     memcpy ((byte*)user_ptr-4, &guard1, 4);
     memcpy ((byte*)user_ptr+user_size, &guard2, 4);
 };
+#endif
 
 void* dmalloc (size_t size, const char * filename, unsigned line, const char * function, const char * structname)
 {
     void* rt;
 
 #ifdef LOGGING
-    fprintf (stderr, __func__"(size=%d, filename=%s:%d func=%s struct=%s)\n", size, filename, line, function, structname);
+    fprintf (stderr, "%s(size=%d, filename=%s:%d func=%s struct=%s)\n", __func__, size, filename, line, function, structname);
 #endif
 
     if (break_on_seq_n && (seq_n==seq_n_to_break_on))
@@ -103,7 +105,7 @@ void* dmalloc (size_t size, const char * filename, unsigned line, const char * f
 
 #ifdef ADD_GUARDS
     add_guards (rt, size);
-#endif    
+#endif     
 
 #ifdef _DEBUG
     store_info (rt, size, filename, line, function, structname);
@@ -123,7 +125,7 @@ void* drealloc (void* ptr, size_t size, const char * filename, unsigned line, co
 #endif
 
 #ifdef LOGGING
-    fprintf (stderr, __func__"(ptr=0x%p, size=%d, filename=%s:%d func=%s struct=%s)\n", ptr, size, filename, line, function, structname);
+    fprintf (stderr, "%s(ptr=0x%p, size=%d, filename=%s:%d func=%s struct=%s)\n", __func__, ptr, size, filename, line, function, structname);
 #endif
 
     if (ptr==NULL)
@@ -134,9 +136,8 @@ void* drealloc (void* ptr, size_t size, const char * filename, unsigned line, co
         return NULL;
     };
 
-#ifdef _DEBUG    
-#ifdef ADD_GUARDS    
-    newptr=(byte*)realloc ((byte*)ptr-4, size+8)+4;
+#ifdef ADD_GUARDS
+    newptr=(byte*)realloc ((byte*)ptr-4, size+8);
 #else    
     newptr=realloc (ptr, size);
 #endif 
@@ -145,9 +146,11 @@ void* drealloc (void* ptr, size_t size, const char * filename, unsigned line, co
         die("%s() can't allocate size %d for %s (%s:%d)\n", __FUNCTION__, size, structname, filename, line);
 
 #ifdef ADD_GUARDS    
+    newptr=newptr+4;
     add_guards(newptr, size);
 #endif 
 
+#ifdef _DEBUG
     if (newptr!=ptr)
     {
         store_info (newptr, size, filename, line, function, structname);
@@ -163,8 +166,6 @@ void* drealloc (void* ptr, size_t size, const char * filename, unsigned line, co
         assert(tmp && "drealloc(ptr): ptr isn't present in our records"); // ensure it's present
         tmp->user_size=size; // set new size
     };
-#else
-    newptr=realloc (ptr, size);
 #endif
 
 #ifdef LOGGING
@@ -205,7 +206,7 @@ static void chk_guard (void *ptr, struct dmalloc_info *i)
     if (r1!=0 || r2!=0)
     {
         printf ("%s(): %s %s overwritten for block:", 
-                __FUNCTION__,
+                __func__,
                 r1!=0 ? "guard1" : "",
                 r2!=0 ? "guard2" : "");
         dump_blk_info (i);
@@ -221,6 +222,7 @@ static void chk_guard (void *ptr, struct dmalloc_info *i)
 };
 #endif
 
+#ifdef DFREE_CHK_ALL_GUARDS
 static void chk_all_guards()
 {
 #ifdef LOGGING
@@ -228,6 +230,7 @@ static void chk_all_guards()
 #endif
     rbtree_foreach(tbl, chk_guard, NULL, NULL);
 };
+#endif
 
 void dfree (void* ptr)
 {
@@ -236,7 +239,7 @@ void dfree (void* ptr)
 #endif
 
 #ifdef LOGGING 
-    fprintf (stderr, __func__"(ptr=0x%p)\n", ptr);
+    fprintf (stderr, "%s(ptr=0x%p)\n", __func__, ptr);
 #endif    
     
     if (ptr==NULL)
@@ -294,7 +297,7 @@ void* dmemdup (void *p, size_t s, const char * filename, unsigned line, const ch
 void dump_unfreed_blocks()
 {
 #ifdef _DEBUG    
-    rbtree_foreach(tbl, dump_unfreed_block, NULL, NULL);
+    rbtree_foreach(tbl, (void(*)(void*,void*))dump_unfreed_block, NULL, NULL);
 #endif    
 };
 

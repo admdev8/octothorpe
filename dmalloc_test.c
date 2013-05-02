@@ -21,6 +21,8 @@ int main()
     //memcpy (t1, "12345678", 8);
     //memcpy((byte*)t1-1, "a", 1);
 
+    t1=DREALLOC(t1, byte, 100, "new size for block123");
+
     DFREE(t1);
     DFREE(t5);
     DFREE(t6);
