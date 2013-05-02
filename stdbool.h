@@ -1,4 +1,4 @@
-// my own stdbool.h
+// my own stdbool.h for MSVC
 
 #pragma once
 

@@ -49,7 +49,7 @@ void* memdup (void *p, size_t s)
     return rt;
 };
 
-void print_string_range (char *s, int b, int e)
+void print_string_range (const char *s, int b, int e)
 {
     int i;
     for (i=b; i<e; i++)

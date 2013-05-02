@@ -1,7 +1,7 @@
 #include "string_list.h"
 #include "dmalloc.h"
 
-void main()
+int main()
 {
     strlist_node *l=NULL;
     strlist_node *i;
@@ -20,4 +20,6 @@ void main()
     strlist_free(l, dfree);
     
     dump_unfreed_blocks();
+
+    return 0;
 };

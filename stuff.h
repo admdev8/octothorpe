@@ -9,7 +9,7 @@ extern "C" {
 unsigned most_significant_hex_number(octabyte x);
 void die (const char * fmt, ...);
 void* memdup (void *p, size_t s);
-void print_string_range (char *s, int b, int e);
+void print_string_range (const char *s, int b, int e);
 byte* load_file_or_die (const char* fname, size_t *fsize);
 void debugger_breakpoint();
 

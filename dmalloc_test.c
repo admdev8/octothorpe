@@ -1,16 +1,19 @@
 #include "dmalloc.h"
 #include "datatypes.h"
 
-void main()
+int main()
 {
-    byte* t1=DMALLOC(byte, 6, "block123");
-    byte* t2=DMALLOC(byte, 124, "block124");
-    byte* t3=DMALLOC(byte, 12,  "block12");
-    byte* t4=DMALLOC(byte, 555, "block555");
-    byte* t5=DMALLOC(byte, 666, "block666");
-    byte* t6=DMALLOC(byte, 777, "block777");
+    byte *t1, *t2, *t3, *t4, *t5, *t6;
+    char *s;
+    
+    s=DSTRDUP ("hahaha", "s");
 
-    char *s=DSTRDUP ("hahaha", "s");
+    t1=DMALLOC(byte, 6, "block123");
+    t2=DMALLOC(byte, 124, "block124");
+    t3=DMALLOC(byte, 12,  "block12");
+    t4=DMALLOC(byte, 555, "block555");
+    t5=DMALLOC(byte, 666, "block666");
+    t6=DMALLOC(byte, 777, "block777");
 
     t6=DREALLOC(t6, byte, 888, "new size for block777");
 
@@ -23,6 +26,11 @@ void main()
     DFREE(t6);
     DFREE(s);
 
+    // make compiler happy about unused variables!
+    t1=t4; t1=t3; t1=t2;
+
     dump_unfreed_blocks();
     dmalloc_deinit();
+
+    return 0;
 };
