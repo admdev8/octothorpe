@@ -52,4 +52,10 @@ void obj_dump_as_list(obj *o);
 void obj_dump(obj *o);
 obj *nconc (obj *l1, obj *l2);
 void obj_free(obj* o);
+bool obj_is_cons(obj* o);
+obj* car(obj* o);
+obj* cdr(obj* o);
+bool obj_is_opaque(obj* o);
+void* obj_unpack_opaque(obj* o);
+
 

@@ -68,6 +68,34 @@ obj* cons (obj* head, obj* tail)
     return rt;
 };
 
+bool obj_is_cons(obj* o)
+{
+    return o->t==OBJ_CONS;
+};
+
+obj* car(obj* o)
+{
+    assert (obj_is_cons(o));
+    return o->u.c->head;
+};
+
+obj* cdr(obj* o)
+{
+    assert (obj_is_cons(o));
+    return o->u.c->tail;
+};
+
+bool obj_is_opaque(obj* o)
+{
+    return o->t==OBJ_OPAQUE;
+};
+
+void* obj_unpack_opaque(obj* o)
+{
+    assert(obj_is_opaque(o));
+    return o->u.o->ptr;
+};
+
 obj* create_obj_opaque(void* ptr, void (*dumper_fn) (void *), void (*free_fn) (void*))
 {
     obj_opaque *op=DCALLOC(obj_opaque, 1, "obj_opaque");
