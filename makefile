@@ -1,44 +1,31 @@
-CC=gcc
-CPPFLAGS=-D_DEBUG
-#CPPFLAGS=
-CFLAGS=-Wall -g $(CPPFLAGS)
-COMPILE_ONLY_CFLAGS=-c $(CFLAGS)
-LDFLAGS=
+# -DUSE_DMALLOC is only for regex
+CPPFLAGS=-D_DEBUG -DUSE_DMALLOC
+CFLAGS=-c -Wall -g
 SOURCES=dmalloc.c memutils.c rbtree.c rand.c strbuf.c stuff.c logging.c x86.c string_list.c \
-	elf.c lisp.c
+	elf.c lisp.c regex.c
 TEST_SOURCES=testrbtree.c strbuf_test.c logging_test.c dmalloc_test.c test-regex.c \
 	string_list_test.c
 OBJECTS=$(SOURCES:.c=.o)
-TEST_OBJECTS=$(TEST_SOURCES:.c=.o)
+DEPFILES=$(SOURCES:.c=.d)
 TEST_EXECS=$(TEST_SOURCES:.c=.exe)
 LIBRARY=octothorped.a
 
-all: $(LIBRARY) $(TEST_EXECS)
+all: $(LIBRARY)($(OBJECTS)) $(TEST_EXECS) $(DEPFILES)
 
 clean:
-	rm $(OBJECTS)
-	rm $(TEST_OBJECTS)
-	rm $(LIBRARY)
-	rm $(TEST_EXECS)
-	rm regex.o
-
-$(LIBRARY): $(OBJECTS) regex.o
-	ar -mc $(LIBRARY) $(OBJECTS) regex.o
-
-regex.o: regex.c dmalloc.h
-	$(CC) $(COMPILE_ONLY_CFLAGS) regex.c -DUSE_DMALLOC -o $@
+	$(RM) $(OBJECTS)
+	$(RM) $(TEST_OBJECTS)
+	$(RM) $(LIBRARY)
+	$(RM) $(TEST_EXECS)
 
 -include $(OBJECTS:.o=.d)
 
-%.o: %.c
-	$(CC) $(COMPILE_ONLY_CFLAGS) $*.c -o $*.o
-	$(CC) -MM $(COMPILE_ONLY_CFLAGS) $*.c > $*.d
+%.d: %.c
+	$(CC) -MM $(CFLAGS) $(CPPFLAGS) $< > $@
 
 # tests:
 
 -include $(TEST_SOURCES:.c=.d)
 
 %.exe: %.o $(LIBRARY)
-	$(CC) $(CFLAGS) $*.c $(LIBRARY) -o $@
-	$(CC) -MM $(COMPILE_ONLY_CFLAGS) $*.c > $*.d
-
+	$(CC) $< $(LIBRARY) -o $@
