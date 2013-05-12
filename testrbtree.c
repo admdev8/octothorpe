@@ -114,6 +114,7 @@ int main()
     rbtree_insert (t2, (void*)60000, "value 60000");
     printf ("enumerate t2:\n");
     rbtree_foreach(t2, visitor, NULL, NULL);
+    printf ("count: %d\n", rbtree_count (t2));
 
     rbtree_lookup2(t2, (void*)10, (void**)&key_prev, (void**)&value_prev, (void**)&key_next, (void**)&value_next);
     printf ("while looking for 10, key_prev=%d, value_prev=%s, key_next=%d, value_next=%s\n", key_prev, value_prev, key_next, value_next);

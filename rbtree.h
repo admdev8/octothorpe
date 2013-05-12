@@ -104,6 +104,7 @@ struct rbtree_node_t *rbtree_pred(struct rbtree_node_t* x);
 void rbtree_copy (rbtree* t, rbtree* new_t, void* (*key_copier)(void*), void* (*value_copier)(void*));
 
 bool rbtree_empty (rbtree* t);
+unsigned rbtree_count(rbtree *t);
 
 #ifdef  __cplusplus
 }

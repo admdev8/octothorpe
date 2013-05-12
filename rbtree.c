@@ -790,3 +790,14 @@ bool rbtree_empty (rbtree* t)
     assert(t);
     return t->root==NULL ? true : false;
 };
+
+unsigned rbtree_count(rbtree *t) // FIXME: might be faster
+{
+    unsigned rt=0;
+
+    for (struct rbtree_node_t *i=rbtree_minimum(t); i!=NULL; i=rbtree_succ(i))
+        rt++;
+
+    return rt;
+};
+
