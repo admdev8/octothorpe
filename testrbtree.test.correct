@@ -44,3 +44,6 @@ while looking for 100, key_prev=99, value_prev=value 99, key_next=101, value_nex
 while looking for 101, key_prev=0, value_prev=(null), key_next=0, value_next=(null)
 while looking for 12300, key_prev=12200, value_prev=value 12200, key_next=12301, value_next=value 12301
 while looking for 99999, key_prev=60000, value_prev=value 60000, key_next=0, value_next=(null)
+test 3
+rbtree_empty (should be present something): 0
+rbtree_empty (should be empty): 1

@@ -52,9 +52,9 @@ void* value_copier(void *v)
 
 int main() 
 {
-    rbtree* t = rbtree_create(true, "test", compare_tetrabyte);
-    rbtree* new_t = rbtree_create(true, "new_test", compare_tetrabyte);
-    rbtree* t2;
+    rbtree *t = rbtree_create(true, "test", compare_tetrabyte);
+    rbtree *new_t = rbtree_create(true, "new_test", compare_tetrabyte);
+    rbtree *t2, *t3;
     int key_prev, key_next;
     char *value_prev, *value_next;
 
@@ -131,6 +131,17 @@ int main()
     printf ("while looking for 99999, key_prev=%d, value_prev=%s, key_next=%d, value_next=%s\n", key_prev, value_prev, key_next, value_next);
 
     rbtree_deinit(t2);
+
+    printf ("test 3\n");
+
+    t3=rbtree_create(true, "test", compare_tetrabyte);
+    rbtree_insert (t3, (void*)50, "value 50");
+    rbtree_insert (t3, (void*)99, "value 99");
+    printf ("rbtree_empty (should be present something): %d\n", rbtree_empty(t3));
+    rbtree_delete(t3, (void*)50);
+    rbtree_delete(t3, (void*)99);
+    printf ("rbtree_empty (should be empty): %d\n", rbtree_empty(t3));
+    rbtree_deinit(t3);
 
     dump_unfreed_blocks();
 
