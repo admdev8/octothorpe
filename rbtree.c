@@ -189,6 +189,9 @@ void rbtree_deinit(rbtree* t)
 
 static void rbtree_clear_helper(rbtree* t, struct rbtree_node_t *n)
 {
+    if (n==NULL)
+        return;
+
     if (n->right)
         rbtree_clear_helper(t, n->right);
     if (n->left)
@@ -204,6 +207,7 @@ void rbtree_clear(rbtree* t)
     if (rbtree_empty(t))
         return;
     rbtree_clear_helper(t, t->root);
+    t->root=NULL;
 };
 
 rbtree_node* new_node(rbtree* t, void* key, void* value, color node_color, node* left, node* right) 

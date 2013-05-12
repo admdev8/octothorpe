@@ -1,4 +1,7 @@
-enumerate:
+enumerate (should be empty):
+rbtree_empty (should be empty): 1
+rbtree_empty (should be present something): 0
+rbtree_empty (should be present something): 0
 enumerate:
 key=12345 value=value1
 key=12346 value=value2
@@ -25,6 +28,7 @@ key=666 value=666
 key=12346 value=value2
 key=12347 value=value3
 freeing:
+rbtree_empty (should be empty after _clear): 1
 test 2 (lower/upper bounds)
 enumerate t2:
 key=50 value=value 50

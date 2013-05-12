@@ -58,13 +58,17 @@ int main()
     int key_prev, key_next;
     char *value_prev, *value_next;
 
-    printf ("enumerate:\n");
+    printf ("enumerate (should be empty):\n");
     rbtree_foreach(t, visitor, NULL, NULL);
 
+    printf ("rbtree_empty (should be empty): %d\n", rbtree_empty(t));
+
     rbtree_insert(t, (void*)12345, (void*)"value1");
+    printf ("rbtree_empty (should be present something): %d\n", rbtree_empty(t));
     assert(strcmp (rbtree_lookup(t, (void*)12345), "value1")==0);
 
     rbtree_insert(t, (void*)12346, (void*)"value2");
+    printf ("rbtree_empty (should be present something): %d\n", rbtree_empty(t));
 
     printf ("enumerate:\n");
     rbtree_foreach(t, visitor, NULL, NULL);
@@ -88,6 +92,8 @@ int main()
 
     printf ("freeing:\n");
     rbtree_foreach(new_t, NULL, NULL, dfree);
+    rbtree_clear(new_t);
+    printf ("rbtree_empty (should be empty after _clear): %d\n", rbtree_empty(new_t));
 
     rbtree_deinit(t);
     rbtree_deinit(new_t);
