@@ -3,21 +3,57 @@
 #include <assert.h>
 #include <stdlib.h>
 #include <string.h>
-#include "dmalloc.h"
+#include <stdarg.h>
 
+#include "dmalloc.h"
 #include "lisp.h"
 
 #define FILE_OUT stdout
 //#define FILE_OUT stderr
 
-obj* obj_int (int i)
+obj* obj_byte (byte i)
 {
     obj* rt;
-    //fprintf (FILE_OUT, "obj_int(%d)", i);
     rt=DCALLOC (obj, 1, "obj");
-    rt->t=OBJ_INTEGER;
-    rt->u.i=i;
+    rt->t=OBJ_BYTE;
+    rt->u.b=i;
     return rt;
+};
+
+obj* obj_wyde (wyde i)
+{
+    obj* rt;
+    rt=DCALLOC (obj, 1, "obj");
+    rt->t=OBJ_WYDE;
+    rt->u.w=i;
+    return rt;
+};
+
+obj* obj_tetrabyte (tetrabyte i)
+{
+    obj* rt;
+    rt=DCALLOC (obj, 1, "obj");
+    rt->t=OBJ_TETRABYTE;
+    rt->u.tb=i;
+    return rt;
+};
+
+obj* obj_octabyte (octabyte i)
+{
+    obj* rt;
+    rt=DCALLOC (obj, 1, "obj");
+    rt->t=OBJ_OCTABYTE;
+    rt->u.ob=i;
+    return rt;
+};
+
+obj* obj_REG (REG i)
+{
+#ifdef _WIN64
+    return obj_octabyte(i);
+#else
+    return obj_tetrabyte(i);
+#endif
 };
 
 obj* obj_double (double d)
@@ -29,18 +65,25 @@ obj* obj_double (double d)
     return rt;
 };
 
-obj* obj_int_n_times (int i, int t)
+obj* obj_wyde_n_times (wyde i, int t)
 {
     if (t==0)
         return NULL;
-    return cons (obj_int(i), obj_int_n_times(i, t-1));
+    return cons (obj_wyde(i), obj_tetrabyte_n_times(i, t-1));
+};
+
+obj* obj_tetrabyte_n_times (tetrabyte i, int t)
+{
+    if (t==0)
+        return NULL;
+    return cons (obj_tetrabyte(i), obj_tetrabyte_n_times(i, t-1));
 };
 
 obj* obj_cstring (const char *s)
 {
     obj* rt=DCALLOC (obj, 1, "obj");
     rt->t=OBJ_CSTRING;
-    rt->u.s=strdup (s);
+    rt->u.s=DSTRDUP (s, "s");
     return rt;
 };
 
@@ -70,6 +113,7 @@ obj* cons (obj* head, obj* tail)
 
 bool obj_is_cons(obj* o)
 {
+    assert(o);
     return o->t==OBJ_CONS;
 };
 
@@ -87,6 +131,7 @@ obj* cdr(obj* o)
 
 bool obj_is_opaque(obj* o)
 {
+    assert(o);
     return o->t==OBJ_OPAQUE;
 };
 
@@ -131,13 +176,12 @@ bool obj_is_list(obj *o)
 
 void obj_dump_as_list(obj *o)
 {
-    obj* c;
     assert (obj_is_list(o));
 
     // treat it as list!
 
     printf ("(");
-    for (c=o; ; c=c->u.c->tail)
+    for (obj* c=o; ; c=c->u.c->tail)
     {
         obj_dump(c->u.c->head);
         if (c->u.c->tail==NULL)
@@ -150,7 +194,6 @@ void obj_dump_as_list(obj *o)
 
 void obj_dump(obj *o)
 {
-    //fprintf (FILE_OUT, "obj_dump(0x%p)\n", o);
     if(o==NULL)
     {
         fprintf (FILE_OUT, "NULL");
@@ -165,8 +208,17 @@ void obj_dump(obj *o)
 
     switch (o->t)
     {
-        case OBJ_INTEGER:
-            fprintf (FILE_OUT, "0x%x", o->u.i);
+        case OBJ_BYTE:
+            fprintf (FILE_OUT, "0x%x", o->u.b);
+            break;
+        case OBJ_WYDE:
+            fprintf (FILE_OUT, "0x%x", o->u.w);
+            break;
+        case OBJ_TETRABYTE:
+            fprintf (FILE_OUT, "0x%x", o->u.tb);
+            break;
+        case OBJ_OCTABYTE:
+            fprintf (FILE_OUT, "0x%I64x", o->u.ob);
             break;
         case OBJ_DOUBLE:
             fprintf (FILE_OUT, "%f", o->u.d);
@@ -175,11 +227,10 @@ void obj_dump(obj *o)
             fprintf (FILE_OUT, "\"%s\"", o->u.s);
             break;
         case OBJ_CONS:
-            assert (o->u.c);
             fprintf (FILE_OUT, "(");
-            obj_dump(o->u.c->head);
+            obj_dump(car(o));
             fprintf(FILE_OUT, " ");
-            obj_dump(o->u.c->tail);
+            obj_dump(cdr(o));
             fprintf (FILE_OUT, ")");
             break;
         case OBJ_OPAQUE:
@@ -203,11 +254,15 @@ static obj* find_last_cons(obj *l)
         return find_last_cons(l->u.c->tail);
 };
 
+// l1 may be NULL, it's OK
 obj* nconc (obj *l1, obj *l2)
 {
+    if (l1==NULL)
+        return l2;
+
     // find last element of l1. it should be NULL.
     obj *last=find_last_cons(l1);
-    assert(last->t==OBJ_CONS);
+    assert(last->t==OBJ_CONS && "nconc: last element of l1 list should be cons cell");
     last->u.c->tail=l2;
     return l1;
 };
@@ -232,5 +287,50 @@ void obj_free(obj* o)
             break;
     };
     DFREE(o);
+};
+
+obj* create_list(obj* o, ...)
+{
+    va_list args;
+    obj *rt=NULL;
+    va_start(args, o);
+
+    for (obj* i=o; i; i=va_arg(args, obj*))
+        rt=nconc(rt, cons(i, NULL));
+
+    va_end(args);
+    return rt;
+};
+
+tetrabyte obj_get_as_tetrabyte(obj* o)
+{
+    if (o->t!=OBJ_TETRABYTE)
+    {
+        printf ("%s() o is not OBJ_TETRABYTE. it is=", __func__);
+        obj_dump(o);
+        exit(0);
+    };
+    return o->u.tb;
+};
+
+octabyte obj_get_as_octabyte(obj* o)
+{
+    assert (o->t==OBJ_OCTABYTE);
+    return o->u.ob;
+};
+
+REG obj_get_as_REG(obj* o)
+{
+#ifdef _WIN64
+    return obj_get_as_octabyte(o);
+#else
+    return obj_get_as_tetrabyte(o);
+#endif
+};
+
+char* obj_get_as_cstring(obj* o)
+{
+    assert (o->t==OBJ_CSTRING);
+    return o->u.s;
 };
 

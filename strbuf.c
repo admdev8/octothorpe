@@ -259,3 +259,11 @@ void env_vars_expansion(strbuf *sb)
     };
 };
 
+char *strbuf_detach(strbuf *s, size_t *out_size)
+{
+    char *rt=s->buf;
+
+    strbuf_reinit(s, 0);
+    return rt;
+};
+

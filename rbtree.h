@@ -34,6 +34,8 @@ extern "C" {
 
 #include <stdbool.h>
 
+#include "datatypes.h"
+
 enum rbtree_node_color { RED, BLACK };
 
 //#pragma pack(push)
@@ -92,6 +94,7 @@ void rbtree_foreach(rbtree* t, void (*visitor_kv)(void*, void*),
         void (*visitor_k)(void*), void (*visitor_v)(void*));
 
 int compare_size_t(void* leftp, void* rightp);
+int compare_tetrabytes(void* leftp, void* rightp);
 
 struct rbtree_node_t *rbtree_minimum(rbtree* t); // will return NULL for empty tree
 struct rbtree_node_t *rbtree_maximum(rbtree* t); // will return NULL for empty tree

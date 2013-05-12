@@ -1,0 +1,11 @@
+matched:
+0, 25
+[config=asdasdasd; comment]
+7, 16
+[asdasdasd]
+dummy regexec() call -> 1
+dummy regexec() call -> 1
+0 87 [trace_skip=\%SystemRoot%\System32.*!.*dll!.* ; skip all functions in 64-bit system DLLs]
+11 35 [\%SystemRoot%\System32.*]
+36 41 [.*dll]
+42 44 [.*]

@@ -166,9 +166,9 @@ rbtree* rbtree_create(bool use_dmalloc, const char *struct_name, compare_func co
     rbtree* t;
 
     if (use_dmalloc)
-        t = DMALLOC(struct rbtree_t, 1, struct_name);
+        t = DCALLOC(rbtree, 1, struct_name);
     else
-        t = malloc(sizeof(struct rbtree_t));
+        t = calloc(sizeof(rbtree), 1);
     t->root = NULL;
     verify_properties(t);
     t->use_dmalloc=use_dmalloc;
@@ -419,6 +419,7 @@ void replace_node(rbtree* t, node* oldn, node* newn)
 void rbtree_insert(rbtree* t, void* key, void* value) 
 {
     rbtree_node* inserted_node = new_node(t, key, value, RED, NULL, NULL);
+    assert (t);
     if (t->root == NULL) 
     {
         t->root = inserted_node;
@@ -685,8 +686,21 @@ void rbtree_foreach(rbtree* t, void (*visitor_kv)(void*, void*),
 
 int compare_size_t(void* leftp, void* rightp)
 {
-    size_t left = (size_t)leftp;
-    size_t right = (size_t)rightp;
+    size_t left = (size_t)leftp, right = (size_t)rightp;
+    if (left < right)
+        return -1;
+    else if (left > right)
+        return 1;
+    else 
+    {
+        assert (left == right);
+        return 0;
+    };
+};
+
+int compare_tetrabytes(void* leftp, void* rightp)
+{
+    tetrabyte left = (tetrabyte)leftp, right = (tetrabyte)rightp;
     if (left < right)
         return -1;
     else if (left > right)
@@ -758,10 +772,8 @@ struct rbtree_node_t* rbtree_pred(struct rbtree_node_t* x)
 
 void rbtree_copy (rbtree* t, rbtree* new_t, void* (*key_copier)(void*), void* (*value_copier)(void*))
 {
-    struct rbtree_node_t *i;
-
     // this can be faster, using rbtree_foreach()
-    for (i=rbtree_minimum(t); i!=NULL; i=rbtree_succ(i))
+    for (struct rbtree_node_t *i=rbtree_minimum(t); i!=NULL; i=rbtree_succ(i))
     {
         void *new_k=(*key_copier)(i->key);
         void *new_v=(*value_copier)(i->value);
@@ -771,5 +783,6 @@ void rbtree_copy (rbtree* t, rbtree* new_t, void* (*key_copier)(void*), void* (*
 
 bool rbtree_empty (rbtree* t)
 {
+    assert(t);
     return t->root==NULL ? true : false;
 };

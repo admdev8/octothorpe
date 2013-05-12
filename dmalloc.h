@@ -40,10 +40,10 @@ void dfree (void* ptr);
 #endif
 
 #ifdef _DEBUG
-char* dstrdup (const char *s, const char * filename, unsigned line, const char * function, const char * structname);
-#define DSTRDUP(size,comment) (dstrdup(size, __FILE__, __LINE__, __func__, comment))
+char* dstrdup (const char *str, const char * filename, unsigned line, const char * function, const char * structname);
+#define DSTRDUP(str,comment) (dstrdup(str, __FILE__, __LINE__, __func__, comment))
 #else
-#define DSTRDUP(size,comment) (strdup(size))
+#define DSTRDUP(str,comment) (strdup(str))
 #endif
 
 void* dmemdup (void *p, size_t s, const char * filename, unsigned line, const char * function, const char * structname);
