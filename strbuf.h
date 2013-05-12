@@ -49,7 +49,7 @@ void strbuf_asmhex(strbuf *out, octabyte v);
 
 void strbuf_addc_C_escaped (strbuf *s, char c, bool treat_any_as_binary);
 void strbuf_cvt_to_C_string (strbuf *s, strbuf *out, bool treat_as_binary);
-void env_vars_expansion(strbuf *sb);
+//void env_vars_expansion(strbuf *sb);
 
 char *strbuf_detach(strbuf *s, size_t *out_size);
 

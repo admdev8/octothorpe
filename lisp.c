@@ -269,6 +269,7 @@ obj* nconc (obj *l1, obj *l2)
 
 void obj_free(obj* o)
 {
+    assert(o);
     switch (o->t)
     {
         case OBJ_CSTRING:
