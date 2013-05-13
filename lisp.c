@@ -284,7 +284,16 @@ void obj_free(obj* o)
             if (o->u.o->free_fn) (*o->u.o->free_fn)(o->u.o->ptr);
             DFREE(o->u.o);
             break;
+        case OBJ_BYTE:
+        case OBJ_WYDE:
+        case OBJ_TETRABYTE:
+        case OBJ_OCTABYTE:
+        case OBJ_DOUBLE:
+            // do nothing
+            break;
+
         default:
+            assert(0);
             break;
     };
     DFREE(o);
