@@ -39,6 +39,8 @@ void dfree (void* ptr);
 #define DFREE(p) (free(p))
 #endif
 
+void DFREE_if_need(void*);
+
 #ifdef _DEBUG
 char* dstrdup (const char *str, const char * filename, unsigned line, const char * function, const char * structname);
 #define DSTRDUP(str,comment) (dstrdup(str, __FILE__, __LINE__, __func__, comment))
