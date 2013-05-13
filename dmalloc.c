@@ -247,7 +247,7 @@ void dfree (void* ptr)
 #endif    
     
     if (ptr==NULL)
-        return;
+        return; // do nothing - by standard
 
 #ifdef DFREE_CHK_ALL_GUARDS
     chk_all_guards();
@@ -325,16 +325,3 @@ void dmalloc_break_at_seq_n (unsigned seq_n)
     break_on_seq_n=true;
     seq_n_to_break_on=seq_n;
 };
-
-void DFREE_if_need(void* p)
-{
-    if (p)
-    {
-#ifdef _DEBUG
-        DFREE(p);
-#else
-        free(p);
-#endif
-    };
-};
-

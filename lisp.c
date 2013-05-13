@@ -293,7 +293,7 @@ void obj_free(obj* o)
             break;
 
         default:
-            assert(0);
+            assert(0); // fail if type is unknown: fail if pointer to incorrect memory chunk is passed
             break;
     };
     DFREE(o);
