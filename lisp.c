@@ -254,9 +254,10 @@ static obj* find_last_cons(obj *l)
         return find_last_cons(l->u.c->tail);
 };
 
-// l1 may be NULL, it's OK
 obj* nconc (obj *l1, obj *l2)
 {
+    assert (obj_is_cons(l2) && "l2 argument should be list too!"); 
+
     if (l1==NULL)
         return l2;
 
@@ -269,7 +270,8 @@ obj* nconc (obj *l1, obj *l2)
 
 void obj_free(obj* o)
 {
-    assert(o);
+    if(o==NULL)
+        return; // be silent, that behavour is the same as in free(NULL);
     switch (o->t)
     {
         case OBJ_CSTRING:

@@ -34,7 +34,7 @@ typedef struct _obj
     union
     {
         byte b; // OBJ_BYTE
-        byte w; // OBJ_WYDE
+        wyde w; // OBJ_WYDE
         tetrabyte tb; // OBJ_TETRABYTE
         octabyte ob; // OBJ_OCTABYTE
         double d; // OBJ_DOUBLE
@@ -64,6 +64,8 @@ obj* create_obj_opaque(void* ptr, void (*dumper_fn) (void*), void (*free_fn) (vo
 bool obj_is_list(obj *o);
 void obj_dump_as_list(obj *o);
 void obj_dump(obj *o);
+
+// l1 may be NULL, it's OK. l1 and l2 should be lists!
 obj *nconc (obj *l1, obj *l2);
 void obj_free(obj* o);
 bool obj_is_cons(obj* o);
