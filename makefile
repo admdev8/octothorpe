@@ -1,6 +1,7 @@
 # -DUSE_DMALLOC is only for regex
 CPPFLAGS=-D_DEBUG -DUSE_DMALLOC
-CFLAGS=-c -Wall -g -std=c99
+#CFLAGS=-c -Wall -g -std=c99
+CFLAGS=-c -Wall -g -std=gnu99
 SOURCES=dmalloc.c memutils.c rbtree.c rand.c strbuf.c stuff.c logging.c x86.c string_list.c \
 	elf.c lisp.c regex.c
 TEST_SOURCES=testrbtree.c strbuf_test.c logging_test.c dmalloc_test.c test-regex.c \

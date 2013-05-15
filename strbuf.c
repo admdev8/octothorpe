@@ -237,7 +237,6 @@ void strbuf_cvt_to_C_string (strbuf *s, strbuf *out, bool treat_as_binary)
         strbuf_addc_C_escaped (out, s->buf[i], treat_as_binary);
 };
 
-#if 0
 // replace %substring% to environment variable, if possible
 void env_vars_expansion(strbuf *sb)
 {
@@ -259,7 +258,6 @@ void env_vars_expansion(strbuf *sb)
         i++;
     };
 };
-#endif
 
 char *strbuf_detach(strbuf *s, size_t *out_size)
 {
