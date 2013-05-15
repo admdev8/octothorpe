@@ -69,6 +69,7 @@ void obj_dump(obj *o);
 // l1 may be NULL, it's OK. l1 and l2 should be lists!
 obj *NCONC (obj *l1, obj *l2);
 void obj_free(obj* o);
+void obj_free_conses_of_list(obj* o);
 bool CONSP(obj* o);
 obj* car(obj* o);
 obj* cdr(obj* o);

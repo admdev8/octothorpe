@@ -301,6 +301,22 @@ void obj_free(obj* o)
     DFREE(o);
 };
 
+void obj_free_conses_of_list(obj* o)
+{
+    assert (LISTP(o));
+    switch (o->t)
+    {
+        case OBJ_CONS:
+            if (o->u.c->tail) obj_free_conses_of_list (o->u.c->tail);
+            DFREE(o->u.c);
+            break;
+        default:
+            assert(0);
+            break;
+    };
+    DFREE(o);
+};
+
 obj* create_list(obj* o, ...)
 {
     va_list args;
