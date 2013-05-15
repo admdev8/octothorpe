@@ -111,7 +111,7 @@ obj* cons (obj* head, obj* tail)
     return rt;
 };
 
-bool obj_is_cons(obj* o)
+bool CONSP(obj* o)
 {
     assert(o);
     return o->t==OBJ_CONS;
@@ -119,13 +119,13 @@ bool obj_is_cons(obj* o)
 
 obj* car(obj* o)
 {
-    assert (obj_is_cons(o));
+    assert (CONSP(o));
     return o->u.c->head;
 };
 
 obj* cdr(obj* o)
 {
-    assert (obj_is_cons(o));
+    assert (CONSP(o));
     return o->u.c->tail;
 };
 
@@ -155,7 +155,7 @@ obj* create_obj_opaque(void* ptr, void (*dumper_fn) (void *), void (*free_fn) (v
     return o;
 };
 
-bool obj_is_list(obj *o)
+bool LISTP(obj *o)
 {
     assert (o);
 
@@ -169,14 +169,14 @@ bool obj_is_list(obj *o)
         return true;
 
     if (o->u.c->tail->t==OBJ_CONS)
-        return obj_is_list (o->u.c->tail);
+        return LISTP (o->u.c->tail);
     else // tail is not cons and not NULL
         return false;
 };
 
 void obj_dump_as_list(obj *o)
 {
-    assert (obj_is_list(o));
+    assert (LISTP(o));
 
     // treat it as list!
 
@@ -200,7 +200,7 @@ void obj_dump(obj *o)
         return;
     };
 
-    if (obj_is_list(o))
+    if (LISTP(o))
     {
         obj_dump_as_list(o);
         return;
@@ -245,24 +245,24 @@ void obj_dump(obj *o)
     };
 };
 
-static obj* find_last_cons(obj *l)
+obj* LAST(obj *l)
 {
     assert (l->t==OBJ_CONS);
     if (l->u.c->tail==NULL)
         return l;
     else
-        return find_last_cons(l->u.c->tail);
+        return LAST(l->u.c->tail);
 };
 
-obj* nconc (obj *l1, obj *l2)
+obj* NCONC (obj *l1, obj *l2)
 {
-    assert (obj_is_cons(l2) && "l2 argument should be list too!"); 
+    assert (CONSP(l2) && "l2 argument should be list too!"); 
 
     if (l1==NULL)
         return l2;
 
     // find last element of l1. it should be NULL.
-    obj *last=find_last_cons(l1);
+    obj *last=LAST(l1);
     assert(last->t==OBJ_CONS && "nconc: last element of l1 list should be cons cell");
     last->u.c->tail=l2;
     return l1;
@@ -308,7 +308,7 @@ obj* create_list(obj* o, ...)
     va_start(args, o);
 
     for (obj* i=o; i; i=va_arg(args, obj*))
-        rt=nconc(rt, cons(i, NULL));
+        rt=NCONC(rt, cons(i, NULL));
 
     va_end(args);
     return rt;

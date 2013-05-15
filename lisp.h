@@ -50,6 +50,7 @@ typedef struct _cons_cell
     obj *tail; // AKA cdr
 } cons_cell;
 
+obj* lisp_LAST(obj *l);
 obj* obj_byte (byte i);
 obj* obj_wyde (wyde i);
 obj* obj_tetrabyte (tetrabyte i);
@@ -61,14 +62,14 @@ obj* obj_tetrabyte_n_times (tetrabyte i, int t);
 obj* obj_cstring (const char *s);
 obj* cons (obj* head, obj* tail);
 obj* create_obj_opaque(void* ptr, void (*dumper_fn) (void*), void (*free_fn) (void*));
-bool obj_is_list(obj *o);
+bool LISTP(obj *o);
 void obj_dump_as_list(obj *o);
 void obj_dump(obj *o);
 
 // l1 may be NULL, it's OK. l1 and l2 should be lists!
-obj *nconc (obj *l1, obj *l2);
+obj *NCONC (obj *l1, obj *l2);
 void obj_free(obj* o);
-bool obj_is_cons(obj* o);
+bool CONSP(obj* o);
 obj* car(obj* o);
 obj* cdr(obj* o);
 bool obj_is_opaque(obj* o);
