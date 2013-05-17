@@ -359,6 +359,12 @@ octabyte obj_get_as_octabyte(obj* o)
     return o->u.ob;
 };
 
+byte obj_get_as_byte(obj* o)
+{
+    assert (o->t==OBJ_BYTE);
+    return o->u.b;
+};
+
 REG obj_get_as_REG(obj* o)
 {
 #ifdef _WIN64

@@ -78,6 +78,7 @@ bool obj_is_opaque(obj* o);
 void* obj_unpack_opaque(obj* o);
 tetrabyte obj_get_as_tetrabyte(obj* o);
 octabyte obj_get_as_octabyte(obj* o);
+byte obj_get_as_byte(obj* o);
 REG obj_get_as_REG(obj* o);
 char* obj_get_as_cstring(obj* o);
 // terminated with NULL
