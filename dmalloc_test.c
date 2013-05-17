@@ -1,10 +1,12 @@
 #include "dmalloc.h"
 #include "datatypes.h"
+#include "logging.h"
 
 int main()
 {
     byte *t1, *t2, *t3, *t4, *t5, *t6;
     char *s;
+    //L_init("tmp");
     
     s=DSTRDUP ("hahaha", "s");
 
@@ -25,6 +27,7 @@ int main()
 
     DFREE(t1);
     DFREE(t5);
+    //L_print_buf (t5, 666);
     DFREE(t6);
     DFREE(s);
 

@@ -75,6 +75,7 @@ static void dump_blk_info (struct dmalloc_info *i)
     printf ("seq_n:%d, size: %d, filename: %s:%d, func: %s, struct: %s\n", i->seq_n, i->user_size, i->filename, i->line, i->function, i->structname);
 };
 
+
 #endif // _DEBUG
 
 #ifdef ADD_GUARDS
@@ -102,6 +103,10 @@ void* dmalloc (size_t size, const char * filename, unsigned line, const char * f
     rt=malloc (size);
 #endif    
     
+#ifdef _DEBUG
+    fill_by_tetrabytes (rt, size, 0x0BADF00D);
+#endif
+
     if (rt==NULL)
         die("%s() can't allocate size %d for %s (%s:%d)\n", __func__, size, structname, filename, line);
 
@@ -240,6 +245,7 @@ void dfree (void* ptr)
 {
 #ifdef _DEBUG
     struct dmalloc_info *tmp;
+    size_t blk_user_size;
 #endif
 
 #ifdef LOGGING 
@@ -272,11 +278,17 @@ void dfree (void* ptr)
 #endif
     }
     else
+    {
+        blk_user_size=tmp->user_size;
         free(tmp);
+    };
     rbtree_delete(tbl, ptr);
 #endif
 
 #ifdef ADD_GUARDS
+#ifdef _DEBUG
+    fill_by_tetrabytes (ptr, blk_user_size, 0xB1CF1EED);
+#endif
     free ((byte*)ptr-4);
 #else
     free (ptr);
