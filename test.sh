@@ -26,3 +26,6 @@ rm test-regex.1
 diff testrbtree.test.correct testrbtree.test
 rm testrbtree.test
 
+./stuff_test > stuff_test.1
+diff stuff_test.1 stuff_test.correct
+rm stuff_test.1

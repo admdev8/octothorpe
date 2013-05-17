@@ -99,3 +99,24 @@ void debugger_breakpoint()
    __asm__("int $3");
 #endif
 };
+
+void fill_by_tetrabytes (void* ptr, size_t size, tetrabyte val)
+{
+    byte *cur_ptr=(byte*)ptr;
+    size_t rem=size;
+
+    while (rem>=4)
+    {
+        *(tetrabyte*)cur_ptr=val;
+        cur_ptr+=sizeof(tetrabyte);
+        rem-=sizeof(tetrabyte);
+    };
+
+    if (rem>=1)
+        *cur_ptr=val&0xFF;
+    if (rem>=2)
+        *(cur_ptr+1)=(val&0xFF00)>>8;
+    if (rem==3)
+        *(cur_ptr+2)=(val&0xFF0000)>>16;
+};
+
