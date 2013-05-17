@@ -79,10 +79,12 @@ void* obj_unpack_opaque(obj* o);
 tetrabyte obj_get_as_tetrabyte(obj* o);
 octabyte obj_get_as_octabyte(obj* o);
 byte obj_get_as_byte(obj* o);
+wyde obj_get_as_wyde(obj* o);
 REG obj_get_as_REG(obj* o);
 char* obj_get_as_cstring(obj* o);
 // terminated with NULL
 obj* create_list(obj* o, ...);
 
 void list_of_bytes_to_array (byte** array, unsigned *array_len, obj* o);
+void list_of_wydes_to_array (wyde** array, unsigned *array_len, obj* o);
 

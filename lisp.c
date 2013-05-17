@@ -69,7 +69,7 @@ obj* obj_wyde_n_times (wyde i, int t)
 {
     if (t==0)
         return NULL;
-    return cons (obj_wyde(i), obj_tetrabyte_n_times(i, t-1));
+    return cons (obj_wyde(i), obj_wyde_n_times(i, t-1));
 };
 
 obj* obj_tetrabyte_n_times (tetrabyte i, int t)
@@ -365,6 +365,11 @@ byte obj_get_as_byte(obj* o)
     return o->u.b;
 };
 
+wyde obj_get_as_wyde(obj* o)
+{
+    assert (o->t==OBJ_WYDE);
+    return o->u.w;
+};
 REG obj_get_as_REG(obj* o)
 {
 #ifdef _WIN64
@@ -393,5 +398,20 @@ void list_of_bytes_to_array (byte** array, unsigned *array_len, obj* o)
 
     //for (int i=0; i<*array_len; i++)
     //    printf ("idx=%d, %02X\n", i, (*array)[i]);
+};
+
+void list_of_wydes_to_array (wyde** array, unsigned *array_len, obj* o)
+{
+   int idx;
+   obj *i;
+   assert (LISTP(o)); 
+
+   *array_len=LENGTH(o);
+   *array=DMALLOC(wyde, *array_len, "array");
+    for (i=o, idx=0; i; i=cdr(i), idx++)
+        (*array)[idx]=obj_get_as_wyde(car(i));
+
+    //for (int i=0; i<*array_len; i++)
+    //    printf ("idx=%d, %04X\n", i, (*array)[i]);
 };
 
