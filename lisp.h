@@ -84,3 +84,5 @@ char* obj_get_as_cstring(obj* o);
 // terminated with NULL
 obj* create_list(obj* o, ...);
 
+void list_of_bytes_to_array (byte** array, unsigned *array_len, obj* o);
+

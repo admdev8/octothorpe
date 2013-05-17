@@ -380,3 +380,18 @@ char* obj_get_as_cstring(obj* o)
     return o->u.s;
 };
 
+void list_of_bytes_to_array (byte** array, unsigned *array_len, obj* o)
+{
+   int idx;
+   obj *i;
+   assert (LISTP(o)); 
+
+   *array_len=LENGTH(o);
+   *array=DMALLOC(byte, *array_len, "array");
+    for (i=o, idx=0; i; i=cdr(i), idx++)
+        (*array)[idx]=obj_get_as_byte(car(i));
+
+    //for (int i=0; i<*array_len; i++)
+    //    printf ("idx=%d, %02X\n", i, (*array)[i]);
+};
+
