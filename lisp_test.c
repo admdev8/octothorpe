@@ -15,6 +15,7 @@ int main()
     o=create_list(obj_tetrabyte(1), obj_tetrabyte(2), obj_tetrabyte(3), obj_tetrabyte(4), NULL);
     obj_dump(o);
     printf ("\n");
+    printf ("LENGTH=%d\n", LENGTH(o));
     obj_free(o);
 
     o=create_list(

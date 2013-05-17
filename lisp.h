@@ -50,7 +50,7 @@ typedef struct _cons_cell
     obj *tail; // AKA cdr
 } cons_cell;
 
-obj* lisp_LAST(obj *l);
+obj* LAST(obj *l);
 obj* obj_byte (byte i);
 obj* obj_wyde (wyde i);
 obj* obj_tetrabyte (tetrabyte i);
@@ -65,6 +65,7 @@ obj* create_obj_opaque(void* ptr, void (*dumper_fn) (void*), void (*free_fn) (vo
 bool LISTP(obj *o);
 void obj_dump_as_list(obj *o);
 void obj_dump(obj *o);
+unsigned LENGTH (obj *l);
 
 // l1 may be NULL, it's OK. l1 and l2 should be lists!
 obj *NCONC (obj *l1, obj *l2);
@@ -81,3 +82,4 @@ REG obj_get_as_REG(obj* o);
 char* obj_get_as_cstring(obj* o);
 // terminated with NULL
 obj* create_list(obj* o, ...);
+

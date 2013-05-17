@@ -245,6 +245,18 @@ void obj_dump(obj *o)
     };
 };
 
+unsigned LENGTH (obj *l)
+{
+    unsigned rt=0;
+    
+    assert (LISTP(l));
+
+    for (obj* i=l; i; i=cdr(i))
+        rt++;
+    
+    return rt;
+};
+
 obj* LAST(obj *l)
 {
     assert (l->t==OBJ_CONS);
