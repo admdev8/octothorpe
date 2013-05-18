@@ -245,7 +245,7 @@ void dfree (void* ptr)
 {
 #ifdef _DEBUG
     struct dmalloc_info *tmp;
-    size_t blk_user_size;
+    size_t blk_user_size=0;
 #endif
 
 #ifdef LOGGING 
