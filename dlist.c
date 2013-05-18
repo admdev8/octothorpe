@@ -1,3 +1,4 @@
+#include <assert.h>
 #include "dlist.h"
 #include "dmalloc.h"
 
@@ -16,12 +17,16 @@ void dlist_insert_at_begin(dlist *l, void *data)
     };
     dlist *old_head=DCALLOC(dlist, 1, "dlist");
    
-    *old_head=*l; // copy whole structure
+    old_head->next=l->next;
+    old_head->data=l->data;
+    old_head->prev=l;
 
     // fill current list head
     l->data=data;
     l->next=old_head;
     l->prev=NULL;
+    //printf ("%s() after inserting\n", __func__);
+    //dlist_dump(l);
 };
 
 void* dlist_get_first(dlist *l)
@@ -44,12 +49,46 @@ void dlist_free(dlist *l, void (*free_fn)(void*))
     };
 };
 
-void dlist_unlink(dlist *l)
+void dlist_unlink(dlist **lst, dlist *l)
 {
-    dlist *left=l->prev;
     dlist *right=l->next;
-    
-    left->next=right;
-    right->prev=left;
+
+    if (*lst==l) // special case: first element is to be unlinked
+    {
+        if (right) // there are at least two elements
+        {
+            right->prev=NULL;
+            *lst=right;
+        }
+        else // only sole element is not be unlinked
+            *lst=NULL; // no more elements!
+    }
+    else
+    {
+        dlist *left=l->prev;
+
+        if (left)
+        {
+            assert (left->next==l); // just to be sure links were correct
+            left->next=right;
+        };
+
+        if (right)
+        {
+            assert (right->prev==l); // just to be sure links were correct
+            right->prev=left;
+        };
+    };
+
     DFREE(l);
 };
+
+void dlist_dump(dlist *l)
+{
+    if (l==NULL)
+        return;
+    printf ("%s(0x%p) prev=0x%p next=0x%p data=0x%p\n", __func__, l, l->prev, l->next, l->data);
+    if (l->next)
+        dlist_dump(l->next);
+};
+
