@@ -8,6 +8,7 @@ dlist *dlist_init()
 
 void dlist_insert_at_begin(dlist *l, void *data)
 {
+    assert(l);
     if (l->data==NULL && l->prev==NULL && l->next==NULL)
     {
         l->data=data;
@@ -43,3 +44,12 @@ void dlist_free(dlist *l, void (*free_fn)(void*))
     };
 };
 
+void dlist_unlink(dlist *l)
+{
+    dlist *left=l->prev;
+    dlist *right=l->next;
+    
+    left->next=right;
+    right->prev=left;
+    DFREE(l);
+};
