@@ -29,3 +29,7 @@ rm testrbtree.test
 ./stuff_test > stuff_test.1
 diff stuff_test.1 stuff_test.correct
 rm stuff_test.1
+
+./dlist_test > dlist_test.1
+diff dlist_test.1 dlist_test.correct
+rm dlist_test.1
