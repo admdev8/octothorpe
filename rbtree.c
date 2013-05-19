@@ -259,47 +259,45 @@ static void find_prev_and_next_nodes (rbtree_node* n, void* key,
 {
     if (key < n->key)
     {
-        if (out_prev_k)
+        if (out_prev_k || out_prev_v)
         {
             rbtree_node *p=rbtree_pred(n);
-            assert(out_prev_v);
+
             if (p)
             {
-                *out_prev_k=p->key;
-                *out_prev_v=p->value;
+                if (out_prev_k) *out_prev_k=p->key;
+                if (out_prev_v) *out_prev_v=p->value;
             }
             else
-                *out_prev_k=*out_prev_v=NULL;
+            {
+                if (out_prev_k) *out_prev_k=NULL;
+                if (out_prev_v) *out_prev_v=NULL;
+            };
         };
 
-        if (out_next_k)
-        {
-            assert(out_next_v);
-            *out_next_k=n->key;
-            *out_next_v=n->value;
-        };
+        if (out_next_k) *out_next_k=n->key;
+        if (out_next_k) *out_next_v=n->value;
     }
     else
     { // key > n->key
-        if (out_next_k)
+        if (out_next_k || out_next_v)
         {
             rbtree_node *p=rbtree_succ(n);
-            assert(out_next_v);
+
             if (p)
             {
-                *out_next_k=p->key;
-                *out_next_v=p->value;
+                if (out_next_k) *out_next_k=p->key;
+                if (out_next_v) *out_next_v=p->value;
             }
             else
-                *out_next_k=*out_next_v=NULL;
+            {
+                if (out_next_k) *out_next_k=NULL;
+                if (out_next_v) *out_next_v=NULL;
+            };
         };
 
-        if (out_prev_k)
-        {
-            assert(out_prev_v);
-            *out_prev_k=n->key;
-            *out_prev_v=n->value;
-        };
+        if (out_prev_k) *out_prev_k=n->key;
+        if (out_prev_v) *out_prev_v=n->value;
     };
 };
 
@@ -318,10 +316,10 @@ node* lookup_node2(rbtree *tree, rbtree_node* n, void* key,
     {
         // not filled in this case (yet)
         // am I need it?
-        if (out_prev_k)
-            *out_prev_k=*out_prev_v=NULL;
-        if (out_next_k)
-            *out_next_k=*out_next_v=NULL;
+        if (out_prev_k) *out_prev_k=NULL;
+        if (out_prev_v) *out_prev_v=NULL;
+        if (out_next_k) *out_next_k=NULL;
+        if (out_next_v) *out_next_v=NULL;
         return n;
     }
     else if (comp_result<0)
