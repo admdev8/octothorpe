@@ -52,14 +52,14 @@ void dump_flags (fds *s, tetrabyte flags)
 void DR7_to_str (tetrabyte DR7, strbuf* out)
 {
     strbuf_addf(out, "%s%s%s%s%s%s%s%s%s%s%sR/W0=%d%d LEN0=%d%d R/W1=%d%d LEN1=%d%d R/W2=%d%d LEN2=%d%d R/W3=%d%d LEN3=%d%d", 
-            IS_SET (DR7, 1<<0) ? "L0 " : "   ",
-            IS_SET (DR7, 1<<1) ? "G0 " : "   ",
-            IS_SET (DR7, 1<<2) ? "L1 " : "   ",
-            IS_SET (DR7, 1<<3) ? "G1 " : "   ",
-            IS_SET (DR7, 1<<4) ? "L2 " : "   ",
-            IS_SET (DR7, 1<<5) ? "G2 " : "   ",
-            IS_SET (DR7, 1<<6) ? "L3 " : "   ",
-            IS_SET (DR7, 1<<7) ? "G3 " : "   ",
+            IS_SET (DR7, FLAG_DR7_L0) ? "L0 " : "   ",
+            IS_SET (DR7, FLAG_DR7_G0) ? "G0 " : "   ",
+            IS_SET (DR7, FLAG_DR7_L1) ? "L1 " : "   ",
+            IS_SET (DR7, FLAG_DR7_G1) ? "G1 " : "   ",
+            IS_SET (DR7, FLAG_DR7_L2) ? "L2 " : "   ",
+            IS_SET (DR7, FLAG_DR7_G2) ? "G2 " : "   ",
+            IS_SET (DR7, FLAG_DR7_L3) ? "L3 " : "   ",
+            IS_SET (DR7, FLAG_DR7_G3) ? "G3 " : "   ",
             IS_SET (DR7, 1<<8) ? "LE " : "   ",
             IS_SET (DR7, 1<<9) ? "GE " : "   ",
             IS_SET (DR7, 1<<13) ? "GD " : "   ",
@@ -80,6 +80,15 @@ void dump_DR7 (fds* s, tetrabyte DR7)
     DR7_to_str(DR7, &sb);
     L_fds (s, sb.buf);
     strbuf_deinit(&sb);
+};
+
+void dump_DR6 (fds* s, tetrabyte DR6)
+{
+    if (IS_SET(DR6, FLAG_DR6_B0)) L_fds (s, "B0 ");
+    if (IS_SET(DR6, FLAG_DR6_B1)) L_fds (s, "B1 ");
+    if (IS_SET(DR6, FLAG_DR6_B2)) L_fds (s, "B2 ");
+    if (IS_SET(DR6, FLAG_DR6_B3)) L_fds (s, "B3 ");
+    if (IS_SET(DR6, FLAG_DR6_BS)) L_fds (s, "BS ");
 };
 
 void MXCSR_to_str (tetrabyte a, strbuf *out)

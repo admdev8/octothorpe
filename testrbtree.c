@@ -32,11 +32,11 @@ void tst_succ_pred(rbtree* t)
     struct rbtree_node_t *i;
 
     printf ("ascending order:\n");
-    for (i=rbtree_minimum(t); i!=NULL; i=rbtree_succ(i))
+    for (i=rbtree_minimum(t); i; i=rbtree_succ(i))
         printf ("%d\n", (int)i->key);
 
     printf ("descending order:\n");
-    for (i=rbtree_maximum(t); i!=NULL; i=rbtree_pred(i))
+    for (i=rbtree_maximum(t); i; i=rbtree_pred(i))
         printf ("%d\n", (int)i->key);
 };
 

@@ -47,9 +47,25 @@ typedef union _u_EFLAGS
     s_EFLAGS s;
 } u_EFLAGS;
 
+#define FLAG_DR6_B0 0
+#define FLAG_DR6_B1 1
+#define FLAG_DR6_B2 2
+#define FLAG_DR6_B3 3
+#define FLAG_DR6_BS 14
+
+#define FLAG_DR7_L0 0
+#define FLAG_DR7_G0 1
+#define FLAG_DR7_L1 2
+#define FLAG_DR7_G1 3
+#define FLAG_DR7_L2 4
+#define FLAG_DR7_G2 5
+#define FLAG_DR7_L3 6
+#define FLAG_DR7_G3 7
+
 void flags_to_str (tetrabyte flags, strbuf *out);
 void dump_flags (fds *s, tetrabyte flags);
 void DR7_to_str (tetrabyte DR7, strbuf* out);
+void dump_DR6 (fds* s, tetrabyte DR6);
 void dump_DR7 (fds* s, tetrabyte DR7);
 void MXCSR_to_str (tetrabyte a, strbuf *out);
 void FCW_to_str (uint16_t a, strbuf *out);
