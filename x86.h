@@ -47,20 +47,20 @@ typedef union _u_EFLAGS
     s_EFLAGS s;
 } u_EFLAGS;
 
-#define FLAG_DR6_B0 0
-#define FLAG_DR6_B1 1
-#define FLAG_DR6_B2 2
-#define FLAG_DR6_B3 3
-#define FLAG_DR6_BS 14
+#define FLAG_DR6_B0 1<<0
+#define FLAG_DR6_B1 1<<1
+#define FLAG_DR6_B2 1<<2
+#define FLAG_DR6_B3 1<<3
+#define FLAG_DR6_BS 1<<14
 
-#define FLAG_DR7_L0 0
-#define FLAG_DR7_G0 1
-#define FLAG_DR7_L1 2
-#define FLAG_DR7_G1 3
-#define FLAG_DR7_L2 4
-#define FLAG_DR7_G2 5
-#define FLAG_DR7_L3 6
-#define FLAG_DR7_G3 7
+#define FLAG_DR7_L0 1<<0
+#define FLAG_DR7_G0 1<<1
+#define FLAG_DR7_L1 1<<2
+#define FLAG_DR7_G1 1<<3
+#define FLAG_DR7_L2 1<<4
+#define FLAG_DR7_G2 1<<5
+#define FLAG_DR7_L3 1<<6
+#define FLAG_DR7_G3 1<<7
 
 void flags_to_str (tetrabyte flags, strbuf *out);
 void dump_flags (fds *s, tetrabyte flags);
