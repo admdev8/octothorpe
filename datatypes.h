@@ -22,8 +22,10 @@ typedef int64_t octabyte_s;
 #define REG_1 OCTABYTE_1
 typedef octabyte REG;
 typedef octabyte_s SIGNED_REG;
+#define REG_SIZE 8
 #else
 #define REG_1 1
 typedef tetrabyte REG;
 typedef tetrabyte_s SIGNED_REG;
+#define REG_SIZE 4
 #endif

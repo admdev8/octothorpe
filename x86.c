@@ -172,7 +172,6 @@ void FSW_to_str (uint16_t a, strbuf *out)
     // TODO trim right part
 };
 
-// old dump_XMM
 void XMM_to_strbuf (byte* p, strbuf *sb)
 {
     int i;

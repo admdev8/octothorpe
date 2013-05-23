@@ -71,7 +71,6 @@ void MXCSR_to_str (tetrabyte a, strbuf *out);
 void FCW_to_str (uint16_t a, strbuf *out);
 void FSW_to_str (uint16_t a, strbuf *out);
 
-// renamed from dump_XMM
 void XMM_to_strbuf (byte* p, strbuf *sb);
 
 bool sse_supported();
