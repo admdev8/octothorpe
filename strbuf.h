@@ -52,6 +52,7 @@ void strbuf_cvt_to_C_string (strbuf *s, strbuf *out, bool treat_as_binary);
 void env_vars_expansion(strbuf *sb);
 
 char *strbuf_detach(strbuf *s, size_t *out_size);
+char strbuf_last_char (strbuf *s);
 
 // TODO: bool strbuf_eq
 

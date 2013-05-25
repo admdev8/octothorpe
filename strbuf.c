@@ -271,3 +271,8 @@ char *strbuf_detach(strbuf *s, size_t *out_size)
     return rt;
 };
 
+char strbuf_last_char (strbuf *s)
+{
+    assert (s->strlen!=0);
+    return s->buf[s->strlen-1];
+};
