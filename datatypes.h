@@ -29,3 +29,11 @@ typedef tetrabyte REG;
 typedef tetrabyte_s SIGNED_REG;
 #define REG_SIZE 4
 #endif
+
+#ifdef _WIN64
+typedef octabyte address;
+typedef octabyte_s address_offset;
+#else
+typedef tetrabyte address;
+typedef tetrabyte_s address_offset;
+#endif
