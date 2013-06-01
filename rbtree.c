@@ -785,7 +785,11 @@ void rbtree_copy (rbtree* t, rbtree* new_t, void* (*key_copier)(void*), void* (*
 
 bool rbtree_empty (rbtree* t)
 {
-    assert(t);
+    if (t==NULL)
+    {
+        assert (!"rbtree_empty: NULL pointer passed");
+    };
+
     return t->root==NULL ? true : false;
 };
 
