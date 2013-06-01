@@ -266,7 +266,8 @@ char *strbuf_detach(strbuf *s, size_t *out_size)
     if (out_size)
         *out_size=s->strlen;
 
-    strbuf_init(s, 0); // don't call _reinit here
+    s->buf=NULL;
+    s->buflen=s->strlen=0;
 
     return rt;
 };

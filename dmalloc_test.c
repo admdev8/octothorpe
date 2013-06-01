@@ -4,7 +4,7 @@
 
 int main()
 {
-    byte *t1, *t2, *t3, *t4, *t5, *t6;
+    byte *t1, *t2, *t3, *t4, *t5, *t6, *t7;
     char *s;
     //L_init("tmp");
     
@@ -16,6 +16,7 @@ int main()
     t4=DMALLOC(byte, 555, "block555");
     t5=DMALLOC(byte, 666, "block666");
     t6=DMALLOC(byte, 777, "block777");
+    t7=DMALLOC(byte, 0, "empty block");
 
     t6=DREALLOC(t6, byte, 888, "new size for block777");
 
@@ -29,6 +30,7 @@ int main()
     DFREE(t5);
     //L_print_buf (t5, 666);
     DFREE(t6);
+    DFREE(t7);
     DFREE(s);
 
     // make compiler happy about unused variables!

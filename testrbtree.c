@@ -30,11 +30,11 @@ void visitor(void* k, void* v)
 void tst_succ_pred(rbtree* t)
 {
     printf ("ascending order:\n");
-    for (struct rbtree_node_t *i=rbtree_minimum(t); i; i=rbtree_succ(i))
+    for (rbtree_node *i=rbtree_minimum(t); i; i=rbtree_succ(i))
         printf ("%d\n", (int)i->key);
 
     printf ("descending order:\n");
-    for (struct rbtree_node_t *i=rbtree_maximum(t); i; i=rbtree_pred(i))
+    for (rbtree_node *i=rbtree_maximum(t); i; i=rbtree_pred(i))
         printf ("%d\n", (int)i->key);
 };
 
