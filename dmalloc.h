@@ -9,42 +9,22 @@ extern "C" {
 #include <string.h>
 #include <memory.h>
 
-#ifdef _DEBUG
 void* dmalloc (size_t size, const char * filename, unsigned line, const char * function, const char * structname);
 #define DMALLOC(type, size, comment) ((type*)dmalloc(sizeof(type)*size, __FILE__, __LINE__, __func__, comment))
-#else
-#define DMALLOC(type, size, comment) ((type*)malloc(sizeof(type)*size))
-#endif
 
-#ifdef _DEBUG
 void* drealloc (void* ptr, size_t size, const char * filename, unsigned line, const char * function, const char * structname);
 #define DREALLOC(ptr, type, size, comment) ((type*)drealloc(ptr, sizeof(type)*size, __FILE__, __LINE__, __func__, comment))
-#else
-#define DREALLOC(ptr, type, size, comment) ((type*)realloc(ptr, sizeof(type)*size))
-#endif
 
-#ifdef _DEBUG
 void* dcalloc (size_t size, const char * filename, unsigned line, const char * function, const char * structname);
 #define DCALLOC(type, size, comment) ((type*)dcalloc(sizeof(type)*size, __FILE__, __LINE__, __func__, comment))
-#else
-#define DCALLOC(type, size, comment) ((type*)calloc(size, sizeof(type)))
-#endif
 
 void dfree (void* ptr);
 
 // for symmetry!
-#ifdef _DEBUG
 #define DFREE(p) (dfree(p))
-#else
-#define DFREE(p) (free(p))
-#endif
 
-#ifdef _DEBUG
 char* dstrdup (const char *str, const char * filename, unsigned line, const char * function, const char * structname);
 #define DSTRDUP(str,comment) (dstrdup(str, __FILE__, __LINE__, __func__, comment))
-#else
-#define DSTRDUP(str,comment) (strdup(str))
-#endif
 
 void* dmemdup (void *p, size_t s, const char * filename, unsigned line, const char * function, const char * structname);
 
