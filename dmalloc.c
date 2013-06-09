@@ -103,12 +103,12 @@ void* dmalloc (size_t size, const char * filename, unsigned line, const char * f
     rt=malloc (size);
 #endif    
     
+    if (rt==NULL)
+        die("%s() can't allocate size %d for %s (%s:%d)\n", __func__, size, structname, filename, line);
+
 #ifdef _DEBUG
     fill_by_tetrabytes (rt, size, 0x0BADF00D);
 #endif
-
-    if (rt==NULL)
-        die("%s() can't allocate size %d for %s (%s:%d)\n", __func__, size, structname, filename, line);
 
 #ifdef ADD_GUARDS
     add_guards (rt, size);

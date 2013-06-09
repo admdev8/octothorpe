@@ -120,3 +120,11 @@ void fill_by_tetrabytes (void* ptr, size_t size, tetrabyte val)
         *(cur_ptr+2)=(val&0xFF0000)>>16;
 };
 
+FILE *fopen_or_die(const char* fname, const char* mode)
+{
+    FILE *rt=fopen (fname, mode);
+    if (rt==NULL)
+        die ("%s(): Can't open %s file in mode '%s'\n", __func__, fname, mode);
+    return rt;
+};
+
