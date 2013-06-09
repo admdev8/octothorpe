@@ -1,6 +1,7 @@
 #pragma once
 
 #include <stdlib.h>
+#include <stdio.h>
 #include "datatypes.h"
 #include <string.h>
 
