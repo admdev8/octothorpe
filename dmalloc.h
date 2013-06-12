@@ -35,6 +35,9 @@ void dmalloc_deinit();
 
 void dmalloc_break_at_seq_n (unsigned seq_n);
 
+void* memdup_range (void *s, int begin, int end);
+char *strdup_range (const char *s, int begin, int end);
+
 #ifdef  __cplusplus
 }
 #endif

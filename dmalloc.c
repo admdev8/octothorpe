@@ -337,3 +337,28 @@ void dmalloc_break_at_seq_n (unsigned seq_n)
     break_on_seq_n=true;
     seq_n_to_break_on=seq_n;
 };
+
+void* memdup_range (void *s, int begin, int end)
+{
+    void *rt;
+    assert(begin < end);
+    size_t size=end - begin;
+
+    rt=DMALLOC(char, size, "char");
+    memcpy (rt, s+begin, size);
+    
+    return rt;
+};
+
+char *strdup_range (const char *s, int begin, int end)
+{
+    char *rt;
+    assert(begin < end);
+    size_t size=end - begin;
+
+    rt=DMALLOC(char, size+1, "char");
+    memcpy (rt, s+begin, size);
+    rt[size]=0;
+
+    return rt;
+};

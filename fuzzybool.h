@@ -2,7 +2,7 @@
 
 typedef enum _TrueFalseUndefined
 {
-    Fuzzy_False=0, // for compatibility with bool
-    Fuzzy_True=1,
-    Fuzzy_Undefined=2
+    Fuzzy_Undefined=0, // should be initialized with calloc(...)
+    Fuzzy_False,
+    Fuzzy_True
 } TrueFalseUndefined;
