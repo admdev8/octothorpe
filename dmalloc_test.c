@@ -12,8 +12,11 @@ int main()
 
     t1=DMALLOC(byte, 6, "block123");
     t2=DMALLOC(byte, 124, "block124");
+    memcpy (t2, "block124", 8);
     t3=DMALLOC(byte, 12,  "block12");
+    memcpy (t3, "block12", 7);
     t4=DMALLOC(byte, 555, "block555");
+    memcpy (t4, "block555", 8);
     t5=DMALLOC(byte, 666, "block666");
     t6=DMALLOC(byte, 777, "block777");
     t7=DMALLOC(byte, 0, "empty block");

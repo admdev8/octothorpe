@@ -144,7 +144,7 @@ void L_once (const char * fmt, ...)
     L_once_va (fmt, va);
 };
 
-void L_print_buf_ofs (byte *buf, size_t size, size_t ofs)
+void L_print_buf_ofs_fds (fds *s, byte *buf, size_t size, size_t ofs)
 {
     size_t pos=0;
     unsigned starting_offset=0;
@@ -159,30 +159,35 @@ void L_print_buf_ofs (byte *buf, size_t size, size_t ofs)
             wpn=size-pos;
 
 #ifdef _WIN64
-        L ("%016I64x: ", starting_offset + pos + ofs);
+        L_fds (s, "%016I64x: ", starting_offset + pos + ofs);
 #else
-        L ("%08X: ", starting_offset + pos + ofs);
+        L_fds (s, "%08X: ", starting_offset + pos + ofs);
 #endif
         for (i=0; i<wpn; i++)
-            L ("%02X%c", buf[pos+i], (i==7) ? '-' : ' ');
+            L_fds (s, "%02X%c", buf[pos+i], (i==7) ? '-' : ' ');
 
         if (wpn<16)
             for (i=0; i<16-wpn; i++)
-                L ("   ");
+                L_fds (s, "   ");
 
-        L ("\"");
+        L_fds (s, "\"");
 
         for (i=0; i<wpn; i++)
-            L ("%c", isprint (buf[pos+i]) ? buf[pos+i] : '.');
+            L_fds (s, "%c", isprint (buf[pos+i]) ? buf[pos+i] : '.');
 
         if (wpn<16)
             for (i=0; i<16-wpn; i++)
-                L (" ");
+                L_fds (s, " ");
 
-        L ("\"\n");
+        L_fds (s, "\"\n");
 
         pos+=wpn;
     };
+};
+
+void L_print_buf_ofs (byte *buf, size_t size, size_t ofs)
+{
+    L_print_buf_ofs_fds (&cur_fds, buf, size, ofs);
 };
 
 void L_print_buf (byte *buf, size_t size)

@@ -7,6 +7,7 @@
 
 #include "datatypes.h"
 #include "stuff.h"
+#include "fmt_utils.h"
 
 #ifdef _MSC_VER
 #include <intrin.h>
@@ -138,4 +139,55 @@ int stricmp_range (const char *s1, int s1_begin, int s1_end, const char *s2)
             return c1-c2;
     };
     return 0;
+};
+
+void make_REG_compact_hex (REG a, strbuf* out)
+{
+    if (a<10)
+        strbuf_addf(out, PRI_SIZE_T_DEC, a);
+    else
+        strbuf_addf(out, "0x" PRI_SIZE_T_HEX, a);
+};
+
+// regs must be sorted before!
+// if limit==0, then there are no limit
+void make_compact_list_of_REGs (REG *regs, unsigned regs_total, strbuf *out, unsigned limit)
+{
+    if (limit>0 && regs_total>limit)
+    {
+        assert (limit>=2);
+        unsigned part_length=limit/2;
+        make_compact_list_of_REGs (regs, part_length, out, 0);
+        strbuf_addf (out, " (%d items skipped) ", regs_total-part_length*2);
+        make_compact_list_of_REGs (regs+regs_total-part_length, part_length, out, 0);
+        return;
+    }
+
+    for(unsigned i=0; i < regs_total; i++)
+    {
+        unsigned step=0;
+        if (i+2<regs_total)
+            for (step=8; step!=0; step=step>>1) // 8, 4, 2, 1
+                if (regs[i]+step==regs[i+1] && regs[i+1]+step==regs[i+2])
+                {
+                    unsigned i_start=i;
+                    REG n=regs[i];
+                    for (; n+step==regs[i+1] && i<regs_total; i++)
+                        n=regs[i+1];
+
+                    make_REG_compact_hex(regs[i_start], out);
+                    strbuf_addstr (out, "..");
+                    make_REG_compact_hex(regs[i], out);
+                    if (step>1)
+                        strbuf_addf (out, "(step=%d)", step);
+
+                    break;
+                };
+
+        if (step==0)
+            make_REG_compact_hex(regs[i], out);
+
+        if (i+1 < regs_total)
+            strbuf_addstr (out, ", ");
+    };
 };
