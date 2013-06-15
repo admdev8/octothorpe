@@ -311,6 +311,7 @@ node* lookup_node2(rbtree *tree, rbtree_node* n, void* key,
         return NULL;
 
     comp_result = tree->cmp_func(key, n->key);
+    //printf ("%s() comp_result=%d\n", __func__, comp_result);
 
     if (comp_result == 0) // key found
     {
@@ -320,6 +321,7 @@ node* lookup_node2(rbtree *tree, rbtree_node* n, void* key,
         if (out_prev_v) *out_prev_v=NULL;
         if (out_next_k) *out_next_k=NULL;
         if (out_next_v) *out_next_v=NULL;
+        //printf ("%s() return n, n->key=0x%p\n", __func__, n->key);
         return n;
     }
     else if (comp_result<0)
@@ -353,13 +355,11 @@ node* lookup_node2(rbtree *tree, rbtree_node* n, void* key,
         };
     };
 };
-#if 0
-void* rbtree_lookup(rbtree* t, void* key) 
+
+bool rbtree_is_key_present(rbtree *tree, void* key)
 {
-    rbtree_node* n = lookup_node(t, key);
-    return n == NULL ? NULL : n->value;
-}
-#endif
+    return lookup_node2(tree, tree->root, key, NULL, NULL, NULL, NULL)==NULL ? false : true;
+};
 
 void* rbtree_lookup2(rbtree* t, void* key, 
         void** out_prev_k, void** out_prev_v,
@@ -368,6 +368,7 @@ void* rbtree_lookup2(rbtree* t, void* key,
     rbtree_node* n = lookup_node2(t, t->root, key, 
             out_prev_k, out_prev_v,
             out_next_k, out_next_v);
+    //printf ("%s() n=0x%p\n", __func__, n);
     return n == NULL ? NULL : n->value;
 }
 
@@ -801,5 +802,11 @@ unsigned rbtree_count(rbtree *t) // FIXME: might be faster
         rt++;
 
     return rt;
+};
+
+void rbtree_return_all_keys (rbtree *t, void **out)
+{
+    for (rbtree_node *i=rbtree_minimum(t); i; i=rbtree_succ(i))
+        *out++=i->key;
 };
 

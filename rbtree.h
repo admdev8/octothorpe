@@ -76,6 +76,10 @@ typedef struct rbtree_t
 rbtree *rbtree_create(bool use_dmalloc, const char *struct_name, compare_func compare);
 void rbtree_clear(rbtree* t);
 
+bool rbtree_is_key_present(rbtree *tree, void* key);
+
+// returning VALUE but not node! if there is an entry where value==NULL, NULL will return
+// do not use it for key presence check!
 void* rbtree_lookup(rbtree* t, void* key);
 
 // extended version
@@ -105,6 +109,8 @@ void rbtree_copy (rbtree* t, rbtree* new_t, void* (*key_copier)(void*), void* (*
 
 bool rbtree_empty (rbtree* t);
 unsigned rbtree_count(rbtree *t);
+// sorted. return as array. caller should allocate space
+void rbtree_return_all_keys (rbtree *t, void **out);
 
 #ifdef  __cplusplus
 }

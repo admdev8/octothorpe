@@ -306,7 +306,7 @@ static void dump_unfreed_block(void *k, struct dmalloc_info *i)
     assert(i!=NULL);
     dump_blk_info (i);
     
-    L_print_buf_ofs_fds (&_fds, k, i->user_size < 0x20 ? i->user_size : 0x20, 0);
+    L_print_buf_ofs_fds (&_fds, k, i->user_size < 0x20 ? i->user_size : 0x20, k);
 };
 #endif
 

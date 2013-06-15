@@ -27,6 +27,18 @@ void visitor(void* k, void* v)
     printf ("key=%d value=%s\n", (tetrabyte)k, (char*)v);
 };
 
+void test_return_all_keys(rbtree *t)
+{
+    printf ("%s() begin\n", __func__);
+    unsigned cnt=rbtree_count(t);
+    REG *buf=DMALLOC(REG, cnt, "REG");
+    rbtree_return_all_keys (t, buf);
+    for (unsigned i=0; i<cnt; i++)
+        printf ("%d\n", buf[i]);
+    DFREE(buf);
+    printf ("%s() end\n", __func__);
+};
+
 void tst_succ_pred(rbtree* t)
 {
     printf ("ascending order:\n");
@@ -46,6 +58,12 @@ void* key_copier(void *i)
 void* value_copier(void *v)
 {
     return DMEMDUP (v, strlen(v)+1, "string");
+};
+
+int my_strcmp(void *v1, void *v2)
+{
+    //printf ("%s(%s, %s)\n", __func__, (char*)v1, (char*)v2);
+    return strcmp ((char*)v1, (char*)v2);
 };
 
 int main() 
@@ -128,6 +146,7 @@ int main()
 
     rbtree_lookup2(t2, (void*)99999, (void**)&key_prev, (void**)&value_prev, (void**)&key_next, (void**)&value_next);
     printf ("while looking for 99999, key_prev=%d, value_prev=%s, key_next=%d, value_next=%s\n", key_prev, value_prev, key_next, value_next);
+    test_return_all_keys(t2);
 
     rbtree_deinit(t2);
 
@@ -141,6 +160,22 @@ int main()
     rbtree_delete(t3, (void*)99);
     printf ("rbtree_empty (should be empty): %d\n", rbtree_empty(t3));
     rbtree_deinit(t3);
+
+    printf ("test 4\n");
+    rbtree *t4=rbtree_create(true, "test 4", my_strcmp);
+    char *s1="value";
+    char *s2=DSTRDUP(s1, "char*");
+   
+    //printf ("s1=0x%p\n", s1);
+    //printf ("s2=0x%p\n", s2);
+    rbtree_insert (t4, (void*)s1, NULL);
+   
+    if (rbtree_is_key_present (t4, (void*)s2))
+        printf ("found\n");
+    else
+        printf ("not found\n");
+    DFREE(s2);
+    rbtree_deinit(t4);
 
     dump_unfreed_blocks();
 
