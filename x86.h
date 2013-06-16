@@ -62,6 +62,30 @@ typedef union _u_EFLAGS
 #define FLAG_DR7_L3 1<<6
 #define FLAG_DR7_G3 1<<7
 
+#define FLAG_DR7_BP0_W 1<<16
+#define FLAG_DR7_BP0_RW (1<<16 | 1 << 17)
+#define FLAG_DR7_BP0_LEN_WYDE 1<<18
+#define FLAG_DR7_BP0_LEN_TETRABYTE (1<<18 | 1<<19)
+#define FLAG_DR7_BP0_LEN_OCTABYTE 1<<19
+
+#define FLAG_DR7_BP1_W 1<<20
+#define FLAG_DR7_BP1_RW (1<<20 | 1 << 21)
+#define FLAG_DR7_BP1_LEN_WYDE 1<<22
+#define FLAG_DR7_BP1_LEN_TETRABYTE (1<<22 | 1<<23)
+#define FLAG_DR7_BP1_LEN_OCTABYTE 1<<23
+
+#define FLAG_DR7_BP2_W 1<<24
+#define FLAG_DR7_BP2_RW (1<<24 | 1 << 25)
+#define FLAG_DR7_BP2_LEN_WYDE 1<<26
+#define FLAG_DR7_BP2_LEN_TETRABYTE (1<<26 | 1<<27)
+#define FLAG_DR7_BP2_LEN_OCTABYTE 1<<27
+
+#define FLAG_DR7_BP3_W 1<<28
+#define FLAG_DR7_BP3_RW (1<<28 | 1 << 29)
+#define FLAG_DR7_BP3_LEN_WYDE 1<<30
+#define FLAG_DR7_BP3_LEN_TETRABYTE (1<<30 | 1<<31)
+#define FLAG_DR7_BP3_LEN_OCTABYTE 1<<31
+
 void flags_to_str (tetrabyte flags, strbuf *out);
 void dump_flags (fds *s, tetrabyte flags);
 void DR7_to_str (tetrabyte DR7, strbuf* out);
