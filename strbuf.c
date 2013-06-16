@@ -277,3 +277,21 @@ char strbuf_last_char (strbuf *s)
     assert (s->strlen!=0);
     return s->buf[s->strlen-1];
 };
+
+void strbuf_make_shorter (strbuf *sb, unsigned new_size)
+{
+    assert (new_size < sb->strlen);
+    sb->buf[new_size]=0;
+    sb->strlen=new_size;
+};
+
+void strbuf_trim_string_with_comment (strbuf *sb, unsigned size, const char *str)
+{
+    if (sb->strlen<=size)
+        return;
+
+    strbuf_make_shorter(sb, size - strlen(str));
+    strbuf_addstr (sb, str);
+};
+
+
