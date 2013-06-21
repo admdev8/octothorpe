@@ -317,10 +317,10 @@ node* lookup_node2(rbtree *tree, rbtree_node* n, void* key,
     {
         // not filled in this case (yet)
         // am I need it?
-        if (out_prev_k) *out_prev_k=NULL;
-        if (out_prev_v) *out_prev_v=NULL;
-        if (out_next_k) *out_next_k=NULL;
-        if (out_next_v) *out_next_v=NULL;
+        if (out_prev_k) { rbtree_node *t=rbtree_pred(n); *out_prev_k=t ? t->key : NULL; };
+        if (out_prev_v) { rbtree_node *t=rbtree_pred(n); *out_prev_v=t ? t->value : NULL; };
+        if (out_next_k) { rbtree_node *t=rbtree_succ(n); *out_next_k=t ? t->key : NULL; };
+        if (out_next_v) { rbtree_node *t=rbtree_succ(n); *out_next_v=t ? t->value : NULL; };
         //printf ("%s() return n, n->key=0x%p\n", __func__, n->key);
         return n;
     }
