@@ -722,7 +722,8 @@ re_search_internal (const regex_t *preg,
 	  goto free_return;
 	}
 
-      mctx.state_log = re_malloc (re_dfastate_t *, mctx.input.bufs_len + 1);
+      //mctx.state_log = re_malloc (re_dfastate_t *, mctx.input.bufs_len + 1);
+      mctx.state_log = re_malloc (re_dfastate_t *, mctx.input.bufs_len + 5); // IDK why is this!
       if (BE (mctx.state_log == NULL, 0))
 	{
 	  err = REG_ESPACE;
