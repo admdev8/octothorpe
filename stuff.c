@@ -208,3 +208,15 @@ void make_compact_list_of_REGs (REG *regs, unsigned regs_total, strbuf *out, uns
             strbuf_addstr (out, ", ");
     };
 };
+
+void regcomp_or_die (regex_t *_Restrict_ preg, const char *_Restrict_ pattern, int cflags)
+{
+    int rc=regcomp(preg, pattern, cflags);
+    if (rc!=0)
+    {
+        char buffer[100];
+        regerror(rc, preg, buffer, 100);
+        die("Regular expression compiling failed for pattern '%s' (%s)", pattern, buffer);
+    };
+};
+
