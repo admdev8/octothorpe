@@ -27,6 +27,25 @@ void set_of_REG_to_string (rbtree *t, strbuf *out, unsigned limit)
     DFREE (keys);
 };
 
+// FIXME: how to join these two functions into one?
+void set_of_doubles_to_string (rbtree *t, strbuf *out, unsigned limit)
+{
+    unsigned doubles_cnt=rbtree_count(t);
+    unsigned doubles_dumped=0;
+    rbtree_node *max=rbtree_maximum(t);
+    for (rbtree_node *j=rbtree_minimum(t); j; j=rbtree_succ(j))
+    {
+        strbuf_addf (out, "%.1f", *(double*)j->key);
+        if (doubles_dumped++>limit)
+        {
+            strbuf_addf (out, " (%d doubles skipped)", doubles_cnt - doubles_dumped);
+            break;
+        };
+        if (j!=max)
+            strbuf_addstr (out, ", ");
+    };
+};
+
 void set_of_string_to_string (rbtree *t, strbuf *out, unsigned limit)
 {
     unsigned strings_cnt=rbtree_count(t);
