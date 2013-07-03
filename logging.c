@@ -15,6 +15,9 @@
  *
  */
 
+#ifdef _WIN32
+#include <windows.h>
+#endif
 #include <assert.h>
 #include <memory.h>
 #include <stdlib.h>
@@ -72,24 +75,28 @@ void L_va (const char * fmt, va_list va)
 
 void L_fds_va (fds *s, const char * fmt, va_list va)
 {
-#ifdef _MSC_VER
+    static bool last_char_was_cr_or_unknown=true;
+    // MinGW defines _WIN32
+#ifdef _WIN32
     SYSTEMTIME t; // win32 only yet
 #endif
 
-    if (L_timestamp)
+    if (L_timestamp && last_char_was_cr_or_unknown)
     {
-#ifdef _MSC_VER
+#ifdef _WIN32
         GetLocalTime (&t);
         if (s->fd1)
-            fprintf (s->fd1, "[%04d-%02d-%02d %02d:%02d:%02d:%03d]", 
+            fprintf (s->fd1, "[%04d-%02d-%02d %02d:%02d:%02d:%03d] ", 
                     t.wYear, t.wMonth, t.wDay, t.wHour, t.wMinute, t.wSecond, t.wMilliseconds);
         if (s->fd2)
-            fprintf (s->fd2, "[%04d-%02d-%02d %02d:%02d:%02d:%03d]", 
+            fprintf (s->fd2, "[%04d-%02d-%02d %02d:%02d:%02d:%03d] ", 
                     t.wYear, t.wMonth, t.wDay, t.wHour, t.wMinute, t.wSecond, t.wMilliseconds);
 #else
        assert(!"to be implemented!");
 #endif
     };
+
+    last_char_was_cr_or_unknown=(strlen(fmt)>0 && fmt[strlen(fmt)-1]=='\n') ? true : false;
 
     if (s->fd1)
         vfprintf (s->fd1, fmt, va);
