@@ -31,7 +31,6 @@
 fds cur_fds={ NULL, NULL };
 
 bool L_timestamp=false;
-bool L_quiet=false;
 
 // set actually is here
 rbtree *once_was_printed=NULL;
@@ -76,9 +75,6 @@ void L_fds_va (fds *s, const char * fmt, va_list va)
 #ifdef _MSC_VER
     SYSTEMTIME t; // win32 only yet
 #endif
-
-    if (L_quiet)
-        return;
 
     if (L_timestamp)
     {

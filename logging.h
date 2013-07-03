@@ -40,7 +40,6 @@ typedef struct _fds
 //#define IF_VERBOSE(LVL, CODE) { if (L_verbose_level >= LVL) { CODE } } ((void) 0)
 
 extern bool L_timestamp;
-extern bool L_quiet;
 extern fds cur_fds;
 
 //string gen_timestamp();
