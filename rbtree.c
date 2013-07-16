@@ -282,8 +282,8 @@ static void find_prev_and_next_nodes (rbtree_node* n, void* key,
 
             if (p)
             {
-                if (out_prev_k) *out_prev_k=p->key;
-                if (out_prev_v) *out_prev_v=p->value;
+                if (out_prev_k) { *out_prev_k=p->key; /* printf ("%s:%d *out_prev_k=%d\n", __func__, __LINE__, *out_prev_k); */ };
+                if (out_prev_v) { *out_prev_v=p->value; /* printf ("%s:%d *out_prev_v=%s\n", __func__, __LINE__, *out_prev_v); */ }
             }
             else
             {
@@ -313,9 +313,11 @@ static void find_prev_and_next_nodes (rbtree_node* n, void* key,
             };
         };
 
-        if (out_prev_k) *out_prev_k=n->key;
+        if (out_prev_k) { *out_prev_k=n->key; /* printf ("%s:%d out_prev_k=%d\n", __func__, __LINE__, *out_prev_k); */ };
         if (out_prev_v) *out_prev_v=n->value;
     };
+
+    //printf ("%s:%d out_prev_k=%d out_prev_v=%s out_next_k=%d out_next_v=%s\n", __func__, __LINE__, *out_prev_k, *out_prev_v, *out_next_k, *out_next_v);
 };
 
 node* lookup_node2(rbtree *tree, rbtree_node* n, void* key, 
@@ -353,10 +355,11 @@ node* lookup_node2(rbtree *tree, rbtree_node* n, void* key,
             find_prev_and_next_nodes (n, key, 
                     out_prev_k, out_prev_v, 
                     out_next_k, out_next_v);
+            //printf ("%s:%d out_prev_k=%d out_prev_v=%s out_next_k=%d out_next_v=%s\n", __func__, __LINE__, *out_prev_k, *out_prev_v, *out_next_k, *out_next_v);
             return NULL;
         };
     }
-    else
+    else // comp_result>0
     {
         if (n->right)
             return lookup_node2(tree, n->right, key, 
@@ -368,6 +371,7 @@ node* lookup_node2(rbtree *tree, rbtree_node* n, void* key,
             find_prev_and_next_nodes (n, key, 
                     out_prev_k, out_prev_v,
                     out_next_k, out_next_v);
+            //printf ("%s:%d out_prev_k=%d out_prev_v=%s out_next_k=%d out_next_v=%s\n", __func__, __LINE__, *out_prev_k, *out_prev_v, *out_next_k, *out_next_v);
             return NULL;
         };
     };

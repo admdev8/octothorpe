@@ -220,3 +220,11 @@ void regcomp_or_die (regex_t *_Restrict_ preg, const char *_Restrict_ pattern, i
     };
 };
 
+int strtol_or_strtoll(const char *nptr, char **endptr, int base)
+{
+#ifdef _WIN64
+    return strtoll(nptr, endptr, base);
+#else
+    return strtol(nptr, endptr, base);
+#endif
+};
