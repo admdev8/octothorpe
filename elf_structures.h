@@ -470,3 +470,5 @@ enum STT
 #define SHN_ABS		0xfff1
 #define SHN_COMMON	0xfff2
 #define SHN_HIRESERVE	0xffff
+
+/* vim: set expandtab ts=4 sw=4 : */

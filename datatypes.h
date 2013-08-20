@@ -54,3 +54,5 @@ typedef octabyte_s address_offset;
 typedef tetrabyte address;
 typedef tetrabyte_s address_offset;
 #endif
+
+/* vim: set expandtab ts=4 sw=4 : */

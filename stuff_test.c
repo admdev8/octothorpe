@@ -54,3 +54,5 @@ int main()
     printf ("%s\n", sb.buf);
     strbuf_deinit(&sb);
 };
+
+/* vim: set expandtab ts=4 sw=4 : */

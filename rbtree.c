@@ -722,6 +722,20 @@ int compare_size_t(void* leftp, void* rightp)
     };
 };
 
+int compare_int(void* leftp, void* rightp)
+{
+    int left = (int)leftp, right = (int)rightp;
+    if (left < right)
+        return -1;
+    else if (left > right)
+        return 1;
+    else 
+    {
+        assert (left == right);
+        return 0;
+    };
+};
+
 int compare_tetrabytes(void* leftp, void* rightp)
 {
     tetrabyte left = (tetrabyte)leftp, right = (tetrabyte)rightp;
@@ -831,3 +845,4 @@ void rbtree_return_all_keys (rbtree *t, void **out)
         *out++=i->key;
 };
 
+/* vim: set expandtab ts=4 sw=4 : */

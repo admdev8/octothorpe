@@ -109,3 +109,4 @@ void dlist_dump(dlist *l)
         dlist_dump(l->next);
 };
 
+/* vim: set expandtab ts=4 sw=4 : */

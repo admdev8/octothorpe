@@ -72,3 +72,4 @@ void set_add_string_or_free (rbtree *t, const char *s)
         rbtree_insert(t, (void*)s, NULL);
 };
 
+/* vim: set expandtab ts=4 sw=4 : */

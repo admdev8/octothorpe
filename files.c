@@ -26,3 +26,5 @@ bool file_exist (const char *filename)
     fclose (tmp);
     return true;
 };
+
+/* vim: set expandtab ts=4 sw=4 : */

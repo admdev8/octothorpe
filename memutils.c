@@ -24,3 +24,4 @@ void bzero (void* ptr, size_t s)
 };
 #endif
 
+/* vim: set expandtab ts=4 sw=4 : */

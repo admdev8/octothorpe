@@ -280,3 +280,4 @@ void L_print_bufs_diff (byte *buf1, byte *buf2, size_t size)
     };
 };
 
+/* vim: set expandtab ts=4 sw=4 : */

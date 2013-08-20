@@ -43,7 +43,7 @@ void tst2()
         for (i=0; i<4; i++)
         {
             printf ("%d %d [", matches[i].rm_so, matches[i].rm_eo); 
-            print_string_range(buf, matches[i].rm_so, matches[i].rm_eo); 
+            print_string_range(buf, matches[i].rm_so, matches[i].rm_eo-matches[i].rm_so);
             printf ("]\n");
         };
         //printf ("\n");
@@ -73,9 +73,9 @@ int main(int argc, char **argv)
     {
         printf ("matched:\n");
         printf ("%d, %d\n", m[0].rm_so, m[0].rm_eo);
-        printf ("["); print_string_range(str, m[0].rm_so, m[0].rm_eo); printf ("]\n");
+        printf ("["); print_string_range(str, m[0].rm_so, m[0].rm_eo-m[0].rm_so); printf ("]\n");
         printf ("%d, %d\n", m[1].rm_so, m[1].rm_eo);
-        printf ("["); print_string_range(str, m[1].rm_so, m[1].rm_eo); printf ("]\n");
+        printf ("["); print_string_range(str, m[1].rm_so, m[1].rm_eo-m[1].rm_so); printf ("]\n");
     };
 
     //printf ("r=0x%p\n", &r);
@@ -88,3 +88,5 @@ int main(int argc, char **argv)
 
     return 0;
 }
+
+/* vim: set expandtab ts=4 sw=4 : */

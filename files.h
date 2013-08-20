@@ -18,3 +18,5 @@
 #include <stdbool.h>
 
 bool file_exist (const char *filename);
+
+/* vim: set expandtab ts=4 sw=4 : */

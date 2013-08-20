@@ -251,3 +251,5 @@ bool sse2_supported()
 #endif
     return false;
 };
+
+/* vim: set expandtab ts=4 sw=4 : */

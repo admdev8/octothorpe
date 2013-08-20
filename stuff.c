@@ -68,11 +68,10 @@ void* memdup (void *p, size_t s)
     return rt;
 };
 
-void print_string_range (const char *s, int b, int e)
+void print_string_range (const char *s, int begin, size_t size)
 {
-    int i;
-    for (i=b; i<e; i++)
-        putc(s[i], stdout);
+    for (int i=0; i<size; i++)
+        putc(s[begin+i], stdout);
 };
 
 byte* load_file_or_die (const char* fname, size_t *fsize)
@@ -228,3 +227,5 @@ int strtol_or_strtoll(const char *nptr, char **endptr, int base)
     return strtol(nptr, endptr, base);
 #endif
 };
+
+/* vim: set expandtab ts=4 sw=4 : */

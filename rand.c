@@ -121,3 +121,5 @@ double rand_double ()
 {
 	return (double)genrand()/0xFFFFFFFF;
 };
+
+/* vim: set expandtab ts=4 sw=4 : */

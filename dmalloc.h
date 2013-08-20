@@ -52,9 +52,11 @@ void dmalloc_deinit();
 
 void dmalloc_break_at_seq_n (unsigned seq_n);
 
-void* memdup_range (void *s, int begin, int end);
-char *strdup_range (const char *s, int begin, int end);
+void* memdup_range (void *s, int begin, size_t size);
+char *strdup_range (const char *s, int begin, size_t size);
 
 #ifdef  __cplusplus
 }
 #endif
+
+/* vim: set expandtab ts=4 sw=4 : */

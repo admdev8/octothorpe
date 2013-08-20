@@ -17,6 +17,10 @@
 
 #pragma once
 
+#include <stdbool.h>
+
 #define IS_SET(flag, bit)       (((flag) & (bit)) ? true : false)
 #define SET_BIT(var, bit)       ((var) |= (bit))
 #define REMOVE_BIT(var, bit)    ((var) &= ~(bit))
+
+/* vim: set expandtab ts=4 sw=4 : */

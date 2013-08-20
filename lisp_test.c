@@ -53,3 +53,5 @@ int main()
     dump_unfreed_blocks();
     return 0;
 };
+
+/* vim: set expandtab ts=4 sw=4 : */

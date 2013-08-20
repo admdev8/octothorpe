@@ -311,4 +311,4 @@ void strbuf_trim_string_with_comment (strbuf *sb, unsigned size, const char *str
     strbuf_addstr (sb, str);
 };
 
-
+/* vim: set expandtab ts=4 sw=4 : */

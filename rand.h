@@ -29,3 +29,5 @@ double rand_double ();
 #ifdef  __cplusplus
 }
 #endif
+
+/* vim: set expandtab ts=4 sw=4 : */

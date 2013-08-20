@@ -31,3 +31,4 @@ void dlist_free(dlist *l, void (*free_fn)(void*));
 void dlist_unlink(dlist **lst, dlist *l);
 void dlist_dump(dlist *l);
 
+/* vim: set expandtab ts=4 sw=4 : */

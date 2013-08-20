@@ -361,11 +361,9 @@ void dmalloc_break_at_seq_n (unsigned seq_n)
     seq_n_to_break_on=seq_n;
 };
 
-void* memdup_range (void *s, int begin, int end)
+void* memdup_range (void *s, int begin, size_t size)
 {
     void *rt;
-    assert(begin < end);
-    size_t size=end - begin;
 
     rt=DMALLOC(char, size, "char");
     memcpy (rt, s+begin, size);
@@ -373,15 +371,15 @@ void* memdup_range (void *s, int begin, int end)
     return rt;
 };
 
-char *strdup_range (const char *s, int begin, int end)
+char *strdup_range (const char *s, int begin, size_t size)
 {
     char *rt;
-    assert(begin < end);
-    size_t size=end - begin;
 
-    rt=DMALLOC(char, size+1, "char");
+    rt=DMALLOC(char, size+1, "char"); // including terminate zero
     memcpy (rt, s+begin, size);
     rt[size]=0;
 
     return rt;
 };
+
+/* vim: set expandtab ts=4 sw=4 : */

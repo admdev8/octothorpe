@@ -116,3 +116,5 @@ void XMM_to_strbuf (byte* p, strbuf *sb);
 
 bool sse_supported();
 bool sse2_supported();
+
+/* vim: set expandtab ts=4 sw=4 : */

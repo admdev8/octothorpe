@@ -27,3 +27,4 @@ void __cdecl cvt64to80 (double in, byte *out)
     *((long double*)out)=in;
 };
 
+/* vim: set expandtab ts=4 sw=4 : */

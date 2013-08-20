@@ -530,3 +530,4 @@ char *elf_get_symbol_name_of_tetrabyte_in_buf_or_NULL(byte *buf, tetrabyte* poin
         return "<symbol not found>";
 };
 
+/* vim: set expandtab ts=4 sw=4 : */

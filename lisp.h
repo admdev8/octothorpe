@@ -105,3 +105,4 @@ obj* create_list(obj* o, ...);
 void list_of_bytes_to_array (byte** array, unsigned *array_len, obj* o);
 void list_of_wydes_to_array (wyde** array, unsigned *array_len, obj* o);
 
+/* vim: set expandtab ts=4 sw=4 : */

@@ -51,3 +51,4 @@ void strlist_free (strlist_node* l, void (*free_fn)(void*))
     DFREE (l);
 };
 
+/* vim: set expandtab ts=4 sw=4 : */

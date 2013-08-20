@@ -23,3 +23,5 @@ typedef enum _TrueFalseUndefined
     Fuzzy_False,
     Fuzzy_True
 } TrueFalseUndefined;
+
+/* vim: set expandtab ts=4 sw=4 : */

@@ -32,7 +32,7 @@ extern "C" {
 unsigned most_significant_hex_number(octabyte x);
 void die (const char * fmt, ...);
 void* memdup (void *p, size_t s);
-void print_string_range (const char *s, int b, int e);
+void print_string_range (const char *s, int begin, size_t size);
 byte* load_file_or_die (const char* fname, size_t *fsize);
 char* str_trim_one_char_right (char *in);
 void debugger_breakpoint();
@@ -52,3 +52,5 @@ int strtol_or_strtoll(const char *nptr, char **endptr, int base);
 #ifdef  __cplusplus
 }
 #endif
+
+/* vim: set expandtab ts=4 sw=4 : */

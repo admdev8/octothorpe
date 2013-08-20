@@ -432,3 +432,4 @@ void list_of_wydes_to_array (wyde** array, unsigned *array_len, obj* o)
     //    printf ("idx=%d, %04X\n", i, (*array)[i]);
 };
 
+/* vim: set expandtab ts=4 sw=4 : */
