@@ -30,7 +30,7 @@ extern "C" {
 #endif
 
 unsigned most_significant_hex_number(octabyte x);
-void die (const char * fmt, ...);
+_Noreturn void die (const char * fmt, ...);
 void* memdup (void *p, size_t s);
 void print_string_range (const char *s, int begin, size_t size);
 byte* load_file_or_die (const char* fname, size_t *fsize);

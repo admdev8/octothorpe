@@ -1,3 +1,5 @@
 My own C library.
 
+Requires C11 compiler, like GCC > 4.6.
+
 -- dennis(a)yurichev.com

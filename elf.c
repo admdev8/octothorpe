@@ -118,7 +118,6 @@ Elf32_Half elf_find_symtab_section (byte *buf)
         };
 
     die ("symbol table is not found!\n");
-    return 0; // make compiler happy
 };
 
 char* elf_get_str_from_shstr(byte* buf, int idx)

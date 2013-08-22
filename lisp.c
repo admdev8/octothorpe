@@ -22,18 +22,63 @@
 #include <string.h>
 #include <stdarg.h>
 
+#include "oassert.h"
 #include "dmalloc.h"
 #include "lisp.h"
 
 #define FILE_OUT stdout
 //#define FILE_OUT stderr
 
+void obj_byte2 (byte i, obj* o)
+{
+    o->t=OBJ_BYTE;
+    o->u.b=i;
+};
+
+void obj_wyde2 (wyde i, obj* o)
+{
+    o->t=OBJ_WYDE;
+    o->u.w=i;
+};
+
+void obj_tetrabyte2 (tetrabyte i, obj* o)
+{
+    o->t=OBJ_TETRABYTE;
+    o->u.tb=i;
+};
+
+void obj_octabyte2 (octabyte i, obj* o)
+{
+    o->t=OBJ_OCTABYTE;
+    o->u.ob=i;
+};
+
+void obj_REG2 (REG i, obj* o)
+{
+#ifdef _WIN64
+    obj_octabyte2 (i, o);
+#else
+    obj_tetrabyte2 (i, o);
+#endif
+};
+
+void obj_double2 (double d, obj* o)
+{
+    o->t=OBJ_DOUBLE;
+    o->u.d=d;
+};
+
+void obj_xmm2 (byte *ptr, obj *o)
+{
+    o->t=OBJ_XMM;
+    o->u.xmm=DMEMDUP(ptr, 16, "XMM value");
+};
+
 obj* obj_byte (byte i)
 {
     obj* rt;
     rt=DCALLOC (obj, 1, "obj");
-    rt->t=OBJ_BYTE;
-    rt->u.b=i;
+    obj_byte2 (i, rt);
     return rt;
 };
 
@@ -41,8 +86,7 @@ obj* obj_wyde (wyde i)
 {
     obj* rt;
     rt=DCALLOC (obj, 1, "obj");
-    rt->t=OBJ_WYDE;
-    rt->u.w=i;
+    obj_wyde2(i, rt);
     return rt;
 };
 
@@ -50,8 +94,7 @@ obj* obj_tetrabyte (tetrabyte i)
 {
     obj* rt;
     rt=DCALLOC (obj, 1, "obj");
-    rt->t=OBJ_TETRABYTE;
-    rt->u.tb=i;
+    obj_tetrabyte2(i, rt);
     return rt;
 };
 
@@ -59,26 +102,31 @@ obj* obj_octabyte (octabyte i)
 {
     obj* rt;
     rt=DCALLOC (obj, 1, "obj");
-    rt->t=OBJ_OCTABYTE;
-    rt->u.ob=i;
+    obj_octabyte2 (i, rt);
     return rt;
 };
 
 obj* obj_REG (REG i)
 {
-#ifdef _WIN64
-    return obj_octabyte(i);
-#else
-    return obj_tetrabyte(i);
-#endif
+    obj* rt;
+    rt=DCALLOC (obj, 1, "obj");
+    obj_REG2 (i, rt);
+    return rt;
 };
 
 obj* obj_double (double d)
 {
     obj* rt;
     rt=DCALLOC (obj, 1, "obj");
-    rt->t=OBJ_DOUBLE;
-    rt->u.d=d;
+    obj_double2 (d, rt);
+    return rt;
+};
+
+obj* obj_xmm (byte *ptr)
+{
+    obj* rt;
+    rt=DCALLOC (obj, 1, "obj");
+    obj_xmm2 (ptr, rt);
     return rt;
 };
 
@@ -240,6 +288,11 @@ void obj_dump(obj *o)
         case OBJ_DOUBLE:
             fprintf (FILE_OUT, "%f", o->u.d);
             break;
+        case OBJ_XMM:
+            printf ("0x");
+            for (int i=0; i<16; i++)
+                fprintf (FILE_OUT, "%02X", o->u.xmm[i]);
+            break;
         case OBJ_CSTRING:
             fprintf (FILE_OUT, "\"%s\"", o->u.s);
             break;
@@ -258,6 +311,90 @@ void obj_dump(obj *o)
             break;
         default:
             assert(0);
+            break;
+    };
+};
+
+// shallow copy
+void obj_copy2 (obj *dst, obj *src)
+{
+    switch (src->t)
+    {
+        case OBJ_NONE:
+            break;
+        case OBJ_BYTE:
+            dst->u.b=src->u.b;
+            break;
+        case OBJ_WYDE:
+            dst->u.w=src->u.w;
+            break;
+        case OBJ_TETRABYTE:
+            dst->u.tb=src->u.tb;
+            break;
+        case OBJ_OCTABYTE:
+            dst->u.ob=src->u.ob;
+            break;
+        case OBJ_DOUBLE:
+            dst->u.d=src->u.d;
+            break;
+        case OBJ_XMM:
+            dst->u.xmm=DMEMDUP (src->u.xmm, 16, "xmm");
+            break;
+        case OBJ_CSTRING:
+            dst->u.s=DSTRDUP (src->u.s, "s");
+        case OBJ_CONS:
+            assert (!"cons object copying isn't yet supported");
+            break;
+        case OBJ_OPAQUE:
+            assert (!"opaque object copying isn't yet supported");
+            break;
+        default:
+            assert (!"something unsupported");
+            break;
+    };
+    dst->t=src->t;
+};
+
+bool EQL(obj *o1, obj* o2)
+{
+    if(o1==NULL && o2==NULL)
+        return true;
+
+    if (o1->t!=o2->t)
+        return false;
+
+    switch (o1->t)
+    {
+        case OBJ_BYTE:
+            return obj_get_as_byte(o1)==obj_get_as_byte(o2);
+
+        case OBJ_WYDE:
+            return obj_get_as_wyde(o1)==obj_get_as_wyde(o2);
+
+        case OBJ_TETRABYTE:
+            return obj_get_as_tetrabyte(o1)==obj_get_as_tetrabyte(o2);
+            
+        case OBJ_OCTABYTE:
+            return obj_get_as_octabyte(o1)==obj_get_as_octabyte(o2);
+
+        case OBJ_DOUBLE:
+            return o1->u.d==o2->u.d;
+
+        case OBJ_XMM:
+            return memcmp (o1->u.xmm, o2->u.xmm, 16)==0;
+
+        case OBJ_CSTRING:
+            return strcmp (o1->u.s, o2->u.s)==0;
+
+        case OBJ_CONS:
+            return car(o1)==car(o2) && cdr(o1)==cdr(o2); // this is EQL, remember
+
+        case OBJ_OPAQUE:
+            oassert (!"opaque objects are not supported in EQL");
+            break;
+
+        default:
+            oassert(!"unknown type");
             break;
     };
 };
@@ -305,6 +442,9 @@ void obj_free(obj* o)
     {
         case OBJ_CSTRING:
             DFREE (o->u.s);
+            break;
+        case OBJ_XMM:
+            DFREE (o->u.xmm);
             break;
         case OBJ_CONS:
             if (o->u.c->head) obj_free (o->u.c->head);
@@ -370,6 +510,12 @@ tetrabyte obj_get_as_tetrabyte(obj* o)
     return o->u.tb;
 };
 
+double obj_get_as_double(obj* o)
+{
+    assert (o->t==OBJ_DOUBLE);
+    return o->u.d;
+};
+
 octabyte obj_get_as_octabyte(obj* o)
 {
     assert (o->t==OBJ_OCTABYTE);
@@ -396,10 +542,71 @@ REG obj_get_as_REG(obj* o)
 #endif
 };
 
+octabyte zero_extend_to_octabyte(obj* o)
+{
+    switch (o->t)
+    {
+        case OBJ_BYTE:
+            return o->u.b;
+        case OBJ_WYDE:
+            return o->u.w;
+        case OBJ_TETRABYTE:
+            return o->u.tb;
+        case OBJ_OCTABYTE:
+            return o->u.ob;
+        default:
+            oassert(!"other types are not convertible to octabyte");
+    };
+};
+
+REG zero_extend_to_REG(obj* o)
+{
+    switch (o->t)
+    {
+        case OBJ_BYTE:
+            return o->u.b;
+        case OBJ_WYDE:
+            return o->u.w;
+        case OBJ_TETRABYTE:
+            return o->u.tb;
+        case OBJ_OCTABYTE:
+#ifdef _WIN64
+            return o->u.ob;
+#else
+            oassert(!"cannot convert octabyte to REG");
+#endif            
+        default:
+            oassert(!"other types are not convertible to REG");
+    };
+};
+
+bool obj_is_zero(obj* o)
+{
+    switch (o->t)
+    {
+        case OBJ_BYTE:
+            return o->u.b==0;
+        case OBJ_WYDE:
+            return o->u.w==0;
+        case OBJ_TETRABYTE:
+            return o->u.tb==0;
+        case OBJ_OCTABYTE:
+            return o->u.ob==0;
+        default:
+            oassert(!"other types are not supported (so far)");
+    };
+};
+
 char* obj_get_as_cstring(obj* o)
 {
     assert (o->t==OBJ_CSTRING);
     return o->u.s;
+};
+
+byte* obj_get_as_xmm(obj* o)
+{
+    assert (o->t==OBJ_XMM);
+    return o->u.xmm;
 };
 
 void list_of_bytes_to_array (byte** array, unsigned *array_len, obj* o)
@@ -432,4 +639,370 @@ void list_of_wydes_to_array (wyde** array, unsigned *array_len, obj* o)
     //    printf ("idx=%d, %04X\n", i, (*array)[i]);
 };
 
+void obj_REG2_and_set_type(enum obj_type t, REG v, obj* out)
+{
+    switch (t)
+    {
+        case OBJ_BYTE:      
+            obj_byte2(v&0xFF, out); break;
+        case OBJ_WYDE:      
+            obj_wyde2(v&0xFFFF, out); break;
+        case OBJ_TETRABYTE: 
+            obj_tetrabyte2(v&0xFFFFFFFF, out); break;
+        case OBJ_OCTABYTE:  
+            obj_octabyte2(v, out); break;
+        default:
+            assert(!"other types are not supported");
+    };
+};
+
+int get_2nd_most_significant_bit(obj *i)
+{
+    switch (i->t)
+    {
+        case OBJ_OCTABYTE:
+            return (obj_get_as_octabyte(i) & 0x4000000000000000) ? 1 : 0;
+        case OBJ_TETRABYTE:
+            return (obj_get_as_tetrabyte(i) & 0x40000000) ? 1 : 0;
+        case OBJ_WYDE:
+            return (obj_get_as_wyde(i) & 0x4000) ? 1 : 0;
+        case OBJ_BYTE:
+            return (obj_get_as_byte(i) & 0x40) ? 1 : 0;
+        default:
+            oassert(!"unsupported type");
+    };
+};
+
+int get_lowest_byte(obj *i)
+{
+    switch (i->t)
+    {
+        case OBJ_OCTABYTE:
+            return obj_get_as_octabyte(i) & 0xFF;
+        case OBJ_TETRABYTE:
+            return obj_get_as_tetrabyte(i) & 0xFF;
+        case OBJ_WYDE:
+            return obj_get_as_wyde(i) & 0xFF;
+        case OBJ_BYTE:
+            return obj_get_as_byte(i);
+        default:
+            oassert(!"unsupported type");
+    };
+};
+
+bool obj_get_4th_bit(obj *i)
+{
+    return (get_lowest_byte(i)>>3) & 1;
+};
+
+void obj_decrement(obj *i)
+{
+    switch (i->t)
+    {
+        case OBJ_OCTABYTE:
+            i->u.ob--;
+            break;
+        case OBJ_TETRABYTE:
+            i->u.tb--;
+            break;
+        case OBJ_WYDE:
+            i->u.w--;
+            break;
+        case OBJ_BYTE:
+            i->u.b--;
+            break;
+        default:
+            oassert(!"unsupported type");
+    };
+};
+
+void obj_subtract(obj *op1, obj *op2, obj *result)
+{
+    oassert (op1->t==op2->t);
+
+    switch (op1->t)
+    {
+        case OBJ_OCTABYTE:
+            obj_octabyte2 (op1->u.ob - op2->u.ob, result);
+            break;
+        case OBJ_TETRABYTE:
+            obj_tetrabyte2 (op1->u.tb - op2->u.tb, result);
+            break;
+        case OBJ_WYDE:
+            obj_wyde2 (op1->u.w - op2->u.w, result);
+            break;
+        case OBJ_BYTE:
+            obj_byte2 (op1->u.b - op2->u.b, result);
+            break;
+        default:
+            oassert(!"unsupported type");
+    };
+};
+
+void obj_add(obj *op1, obj *op2, obj *result)
+{
+    oassert (op1->t==op2->t);
+
+    switch (op1->t)
+    {
+        case OBJ_OCTABYTE:
+            obj_octabyte2 (op1->u.ob + op2->u.ob, result);
+            break;
+        case OBJ_TETRABYTE:
+            obj_tetrabyte2 (op1->u.tb + op2->u.tb, result);
+            break;
+        case OBJ_WYDE:
+            obj_wyde2 (op1->u.w + op2->u.w, result);
+            break;
+        case OBJ_BYTE:
+            obj_byte2 (op1->u.b + op2->u.b, result);
+            break;
+        default:
+            oassert(!"unsupported type");
+    };
+};
+
+void obj_XOR(obj *op1, obj *op2, obj *result)
+{
+    oassert (op1->t==op2->t);
+
+    switch (op1->t)
+    {
+        case OBJ_OCTABYTE:
+            obj_octabyte2 (op1->u.ob ^ op2->u.ob, result);
+            break;
+        case OBJ_TETRABYTE:
+            obj_tetrabyte2 (op1->u.tb ^ op2->u.tb, result);
+            break;
+        case OBJ_WYDE:
+            obj_wyde2 (op1->u.w ^ op2->u.w, result);
+            break;
+        case OBJ_BYTE:
+            obj_byte2 (op1->u.b ^ op2->u.b, result);
+            break;
+        default:
+            oassert(!"unsupported type");
+    };
+};
+
+void obj_AND(obj *op1, obj *op2, obj *result)
+{
+    oassert (op1->t==op2->t);
+
+    switch (op1->t)
+    {
+        case OBJ_OCTABYTE:
+            obj_octabyte2 (op1->u.ob & op2->u.ob, result);
+            break;
+        case OBJ_TETRABYTE:
+            obj_tetrabyte2 (op1->u.tb & op2->u.tb, result);
+            break;
+        case OBJ_WYDE:
+            obj_wyde2 (op1->u.w & op2->u.w, result);
+            break;
+        case OBJ_BYTE:
+            obj_byte2 (op1->u.b & op2->u.b, result);
+            break;
+        default:
+            oassert(!"unsupported type");
+    };
+};
+
+void obj_OR(obj *op1, obj *op2, obj *result)
+{
+    oassert (op1->t==op2->t);
+
+    switch (op1->t)
+    {
+        case OBJ_OCTABYTE:
+            obj_octabyte2 (op1->u.ob | op2->u.ob, result);
+            break;
+        case OBJ_TETRABYTE:
+            obj_tetrabyte2 (op1->u.tb | op2->u.tb, result);
+            break;
+        case OBJ_WYDE:
+            obj_wyde2 (op1->u.w | op2->u.w, result);
+            break;
+        case OBJ_BYTE:
+            obj_byte2 (op1->u.b | op2->u.b, result);
+            break;
+        default:
+            oassert(!"unsupported type");
+    };
+};
+
+int obj_compare(obj *op1, obj *op2)
+{
+    oassert (op1->t==op2->t);
+
+    switch (op1->t)
+    {
+        case OBJ_OCTABYTE:
+            {
+                octabyte o1=obj_get_as_octabyte (op1);
+                octabyte o2=obj_get_as_octabyte (op2);
+                if (o1<o2)
+                    return -1;
+                if (o1>o2)
+                    return -1;
+                return 0;
+            };
+
+        case OBJ_TETRABYTE:
+            {
+                tetrabyte o1=obj_get_as_tetrabyte (op1);
+                tetrabyte o2=obj_get_as_tetrabyte (op2);
+                if (o1<o2)
+                    return -1;
+                if (o1>o2)
+                    return -1;
+                return 0;
+            };
+
+        case OBJ_WYDE:
+            {
+                wyde o1=obj_get_as_wyde (op1);
+                wyde o2=obj_get_as_wyde (op2);
+                if (o1<o2)
+                    return -1;
+                if (o1>o2)
+                    return -1;
+                return 0;
+            };
+
+        case OBJ_BYTE:
+            {
+                byte o1=obj_get_as_byte (op1);
+                byte o2=obj_get_as_byte (op2);
+                if (o1<o2)
+                    return -1;
+                if (o1>o2)
+                    return -1;
+                return 0;
+            };
+
+        default:
+            oassert(!"unsupported type");
+    };
+};
+
+int get_most_significant_bit(obj *i)
+{
+    switch (i->t)
+    {
+        case OBJ_OCTABYTE:
+            return (obj_get_as_octabyte(i) & 0x8000000000000000) ? 1 : 0;
+        case OBJ_TETRABYTE:
+            return (obj_get_as_tetrabyte(i) & 0x80000000) ? 1 : 0;
+        case OBJ_WYDE:
+            return (obj_get_as_wyde(i) & 0x8000) ? 1 : 0;
+        case OBJ_BYTE:
+            return (obj_get_as_byte(i) & 0x80) ? 1 : 0;
+        default:
+            oassert(!"unsupported type");
+    };
+};
+
+void obj_AND_with(obj* op1, byte op2)
+{
+    switch (op1->t)
+    {
+        case OBJ_OCTABYTE:
+            op1->u.ob &= (octabyte)op2;
+            break;
+        case OBJ_TETRABYTE:
+            op1->u.tb &= (tetrabyte)op2;
+            break;
+        case OBJ_WYDE:
+            op1->u.w &= (wyde)op2;
+            break;
+        case OBJ_BYTE:
+            op1->u.b &= op2;
+            break;
+        default:
+            oassert(!"unsupported type");
+    };
+};
+
+void obj2_sign_extended_shift_right (obj *op1, byte op2, obj *out)
+{
+    switch (op1->t)
+    {
+        case OBJ_OCTABYTE:
+            obj_octabyte2 ((uint64_t)(((int64_t)obj_get_as_octabyte (op1)) >> op2), out);
+            break;
+        case OBJ_TETRABYTE:
+            obj_tetrabyte2 ((uint32_t)(((int32_t)obj_get_as_tetrabyte (op1)) >> op2), out);
+            break;
+        case OBJ_WYDE:
+            obj_wyde2 ((uint16_t)(((int16_t)obj_get_as_wyde (op1)) >> op2), out);
+            break;
+        case OBJ_BYTE:
+            obj_byte2 ((uint8_t)(((int8_t)obj_get_as_byte (op1)) >> op2), out);
+            break;
+        default:
+            oassert(0);
+            break;
+    };
+};
+                    
+void obj_zero_extend (obj *in, enum obj_type out_type, obj* out)
+{
+    REG tmp=zero_extend_to_REG(in);
+
+    switch (out_type)
+    {
+        case OBJ_WYDE:
+            obj_wyde2 (tmp, out);
+            break;
+        case OBJ_TETRABYTE:
+            obj_tetrabyte2 (tmp, out);
+            break;
+        case OBJ_OCTABYTE:
+            obj_octabyte2 (tmp, out);
+            break;
+        default:
+            oassert (!"other types are not yet supported");
+    };
+};
+
+void obj_sign_extend (obj *in, enum obj_type out_type, obj* out)
+{
+    switch (out_type)
+    {
+        case OBJ_WYDE:
+            oassert (in->t==OBJ_BYTE);
+            obj_wyde2((uint16_t)(int16_t)obj_get_as_byte(in), out);
+            break;
+
+        case OBJ_TETRABYTE:
+            if (in->t==OBJ_BYTE)
+                obj_tetrabyte2((uint32_t)(int32_t)(int8_t)obj_get_as_byte(in), out);
+            else if (in->t==OBJ_WYDE)
+                obj_tetrabyte2((uint32_t)(int32_t)(int16_t)obj_get_as_wyde(in), out);
+            else
+            {
+                oassert(0);
+            };
+            break;
+
+        case OBJ_OCTABYTE:
+            if (in->t==OBJ_BYTE)
+                obj_octabyte2((uint64_t)(int64_t)(int8_t)obj_get_as_byte(in), out);
+            else if (in->t==OBJ_WYDE)
+                obj_octabyte2((uint64_t)(int64_t)(int16_t)obj_get_as_wyde(in), out);
+            else if (in->t==OBJ_TETRABYTE)
+                obj_octabyte2((uint64_t)(int64_t)(int32_t)obj_get_as_tetrabyte(in), out);
+            else
+            {
+                oassert(0);
+            };
+            break;
+
+        default:
+            oassert (!"other types are not yet supported");
+    };
+};
+
 /* vim: set expandtab ts=4 sw=4 : */
+
