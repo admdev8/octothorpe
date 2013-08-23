@@ -36,9 +36,10 @@ void* dcalloc (size_t size, const char * filename, unsigned line, const char * f
 #define DCALLOC(type, size, comment) ((type*)dcalloc(sizeof(type)*size, __FILE__, __LINE__, __func__, comment))
 
 void dfree (void* ptr);
+void dfree2 (void* ptr, const char *filename, unsigned line, const char *funcname);
 
 // for symmetry!
-#define DFREE(p) (dfree(p))
+#define DFREE(p) (dfree2(p, __FILE__, __LINE__, __func__))
 
 char* dstrdup (const char *str, const char * filename, unsigned line, const char * function, const char * structname);
 #define DSTRDUP(str,comment) (dstrdup(str, __FILE__, __LINE__, __func__, comment))

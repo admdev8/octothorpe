@@ -156,7 +156,7 @@ void* drealloc (void* ptr, size_t size, const char * filename, unsigned line, co
         return dmalloc (size, filename, line, function, structname);
     if (size==0)
     {
-        dfree(ptr);
+        DFREE(ptr);
         return NULL;
     };
 
@@ -260,13 +260,18 @@ static void chk_all_guards()
 
 void dfree (void* ptr)
 {
+    dfree2 (ptr, __FILE__, __LINE__, __func__);
+};
+
+void dfree2 (void* ptr, const char *filename, unsigned line, const char *funcname)
+{
 #ifdef _DEBUG
     struct dmalloc_info *tmp;
     size_t blk_user_size=0;
 #endif
 
 #ifdef LOGGING 
-    fprintf (stderr, "%s(ptr=0x%p)\n", __func__, ptr);
+    fprintf (stderr, "%s(ptr=0x%p filename=%s line=%d funcname=%s)\n", __func__, ptr, filename, line, funcname);
 #endif    
     
     if (ptr==NULL)
@@ -290,6 +295,7 @@ void dfree (void* ptr)
     if (tmp==NULL)
     {
         fprintf (stderr, "%s(0x%p): ptr isn't present in our records\n", __FUNCTION__, ptr);
+        fprintf (stderr, "filename:line=%s:%d, function=%s\n", filename, line, funcname);
 #ifdef BREAK_ON_UNKNOWN_BLOCK_BEING_FREED
         debugger_breakpoint();
 #endif

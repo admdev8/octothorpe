@@ -295,6 +295,13 @@ char strbuf_last_char (strbuf *s)
     return s->buf[s->strlen-1];
 };
 
+void strbuf_trim_last_char (strbuf *s)
+{
+    assert (s->strlen!=0);
+    s->strlen--;
+    s->buf[s->strlen]=0;
+};
+
 void strbuf_make_shorter (strbuf *sb, unsigned new_size)
 {
     assert (new_size < sb->strlen);

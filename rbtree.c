@@ -196,6 +196,9 @@ rbtree* rbtree_create(bool use_dmalloc, const char *struct_name, compare_func co
 
 void rbtree_deinit(rbtree* t)
 {
+    if (t==NULL) // behave as free(NULL)
+        return;
+
     rbtree_clear(t);
 
     if (t->use_dmalloc)
