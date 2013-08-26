@@ -21,6 +21,7 @@
 #include <string.h>
 #include <assert.h>
 
+#include "oassert.h"
 #include "strbuf.h"
 #include "dmalloc.h"
 #include "stuff.h"
@@ -90,6 +91,7 @@ void strbuf_addstr_range (strbuf *sb, const char *s, int len)
 
 void strbuf_addstr (strbuf *sb, const char *s)
 {
+    oassert (s);
     strbuf_addstr_range (sb, s, strlen(s));
 };
 
@@ -297,7 +299,7 @@ char strbuf_last_char (strbuf *s)
 
 void strbuf_trim_last_char (strbuf *s)
 {
-    assert (s->strlen!=0);
+    oassert (s->strlen!=0 && "input string is empty");
     s->strlen--;
     s->buf[s->strlen]=0;
 };

@@ -43,6 +43,7 @@ Retrieved from: http://en.literateprograms.org/Red-black_tree_(C)?oldid=18555
 #include <assert.h>
 #include <stdlib.h>
 #include "dmalloc.h"
+#include "oassert.h"
 
 #if 0
 #define VERIFY_RBTREE
@@ -398,6 +399,7 @@ void* rbtree_lookup2(rbtree* t, void* key,
 
 void* rbtree_lookup(rbtree* t, void* key)
 {
+    oassert(t);
     return rbtree_lookup2(t, key, NULL, NULL, NULL, NULL);
 };
 
