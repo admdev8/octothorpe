@@ -17,6 +17,7 @@
 
 #include "set.h"
 #include "dmalloc.h"
+#include "stuff.h"
 
 void set_of_REG_to_string (rbtree *t, strbuf *out, unsigned limit)
 {
@@ -31,18 +32,43 @@ void set_of_REG_to_string (rbtree *t, strbuf *out, unsigned limit)
 void set_of_doubles_to_string (rbtree *t, strbuf *out, unsigned limit)
 {
     unsigned doubles_cnt=rbtree_count(t);
-    unsigned doubles_dumped=0;
-    rbtree_node *max=rbtree_maximum(t);
-    for (rbtree_node *j=rbtree_minimum(t); j; j=rbtree_succ(j))
+
+    if (doubles_cnt<limit)
     {
-        strbuf_addf (out, "%.1f", *(double*)j->key);
-        if (doubles_dumped++>limit)
+        rbtree_node *max=rbtree_maximum(t);
+
+        for (rbtree_node *j=rbtree_minimum(t); j; j=rbtree_succ(j))
         {
-            strbuf_addf (out, " (%d doubles skipped)", doubles_cnt - doubles_dumped);
-            break;
+            strbuf_addf (out, "%.1f", *(double*)j->key);
+            if (j!=max)
+                strbuf_addstr (out, ", ");
         };
-        if (j!=max)
-            strbuf_addstr (out, ", ");
+    }
+    else
+    {
+        unsigned chunk_size=limit/2;
+        int i;
+        rbtree_node *j;
+
+        for (i=0, j=rbtree_minimum(t); i<chunk_size; j=rbtree_succ(j), i++)
+        {
+            strbuf_addf (out, "%.1f", *(double*)j->key);
+            if (i+1 != chunk_size)
+                strbuf_addstr (out, ", ");
+        };
+        
+        strbuf_addf (out, " (%d doubles skipped) ", doubles_cnt - chunk_size*2);
+
+        rbtree_node *n=rbtree_maximum(t);
+        for (int i=0; i<(chunk_size-1); i++)
+            n=rbtree_pred(n);
+
+        for (int i=0; i<chunk_size; n=rbtree_succ(n), i++)
+        {
+            strbuf_addf (out, "%.1f", *(double*)n->key);
+            if (i+1 != chunk_size)
+                strbuf_addstr (out, ", ");
+        };
     };
 };
 
@@ -64,7 +90,7 @@ void set_of_string_to_string (rbtree *t, strbuf *out, unsigned limit)
     };
 };
 
-void set_add_string_or_free (rbtree *t, const char *s)
+void set_add_string_or_free (rbtree *t, char *s)
 {
     if (rbtree_is_key_present(t, (void*)s))
         DFREE(s);
