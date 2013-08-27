@@ -33,6 +33,9 @@
 #define FLAG_OF (1<<11)
 #define FLAG_RF (1<<16)
 
+// 0x8d5
+#define FLAG_PSAZOC (FLAG_PF | FLAG_SF | FLAG_AF | FLAG_ZF | FLAG_OF | FLAG_CF)
+
 typedef struct _s_EFLAGS
 {
     unsigned CF : 1;
@@ -116,5 +119,25 @@ void XMM_to_strbuf (byte* p, strbuf *sb);
 
 bool sse_supported();
 bool sse2_supported();
+
+// was used for testing in tracer/cc and bolt/x86 emulator
+#define X86_INC_EAX "\x40"
+#define X86_INC_EAX_LEN 1
+#define X86_MOV_EAX_ESI "\x89\xF0"
+#define X86_MOV_EAX_ESI_LEN 2
+#define X86_FSTP_ESI "\xD9\x1E"
+#define X86_FSTP_ESI_LEN 2
+#define X86_JA_NEXT "\x77\x00"
+#define X86_JA_NEXT_LEN 2
+#define X86_CALL_EAX "\xFF\xD0"
+#define X86_CALL_EAX_LEN 2
+#define X86_CMP_EAX_EBX "\x39\xD8"
+#define X86_CMP_EAX_EBX_LEN 2
+#define X86_SHR_OP_ESI_CP_CL "\xD3\x2E"
+#define X86_SHR_OP_ESI_CP_CL_LEN 2
+#define X86_SHL_OP_ESI_CP_CL "\xD3\x26"
+#define X86_SHL_OP_ESI_CP_CL_LEN 2
+#define X86_SAR_OP_ESI_CP_CL "\xD3\x3E"
+#define X86_SAR_OP_ESI_CP_CL_LEN 2
 
 /* vim: set expandtab ts=4 sw=4 : */
