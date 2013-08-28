@@ -29,6 +29,18 @@
 extern "C" {
 #endif
 
+#ifndef IN
+#define IN
+#endif
+
+#ifndef OUT
+#define OUT
+#endif
+
+#ifndef OPTIONAL
+#define OPTIONAL
+#endif
+
 unsigned most_significant_hex_number(octabyte x);
 _Noreturn void die (const char * fmt, ...);
 void* memdup (void *p, size_t s);
