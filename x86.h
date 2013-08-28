@@ -25,7 +25,7 @@
 #define FLAG_CF (1<<0)
 #define FLAG_RSRV1 (1<<1)
 #define FLAG_PF (1<<2)
-#define FLAG_AF (1<<4)
+#define FLAG_AF (1<<4) // 0x10
 #define FLAG_ZF (1<<6)
 #define FLAG_SF (1<<7)
 #define FLAG_TF (1<<8)
@@ -120,7 +120,7 @@ void XMM_to_strbuf (byte* p, strbuf *sb);
 bool sse_supported();
 bool sse2_supported();
 
-// was used for testing in tracer/cc and bolt/x86 emulator
+// used for testing in tracer/cc and bolt/x86 emulator
 #define X86_INC_EAX "\x40"
 #define X86_INC_EAX_LEN 1
 #define X86_MOV_EAX_ESI "\x89\xF0"
@@ -139,5 +139,18 @@ bool sse2_supported();
 #define X86_SHL_OP_ESI_CP_CL_LEN 2
 #define X86_SAR_OP_ESI_CP_CL "\xD3\x3E"
 #define X86_SAR_OP_ESI_CP_CL_LEN 2
+#define X86_ADD_EAX_EBX "\x01\xD8"
+#define X86_ADC_EAX_EBX "\x11\xD8"
+#define X86_SUB_EAX_EBX "\x29\xD8"
+#define X86_SBB_EAX_EBX "\x19\xD8"
+#define X86_XOR_EAX_EBX "\x31\xD8"
+#define X86_OR_EAX_EBX "\x09\xD8"
+#define X86_AND_EAX_EBX "\x21\xD8"
+#define X86_MOVZX_EAX_AL "\x0F\xB6\xC0"
+#define X86_MOVZX_EAX_AX "\x0F\xB7\xC0"
+#define X86_MOVSX_EAX_AL "\x0F\xBE\xC0"
+#define X86_MOVSX_EAX_AX "\x0F\xBF\xC0"
+#define X86_MOVZX_AX_AL "\x66\x0F\xB6\xC0"
+#define X86_MOVSX_AX_AL "\x66\x0F\xBE\xC0"
 
 /* vim: set expandtab ts=4 sw=4 : */

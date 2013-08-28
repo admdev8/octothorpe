@@ -692,7 +692,7 @@ int get_lowest_byte(obj *i)
 
 bool obj_get_4th_bit(obj *i)
 {
-    return (get_lowest_byte(i)>>3) & 1;
+    return (get_lowest_byte(i)>>4) & 1;
 };
 
 void obj_decrement(obj *i)
@@ -844,7 +844,7 @@ int obj_compare(obj *op1, obj *op2)
                 if (o1<o2)
                     return -1;
                 if (o1>o2)
-                    return -1;
+                    return 1;
                 return 0;
             };
 
@@ -855,7 +855,7 @@ int obj_compare(obj *op1, obj *op2)
                 if (o1<o2)
                     return -1;
                 if (o1>o2)
-                    return -1;
+                    return 1;
                 return 0;
             };
 
@@ -866,7 +866,7 @@ int obj_compare(obj *op1, obj *op2)
                 if (o1<o2)
                     return -1;
                 if (o1>o2)
-                    return -1;
+                    return 1;
                 return 0;
             };
 
@@ -877,7 +877,7 @@ int obj_compare(obj *op1, obj *op2)
                 if (o1<o2)
                     return -1;
                 if (o1>o2)
-                    return -1;
+                    return 1;
                 return 0;
             };
 
@@ -972,7 +972,7 @@ void obj_sign_extend (obj *in, enum obj_type out_type, obj* out)
     {
         case OBJ_WYDE:
             oassert (in->t==OBJ_BYTE);
-            obj_wyde2((uint16_t)(int16_t)obj_get_as_byte(in), out);
+            obj_wyde2((uint16_t)(int16_t)(int8_t)obj_get_as_byte(in), out);
             break;
 
         case OBJ_TETRABYTE:
