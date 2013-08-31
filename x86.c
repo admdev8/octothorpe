@@ -53,7 +53,8 @@ void flags_to_str (tetrabyte flags, strbuf *out)
     if (uf.s.VIP) strbuf_addstr (out, "VIP ");
     if (uf.s.ID) strbuf_addstr (out, "ID ");
 
-    // TODO trim right part
+    if (out->strlen>0)
+        strbuf_trim_last_char (out);
 };
 
 void dump_flags (fds *s, tetrabyte flags)

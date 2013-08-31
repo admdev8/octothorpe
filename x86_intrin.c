@@ -178,6 +178,26 @@ void intrin_XOR (IN tetrabyte op1, IN tetrabyte op2, OUT tetrabyte* result, IN O
 	*flags=(tmp & FLAG_PSAZOC);
 };
 
+void intrin_XOR_addr (IN tetrabyte *address_of_op1, IN tetrabyte op2, OUT tetrabyte* result, IN OUT tetrabyte* flags)
+{
+	tetrabyte tmp;
+	
+	__asm__("pushfl;"
+		"popl %%esi;"
+		"andl $0xfffff72a, %%esi;" // ~FLAG_PSAZOC
+		"orl %%edx, %%esi;"
+		"pushl %%esi;"
+		"popfl;"
+		"xorl %%ecx, (%%eax);"
+		"pushfl;"
+		"popl %%edx;"
+				: "=a" (*result), "=d" (tmp)
+				: "a" (address_of_op1), "c" (op2), "d" (*flags)
+				: "%esi", "cc"
+		);
+	*flags=(tmp & FLAG_PSAZOC);
+};
+
 void intrin_OR (IN tetrabyte op1, IN tetrabyte op2, OUT tetrabyte* result, IN OUT tetrabyte* flags)
 {
 	tetrabyte tmp;
