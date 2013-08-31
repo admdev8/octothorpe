@@ -102,6 +102,7 @@ int get_lowest_byte(obj *i);
 bool obj_get_4th_bit(obj *i);
 // l1 may be NULL, it's OK. l1 and l2 should be lists!
 obj *NCONC (obj *l1, obj *l2);
+void obj_free_structures(obj* o);
 void obj_free(obj* o);
 void obj_free_conses_of_list(obj* o);
 bool CONSP(obj* o);

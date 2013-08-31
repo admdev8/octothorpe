@@ -434,7 +434,7 @@ obj* NCONC (obj *l1, obj *l2)
     return l1;
 };
 
-void obj_free(obj* o)
+void obj_free_structures(obj* o)
 {
     if(o==NULL)
         return; // be silent, that behavour is the same as in free(NULL);
@@ -464,9 +464,14 @@ void obj_free(obj* o)
             break;
 
         default:
-            assert(0); // fail if type is unknown: fail if pointer to incorrect memory chunk is passed
+            oassert(!"type unknown"); // fail if type is unknown: fail if pointer to incorrect memory chunk is passed
             break;
     };
+};
+
+void obj_free(obj* o)
+{
+    obj_free_structures(o);
     DFREE(o);
 };
 
