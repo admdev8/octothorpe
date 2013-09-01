@@ -455,6 +455,7 @@ void obj_free_structures(obj* o)
             if (o->u.o->free_fn) (*o->u.o->free_fn)(o->u.o->ptr);
             DFREE(o->u.o);
             break;
+        case OBJ_NONE:
         case OBJ_BYTE:
         case OBJ_WYDE:
         case OBJ_TETRABYTE:
