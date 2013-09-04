@@ -109,6 +109,36 @@ char* str_trim_one_char_right (char *in)
     return in;
 };
 
+char* str_trim_all_lf_cr_right (char *in)
+{
+    size_t slen=strlen(in);
+    if (slen==0)
+        return in;
+    int last_char_pos=slen-1;
+
+    if (in[last_char_pos]=='\n' || in[last_char_pos]=='\r')
+    {
+        in[last_char_pos]=0;
+        str_trim_all_lf_cr_right(in);
+    };
+
+    return in;
+};
+
+char *remove_char_begin_end_if_present (char *s, char c)
+{
+    size_t slen=strlen(s);
+    if (slen==0)
+        return s;
+    int last_char_pos=slen-1;
+    if (s[0]==c && s[last_char_pos]==c)
+    {
+        s[last_char_pos]=0;
+        strcpy (s, s+1);
+    };
+    return s;
+};
+
 void debugger_breakpoint()
 {
 #ifdef _MSC_VER
@@ -116,26 +146,6 @@ void debugger_breakpoint()
 #else
    __asm__("int $3");
 #endif
-};
-
-void fill_by_tetrabytes (void* ptr, size_t size, tetrabyte val)
-{
-    byte *cur_ptr=(byte*)ptr;
-    size_t rem=size;
-
-    while (rem>=4)
-    {
-        *(tetrabyte*)cur_ptr=val;
-        cur_ptr+=sizeof(tetrabyte);
-        rem-=sizeof(tetrabyte);
-    };
-
-    if (rem>=1)
-        *cur_ptr=val&0xFF;
-    if (rem>=2)
-        *(cur_ptr+1)=(val&0xFF00)>>8;
-    if (rem==3)
-        *(cur_ptr+2)=(val&0xFF0000)>>16;
 };
 
 FILE *fopen_or_die(const char* fname, const char* mode)
@@ -226,6 +236,13 @@ int strtol_or_strtoll(const char *nptr, char **endptr, int base)
 #else
     return strtol(nptr, endptr, base);
 #endif
+};
+
+const char *bool_to_string(bool b)
+{
+    if (b)
+        return "true";
+    return false;
 };
 
 /* vim: set expandtab ts=4 sw=4 : */

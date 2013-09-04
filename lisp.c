@@ -17,7 +17,6 @@
 
 #include <stdbool.h>
 #include <stdio.h>
-#include <assert.h>
 #include <stdlib.h>
 #include <string.h>
 #include <stdarg.h>
@@ -178,31 +177,31 @@ obj* cons (obj* head, obj* tail)
 
 bool CONSP(obj* o)
 {
-    assert(o);
+    oassert(o);
     return o->t==OBJ_CONS;
 };
 
 obj* car(obj* o)
 {
-    assert (CONSP(o));
+    oassert (CONSP(o));
     return o->u.c->head;
 };
 
 obj* cdr(obj* o)
 {
-    assert (CONSP(o));
+    oassert (CONSP(o));
     return o->u.c->tail;
 };
 
 bool obj_is_opaque(obj* o)
 {
-    assert(o);
+    oassert(o);
     return o->t==OBJ_OPAQUE;
 };
 
 void* obj_unpack_opaque(obj* o)
 {
-    assert(obj_is_opaque(o));
+    oassert(obj_is_opaque(o));
     return o->u.o->ptr;
 };
 
@@ -222,7 +221,7 @@ obj* create_obj_opaque(void* ptr, void (*dumper_fn) (void *), void (*free_fn) (v
 
 bool LISTP(obj *o)
 {
-    assert (o);
+    oassert (o);
 
     if (o->t!=OBJ_CONS)
         return false;
@@ -241,7 +240,7 @@ bool LISTP(obj *o)
 
 void obj_dump_as_list(obj *o)
 {
-    assert (LISTP(o));
+    oassert (LISTP(o));
 
     // treat it as list!
 
@@ -310,7 +309,7 @@ void obj_dump(obj *o)
                 fprintf (FILE_OUT, "opaque_0x%p", o->u.o->ptr);
             break;
         default:
-            assert(0);
+            oassert(0);
             break;
     };
 };
@@ -343,13 +342,13 @@ void obj_copy2 (obj *dst, obj *src)
         case OBJ_CSTRING:
             dst->u.s=DSTRDUP (src->u.s, "s");
         case OBJ_CONS:
-            assert (!"cons object copying isn't yet supported");
+            oassert (!"cons object copying isn't yet supported");
             break;
         case OBJ_OPAQUE:
-            assert (!"opaque object copying isn't yet supported");
+            oassert (!"opaque object copying isn't yet supported");
             break;
         default:
-            assert (!"something unsupported");
+            oassert (!"something unsupported");
             break;
     };
     dst->t=src->t;
@@ -403,7 +402,7 @@ unsigned LENGTH (obj *l)
 {
     unsigned rt=0;
     
-    assert (LISTP(l));
+    oassert (LISTP(l));
 
     for (obj* i=l; i; i=cdr(i))
         rt++;
@@ -413,7 +412,7 @@ unsigned LENGTH (obj *l)
 
 obj* LAST(obj *l)
 {
-    assert (l->t==OBJ_CONS);
+    oassert (l->t==OBJ_CONS);
     if (l->u.c->tail==NULL)
         return l;
     else
@@ -422,14 +421,14 @@ obj* LAST(obj *l)
 
 obj* NCONC (obj *l1, obj *l2)
 {
-    assert (CONSP(l2) && "l2 argument should be list too!"); 
+    oassert (CONSP(l2) && "l2 argument should be list too!"); 
 
     if (l1==NULL)
         return l2;
 
     // find last element of l1. it should be NULL.
     obj *last=LAST(l1);
-    assert(last->t==OBJ_CONS && "nconc: last element of l1 list should be cons cell");
+    oassert(last->t==OBJ_CONS && "nconc: last element of l1 list should be cons cell");
     last->u.c->tail=l2;
     return l1;
 };
@@ -478,7 +477,7 @@ void obj_free(obj* o)
 
 void obj_free_conses_of_list(obj* o)
 {
-    assert (LISTP(o));
+    oassert (LISTP(o));
     switch (o->t)
     {
         case OBJ_CONS:
@@ -486,7 +485,7 @@ void obj_free_conses_of_list(obj* o)
             DFREE(o->u.c);
             break;
         default:
-            assert(0);
+            oassert(0);
             break;
     };
     DFREE(o);
@@ -507,36 +506,31 @@ obj* create_list(obj* o, ...)
 
 tetrabyte obj_get_as_tetrabyte(obj* o)
 {
-    if (o->t!=OBJ_TETRABYTE)
-    {
-        printf ("%s() o is not OBJ_TETRABYTE. it is=", __func__);
-        obj_dump(o);
-        exit(0);
-    };
+    oassert (o->t==OBJ_TETRABYTE);
     return o->u.tb;
 };
 
 double obj_get_as_double(obj* o)
 {
-    assert (o->t==OBJ_DOUBLE);
+    oassert (o->t==OBJ_DOUBLE);
     return o->u.d;
 };
 
 octabyte obj_get_as_octabyte(obj* o)
 {
-    assert (o->t==OBJ_OCTABYTE);
+    oassert (o->t==OBJ_OCTABYTE);
     return o->u.ob;
 };
 
 byte obj_get_as_byte(obj* o)
 {
-    assert (o->t==OBJ_BYTE);
+    oassert (o->t==OBJ_BYTE);
     return o->u.b;
 };
 
 wyde obj_get_as_wyde(obj* o)
 {
-    assert (o->t==OBJ_WYDE);
+    oassert (o->t==OBJ_WYDE);
     return o->u.w;
 };
 REG obj_get_as_REG(obj* o)
@@ -605,13 +599,13 @@ bool obj_is_zero(obj* o)
 
 char* obj_get_as_cstring(obj* o)
 {
-    assert (o->t==OBJ_CSTRING);
+    oassert (o->t==OBJ_CSTRING);
     return o->u.s;
 };
 
 byte* obj_get_as_xmm(obj* o)
 {
-    assert (o->t==OBJ_XMM);
+    oassert (o->t==OBJ_XMM);
     return o->u.xmm;
 };
 
@@ -619,7 +613,7 @@ void list_of_bytes_to_array (byte** array, unsigned *array_len, obj* o)
 {
    int idx;
    obj *i;
-   assert (LISTP(o)); 
+   oassert (LISTP(o)); 
 
    *array_len=LENGTH(o);
    *array=DMALLOC(byte, *array_len, "array");
@@ -634,7 +628,7 @@ void list_of_wydes_to_array (wyde** array, unsigned *array_len, obj* o)
 {
    int idx;
    obj *i;
-   assert (LISTP(o)); 
+   oassert (LISTP(o)); 
 
    *array_len=LENGTH(o);
    *array=DMALLOC(wyde, *array_len, "array");
@@ -658,7 +652,7 @@ void obj_REG2_and_set_type(enum obj_type t, REG v, obj* out)
         case OBJ_OCTABYTE:  
             obj_octabyte2(v, out); break;
         default:
-            assert(!"other types are not supported");
+            oassert(!"other types are not supported");
     };
 };
 

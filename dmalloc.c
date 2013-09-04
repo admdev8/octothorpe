@@ -124,7 +124,7 @@ void* dmalloc (size_t size, const char * filename, unsigned line, const char * f
         die("%s() can't allocate size %d for %s (%s:%d)\n", __func__, size, structname, filename, line);
 
 #ifdef _DEBUG
-    fill_by_tetrabytes (rt, size, 0x0BADF00D);
+    tetrabytefill (rt, size, 0x0BADF00D);
 #endif
 
 #ifdef ADD_GUARDS
@@ -310,7 +310,7 @@ void dfree2 (void* ptr, const char *filename, unsigned line, const char *funcnam
 
 #ifdef ADD_GUARDS
 #ifdef _DEBUG
-    fill_by_tetrabytes (ptr, blk_user_size, 0xB1CF1EED);
+    tetrabytefill (ptr, blk_user_size, 0xB1CF1EED);
 #endif
     free ((byte*)ptr-4);
 #else

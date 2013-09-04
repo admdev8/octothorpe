@@ -47,8 +47,9 @@ void* memdup (void *p, size_t s);
 void print_string_range (const char *s, int begin, size_t size);
 byte* load_file_or_die (const char* fname, size_t *fsize);
 char* str_trim_one_char_right (char *in);
+char* str_trim_all_lf_cr_right (char *in);
+char *remove_char_begin_end_if_present (char *s, char c);
 void debugger_breakpoint();
-void fill_by_tetrabytes (void* ptr, size_t size, tetrabyte val);
 FILE *fopen_or_die(const char* fname, const char* mode);
 int stricmp_range (const char *s1, int s1_begin, int s1_end, const char *s2);
 void make_REG_compact_hex (REG a, strbuf* out);
@@ -56,6 +57,7 @@ void make_compact_list_of_REGs (REG *regs, unsigned regs_total, strbuf *out, uns
 void regcomp_or_die (regex_t *_Restrict_ preg, const char *_Restrict_ pattern, int cflags);
 
 int strtol_or_strtoll(const char *nptr, char **endptr, int base);
+const char *bool_to_string(bool b);
 
 //#ifndef _MSC_VER
 //#define stricmp strcasecmp

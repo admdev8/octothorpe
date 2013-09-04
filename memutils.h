@@ -22,6 +22,11 @@ extern "C" {
 #endif
 
 #include <stdio.h>
+#include "datatypes.h"
+
+// to add: wydefill
+void bytefill (void* ptr, size_t size, byte val);
+void tetrabytefill (void* ptr, size_t size, tetrabyte val);
 
 #ifndef bzero
 void bzero (void* ptr, size_t s);
