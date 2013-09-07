@@ -24,6 +24,7 @@ TEST_EXECS=$(addprefix $(OUTDIR)/,$(TEST_SOURCES:.c=.exe))
 LIBRARY=$(OUTDIR)\octothorpe.a
 
 all: $(OUTDIR) $(LIBRARY)($(OBJECTS)) $(TEST_EXECS) $(DEPFILES) $(OUTDIR)/lisp.o
+	bash test.sh $(OUTDIR) $(bsuffix)
 
 $(OUTDIR):
 	mkdir $(OUTDIR)

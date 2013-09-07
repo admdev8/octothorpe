@@ -1,9 +1,10 @@
-OUTDIR=MINGW32_debug
-BITS=$(echo $OUTDIR | sed 's/MINGW//' | sed 's/_debug//')
+OUTDIR=$1
+BITS=$(echo $OUTDIR | sed 's/MINGW//' | sed 's/_debug//' | sed 's/_release//')
+BUILD_SUFFIX=$2
 
 $OUTDIR/dmalloc_test > dmalloc_test.1
 grep "main" dmalloc_test.1 > dmalloc_test.2
-diff dmalloc_test.correct dmalloc_test.2
+diff dmalloc_test.correct_$BUILD_SUFFIX dmalloc_test.2
 rm dmalloc_test.1
 rm dmalloc_test.2
 
