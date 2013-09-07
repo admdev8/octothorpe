@@ -390,11 +390,11 @@ bool EQL(obj *o1, obj* o2)
 
         case OBJ_OPAQUE:
             oassert (!"opaque objects are not supported in EQL");
-            break;
+            fatal_error();
 
         default:
             oassert(!"unknown type");
-            break;
+            fatal_error();
     };
 };
 
@@ -556,6 +556,7 @@ octabyte zero_extend_to_octabyte(obj* o)
             return o->u.ob;
         default:
             oassert(!"other types are not convertible to octabyte");
+            fatal_error();
     };
 };
 
@@ -575,8 +576,10 @@ REG zero_extend_to_REG(obj* o)
 #else
             oassert(!"cannot convert octabyte to REG");
 #endif            
+            fatal_error();
         default:
             oassert(!"other types are not convertible to REG");
+            fatal_error();
     };
 };
 
@@ -594,6 +597,7 @@ bool obj_is_zero(obj* o)
             return o->u.ob==0;
         default:
             oassert(!"other types are not supported (so far)");
+            fatal_error();
     };
 };
 
@@ -653,6 +657,7 @@ void obj_REG2_and_set_type(enum obj_type t, REG v, obj* out)
             obj_octabyte2(v, out); break;
         default:
             oassert(!"other types are not supported");
+            fatal_error();
     };
 };
 
@@ -670,6 +675,7 @@ int get_2nd_most_significant_bit(obj *i)
             return (obj_get_as_byte(i) & 0x40) ? 1 : 0;
         default:
             oassert(!"unsupported type");
+            fatal_error();
     };
 };
 
@@ -687,6 +693,7 @@ int get_lowest_byte(obj *i)
             return obj_get_as_byte(i);
         default:
             oassert(!"unsupported type");
+            fatal_error();
     };
 };
 
@@ -883,6 +890,7 @@ int obj_compare(obj *op1, obj *op2)
 
         default:
             oassert(!"unsupported type");
+            fatal_error();
     };
 };
 
@@ -900,6 +908,7 @@ int get_most_significant_bit(obj *i)
             return (obj_get_as_byte(i) & 0x80) ? 1 : 0;
         default:
             oassert(!"unsupported type");
+            fatal_error();
     };
 };
 
