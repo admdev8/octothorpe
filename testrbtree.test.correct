@@ -42,9 +42,21 @@ key=60000 value=value 60000
 count: 8
 while looking for 10, key_prev=0, value_prev=(null), key_next=50, value_next=value 50
 while looking for 100, key_prev=99, value_prev=value 99, key_next=101, value_next=value 101
-while looking for 101, key_prev=0, value_prev=(null), key_next=0, value_next=(null)
+while looking for 101, key_prev=99, value_prev=value 99, key_next=500, value_next=value 500
 while looking for 12300, key_prev=12200, value_prev=value 12200, key_next=12301, value_next=value 12301
 while looking for 99999, key_prev=60000, value_prev=value 60000, key_next=0, value_next=(null)
+test_return_all_keys() begin
+50
+99
+101
+500
+12200
+12301
+50000
+60000
+test_return_all_keys() end
 test 3
 rbtree_empty (should be present something): 0
 rbtree_empty (should be empty): 1
+test 4
+found

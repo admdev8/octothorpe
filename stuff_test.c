@@ -19,6 +19,7 @@
 #include "dmalloc.h"
 #include "stuff.h"
 #include "logging.h"
+#include "memutils.h"
 
 int main()
 {

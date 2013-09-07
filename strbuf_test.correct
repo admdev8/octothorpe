@@ -1,0 +1,17 @@
+[]
+sb->strlen=0 sb->buflen=0
+[string1]
+sb->strlen=7 sb->buflen=9
+[string1,]
+sb->strlen=8 sb->buflen=9
+[string1,string2]
+sb->strlen=15 sb->buflen=17
+[string1,string2,]
+sb->strlen=16 sb->buflen=17
+[string1,string2,123 456 789 hello]
+sb->strlen=33 sb->buflen=34
+three what here
+two words here
+three words not here
+12345 12345 12345
+7FFFFFFFFFFFFFFFh 7FFFFFFFFFFFFFFFh 7FFFFFFFFFFFFFFFh

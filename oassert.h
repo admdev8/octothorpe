@@ -30,4 +30,5 @@
 #endif
 
 _Noreturn void _oassert (const char *msg, const char *file, unsigned line, const char *func);
+_Noreturn void fatal_error (const char *file, unsigned line, const char *func);
 

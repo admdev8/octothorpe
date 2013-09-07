@@ -1,8 +1,11 @@
-OUTDIR=MINGW64_release
+OUTDIR=MINGW32_debug
+BITS=$(echo $OUTDIR | sed 's/MINGW//' | sed 's/_debug//')
 
 $OUTDIR/dmalloc_test > dmalloc_test.1
-diff dmalloc_test.correct dmalloc_test.1
+grep "main" dmalloc_test.1 > dmalloc_test.2
+diff dmalloc_test.correct dmalloc_test.2
 rm dmalloc_test.1
+rm dmalloc_test.2
 
 $OUTDIR/lisp_test.exe > lisp_test.1
 diff lisp_test.correct lisp_test.1
@@ -29,7 +32,7 @@ diff testrbtree.test.correct testrbtree.test
 rm testrbtree.test
 
 $OUTDIR/stuff_test > stuff_test.1
-diff stuff_test.1 stuff_test.correct
+diff stuff_test.1 stuff_test.correct_$BITS
 rm stuff_test.1
 
 $OUTDIR/dlist_test > dlist_test.1
