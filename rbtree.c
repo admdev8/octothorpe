@@ -274,7 +274,7 @@ node* lookup_node(rbtree* t, void* key)
 }
 #endif
 
-static void find_prev_and_next_nodes (rbtree_node* n, void* key, 
+void find_prev_and_next_nodes (rbtree_node* n, void* key, 
         void** out_prev_k, void** out_prev_v,
         void** out_next_k, void** out_next_v)
 {
@@ -286,8 +286,8 @@ static void find_prev_and_next_nodes (rbtree_node* n, void* key,
 
             if (p)
             {
-                if (out_prev_k) { *out_prev_k=p->key; /* printf ("%s:%d *out_prev_k=%d\n", __func__, __LINE__, *out_prev_k); */ };
-                if (out_prev_v) { *out_prev_v=p->value; /* printf ("%s:%d *out_prev_v=%s\n", __func__, __LINE__, *out_prev_v); */ }
+                if (out_prev_k) *out_prev_k=p->key;
+                if (out_prev_v) *out_prev_v=p->value;
             }
             else
             {
@@ -297,7 +297,7 @@ static void find_prev_and_next_nodes (rbtree_node* n, void* key,
         };
 
         if (out_next_k) *out_next_k=n->key;
-        if (out_next_k) *out_next_v=n->value;
+        if (out_next_v) *out_next_v=n->value;
     }
     else
     { // key > n->key
@@ -317,11 +317,9 @@ static void find_prev_and_next_nodes (rbtree_node* n, void* key,
             };
         };
 
-        if (out_prev_k) { *out_prev_k=n->key; /* printf ("%s:%d out_prev_k=%d\n", __func__, __LINE__, *out_prev_k); */ };
+        if (out_prev_k) *out_prev_k=n->key;
         if (out_prev_v) *out_prev_v=n->value;
     };
-
-    //printf ("%s:%d out_prev_k=%d out_prev_v=%s out_next_k=%d out_next_v=%s\n", __func__, __LINE__, *out_prev_k, *out_prev_v, *out_next_k, *out_next_v);
 };
 
 node* lookup_node2(rbtree *tree, rbtree_node* n, void* key, 
@@ -334,17 +332,15 @@ node* lookup_node2(rbtree *tree, rbtree_node* n, void* key,
         return NULL;
 
     comp_result = tree->cmp_func(key, n->key);
-    //printf ("%s() comp_result=%d\n", __func__, comp_result);
 
     if (comp_result == 0) // key found
     {
         // not filled in this case (yet)
         // am I need it?
-        if (out_prev_k) { rbtree_node *t=rbtree_pred(n); *out_prev_k=t ? t->key : NULL; };
-        if (out_prev_v) { rbtree_node *t=rbtree_pred(n); *out_prev_v=t ? t->value : NULL; };
-        if (out_next_k) { rbtree_node *t=rbtree_succ(n); *out_next_k=t ? t->key : NULL; };
-        if (out_next_v) { rbtree_node *t=rbtree_succ(n); *out_next_v=t ? t->value : NULL; };
-        //printf ("%s() return n, n->key=0x%p\n", __func__, n->key);
+        if (out_prev_k) { rbtree_node *t=rbtree_pred(n); *out_prev_k=(t ? t->key : NULL); };
+        if (out_prev_v) { rbtree_node *t=rbtree_pred(n); *out_prev_v=(t ? t->value : NULL); };
+        if (out_next_k) { rbtree_node *t=rbtree_succ(n); *out_next_k=(t ? t->key : NULL); };
+        if (out_next_v) { rbtree_node *t=rbtree_succ(n); *out_next_v=(t ? t->value : NULL); };
         return n;
     }
     else if (comp_result<0)
@@ -359,7 +355,6 @@ node* lookup_node2(rbtree *tree, rbtree_node* n, void* key,
             find_prev_and_next_nodes (n, key, 
                     out_prev_k, out_prev_v, 
                     out_next_k, out_next_v);
-            //printf ("%s:%d out_prev_k=%d out_prev_v=%s out_next_k=%d out_next_v=%s\n", __func__, __LINE__, *out_prev_k, *out_prev_v, *out_next_k, *out_next_v);
             return NULL;
         };
     }
@@ -375,7 +370,6 @@ node* lookup_node2(rbtree *tree, rbtree_node* n, void* key,
             find_prev_and_next_nodes (n, key, 
                     out_prev_k, out_prev_v,
                     out_next_k, out_next_v);
-            //printf ("%s:%d out_prev_k=%d out_prev_v=%s out_next_k=%d out_next_v=%s\n", __func__, __LINE__, *out_prev_k, *out_prev_v, *out_next_k, *out_next_v);
             return NULL;
         };
     };
@@ -393,7 +387,6 @@ void* rbtree_lookup2(rbtree* t, void* key,
     rbtree_node* n = lookup_node2(t, t->root, key, 
             out_prev_k, out_prev_v,
             out_next_k, out_next_v);
-    //printf ("%s() n=0x%p\n", __func__, n);
     return n == NULL ? NULL : n->value;
 }
 

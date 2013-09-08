@@ -102,6 +102,8 @@ void* rbtree_lookup(rbtree* t, void* key);
 // extended version
 // output_(lower|upper)_bound_(k|v) are set if key not found. 
 // they may be NULL if results are not needed
+// important thing: if pointers are pointing to int32 variables in x64 code,
+// this function may overwrite something!
 void* rbtree_lookup2(rbtree* t, void* key, 
         void** out_prev_k, void** out_prev_v,
         void** out_next_k, void** out_next_v);

@@ -22,6 +22,9 @@
 #include "stuff.h"
 #include "datatypes.h"
 
+#ifdef _WIN64
+#else
+
 void intrin_SHL (IN tetrabyte value, IN uint8_t shift_value, OUT tetrabyte* result, IN OUT tetrabyte* flags);
 void intrin_SHR (IN tetrabyte value, IN uint8_t shift_value, OUT tetrabyte* result, IN OUT tetrabyte* flags);
 void intrin_SAR (IN tetrabyte value, IN uint8_t shift_value, OUT tetrabyte* result, IN OUT tetrabyte* flags);
@@ -34,3 +37,4 @@ void intrin_XOR_addr (IN tetrabyte *address_of_op1, IN tetrabyte op2, OUT tetrab
 void intrin_OR (IN tetrabyte op1, IN tetrabyte op2, OUT tetrabyte* result, IN OUT tetrabyte* flags);
 void intrin_AND (IN tetrabyte op1, IN tetrabyte op2, OUT tetrabyte* result, IN OUT tetrabyte* flags);
 
+#endif

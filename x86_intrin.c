@@ -18,6 +18,9 @@
 #include "x86_intrin.h"
 #include "x86.h"
 
+#ifdef _WIN64
+#else
+
 void intrin_SHL (IN tetrabyte value, IN uint8_t shift_value, OUT tetrabyte* result, IN OUT tetrabyte* flags)
 {
 	tetrabyte tmp;
@@ -238,3 +241,4 @@ void intrin_AND (IN tetrabyte op1, IN tetrabyte op2, OUT tetrabyte* result, IN O
 	*flags=(tmp & FLAG_PSAZOC);
 };
 
+#endif
