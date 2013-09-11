@@ -25,10 +25,11 @@ typedef struct _dlist
 } dlist;
 
 dlist *dlist_init();
-void dlist_insert_at_begin(dlist *l, void *data);
+void dlist_insert_at_begin(dlist **l, void *data);
 void* dlist_get_first(dlist *l);
 void dlist_free(dlist *l, void (*free_fn)(void*));
 void dlist_unlink(dlist **lst, dlist *l);
 void dlist_dump(dlist *l);
+void dlist_check_consistency(dlist *l);
 
 /* vim: set expandtab ts=4 sw=4 : */

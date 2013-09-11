@@ -22,14 +22,28 @@ int main()
 {
     dlist *l=dlist_init();
 
-    dlist_insert_at_begin (l, DSTRDUP("1st", "string"));
-    dlist_insert_at_begin (l, DSTRDUP("2nd", "string"));
-    dlist_insert_at_begin (l, DSTRDUP("3rd", "string"));
+    dlist_insert_at_begin (&l, DSTRDUP("1st", "string"));
+    dlist_insert_at_begin (&l, DSTRDUP("2nd", "string"));
+    dlist_insert_at_begin (&l, DSTRDUP("3rd", "string"));
+
+    //printf ("first dump:\n");
+    //dlist_dump (l);
 
     printf ("dlist_get_first=%s\n", (char*)dlist_get_first(l));
 
     printf ("enumerate:\n");
+    for (dlist *i=l; i; i=i->next)
+        printf ("%s\n", (char*)i->data);
 
+    // remove first
+    char *tmp=l->data;
+    dlist_unlink (&l, l);
+    DFREE(tmp);
+    //printf ("dump after unlink:\n");
+    //dlist_dump (l);
+    dlist_check_consistency (l);
+
+    printf ("enumerate:\n");
     for (dlist *i=l; i; i=i->next)
         printf ("%s\n", (char*)i->data);
 

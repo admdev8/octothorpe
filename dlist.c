@@ -15,7 +15,7 @@
  *
  */
 
-#include <assert.h>
+#include "oassert.h"
 #include "dlist.h"
 #include "dmalloc.h"
 
@@ -24,26 +24,23 @@ dlist *dlist_init()
     return DCALLOC(dlist, 1, "dlist");
 };
 
-void dlist_insert_at_begin(dlist *l, void *data)
+void dlist_insert_at_begin(dlist **l, void *data)
 {
-    assert(l);
-    if (l->data==NULL && l->prev==NULL && l->next==NULL)
+    oassert(l);
+    if ((*l)->data==NULL && (*l)->prev==NULL && (*l)->next==NULL)
     {
-        l->data=data;
+        (*l)->data=data;
         return;
     };
-    dlist *old_head=DCALLOC(dlist, 1, "dlist");
+    dlist *new_head=DCALLOC(dlist, 1, "dlist");
+    new_head->data=data;
+    new_head->next=*l;
+    oassert ((*l)->prev==NULL);
+    (*l)->prev=new_head;
+    *l=new_head;
    
-    old_head->next=l->next;
-    old_head->data=l->data;
-    old_head->prev=l;
-
-    // fill current list head
-    l->data=data;
-    l->next=old_head;
-    l->prev=NULL;
     //printf ("%s() after inserting\n", __func__);
-    //dlist_dump(l);
+    //dlist_dump(*l);
 };
 
 void* dlist_get_first(dlist *l)
@@ -77,7 +74,7 @@ void dlist_unlink(dlist **lst, dlist *l)
             right->prev=NULL;
             *lst=right;
         }
-        else // only sole element is not be unlinked
+        else // single element is not to be unlinked
             *lst=NULL; // no more elements!
     }
     else
@@ -86,13 +83,13 @@ void dlist_unlink(dlist **lst, dlist *l)
 
         if (left)
         {
-            assert (left->next==l); // just to be sure links were correct
+            oassert (left->next==l); // just to be sure links were correct
             left->next=right;
         };
 
         if (right)
         {
-            assert (right->prev==l); // just to be sure links were correct
+            oassert (right->prev==l); // just to be sure links were correct
             right->prev=left;
         };
     };
@@ -104,9 +101,24 @@ void dlist_dump(dlist *l)
 {
     if (l==NULL)
         return;
-    printf ("%s(0x%p) prev=0x%p next=0x%p data=0x%p\n", __func__, l, l->prev, l->next, l->data);
+    printf ("%s(0x%p) prev=0x%p next=0x%p data=%s\n", __func__, l, l->prev, l->next, l->data);
     if (l->next)
         dlist_dump(l->next);
+};
+
+void dlist_check_consistency(dlist *l)
+{
+    for (dlist *i=l; i; i=i->next)
+    {
+        if (i->prev) // has previous element
+        {
+            oassert(i->prev->next==i);
+        };
+        if (i->next) // has next element
+        {
+            oassert(i->next->prev==i);
+        };
+    };
 };
 
 /* vim: set expandtab ts=4 sw=4 : */
