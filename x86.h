@@ -26,12 +26,12 @@
 #define FLAG_RSRV1 (1<<1)
 #define FLAG_PF (1<<2)
 #define FLAG_AF (1<<4) // 0x10
-#define FLAG_ZF (1<<6)
-#define FLAG_SF (1<<7)
-#define FLAG_TF (1<<8)
-#define FLAG_DF (1<<10)
-#define FLAG_OF (1<<11)
-#define FLAG_RF (1<<16)
+#define FLAG_ZF (1<<6) // 0x40
+#define FLAG_SF (1<<7) // 0x80
+#define FLAG_TF (1<<8) // 0x100
+#define FLAG_DF (1<<10) // 0x400
+#define FLAG_OF (1<<11) // 0x800
+#define FLAG_RF (1<<16) // 0x10000
 
 // 0x8d5
 #define FLAG_PSAZOC (FLAG_PF | FLAG_SF | FLAG_AF | FLAG_ZF | FLAG_OF | FLAG_CF)
