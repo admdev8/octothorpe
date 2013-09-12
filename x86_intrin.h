@@ -36,5 +36,7 @@ void intrin_XOR (IN tetrabyte op1, IN tetrabyte op2, OUT tetrabyte* result, IN O
 void intrin_XOR_addr (IN tetrabyte *address_of_op1, IN tetrabyte op2, OUT tetrabyte* result, IN OUT tetrabyte* flags);
 void intrin_OR (IN tetrabyte op1, IN tetrabyte op2, OUT tetrabyte* result, IN OUT tetrabyte* flags);
 void intrin_AND (IN tetrabyte op1, IN tetrabyte op2, OUT tetrabyte* result, IN OUT tetrabyte* flags);
+void intrin_NOT (IN tetrabyte op1, OUT tetrabyte* result, IN OUT tetrabyte* flags);
+void intrin_NEG (IN tetrabyte op1, OUT tetrabyte* result, IN OUT tetrabyte* flags);
 
 #endif

@@ -241,4 +241,44 @@ void intrin_AND (IN tetrabyte op1, IN tetrabyte op2, OUT tetrabyte* result, IN O
 	*flags=(tmp & FLAG_PSAZOC);
 };
 
+void intrin_NOT (IN tetrabyte op1, OUT tetrabyte* result, IN OUT tetrabyte* flags)
+{
+	tetrabyte tmp;
+	
+	__asm__("pushfl;"
+		"popl %%ebx;"
+		"andl $0xfffff72a, %%ebx;" // ~FLAG_PSAZOC
+		"orl %%edx, %%ebx;"
+		"pushl %%ebx;"
+		"popfl;"
+		"notl %%eax;"
+		"pushfl;"
+		"popl %%edx;"
+				: "=a" (*result), "=d" (tmp)
+				: "a" (op1), "d" (*flags)
+				: "%ebx", "cc"
+		);
+	*flags=(tmp & FLAG_PSAZOC);
+};
+
+void intrin_NEG (IN tetrabyte op1, OUT tetrabyte* result, IN OUT tetrabyte* flags)
+{
+	tetrabyte tmp;
+	
+	__asm__("pushfl;"
+		"popl %%ebx;"
+		"andl $0xfffff72a, %%ebx;" // ~FLAG_PSAZOC
+		"orl %%edx, %%ebx;"
+		"pushl %%ebx;"
+		"popfl;"
+		"negl %%eax;"
+		"pushfl;"
+		"popl %%edx;"
+				: "=a" (*result), "=d" (tmp)
+				: "a" (op1), "d" (*flags)
+				: "%ebx", "cc"
+		);
+	*flags=(tmp & FLAG_PSAZOC);
+};
+
 #endif

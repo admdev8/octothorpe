@@ -343,12 +343,15 @@ void obj_copy2 (obj *dst, obj *src)
             dst->u.s=DSTRDUP (src->u.s, "s");
         case OBJ_CONS:
             oassert (!"cons object copying isn't yet supported");
+            fatal_error();
             break;
         case OBJ_OPAQUE:
             oassert (!"opaque object copying isn't yet supported");
+            fatal_error();
             break;
         default:
             oassert (!"something unsupported");
+            fatal_error();
             break;
     };
     dst->t=src->t;
@@ -702,6 +705,28 @@ bool obj_get_4th_bit(obj *i)
     return (get_lowest_byte(i)>>4) & 1;
 };
 
+void obj_increment(obj *i)
+{
+    switch (i->t)
+    {
+        case OBJ_OCTABYTE:
+            i->u.ob++;
+            break;
+        case OBJ_TETRABYTE:
+            i->u.tb++;
+            break;
+        case OBJ_WYDE:
+            i->u.w++;
+            break;
+        case OBJ_BYTE:
+            i->u.b++;
+            break;
+        default:
+            oassert(!"unsupported type");
+            fatal_error();
+    };
+};
+
 void obj_decrement(obj *i)
 {
     switch (i->t)
@@ -720,6 +745,7 @@ void obj_decrement(obj *i)
             break;
         default:
             oassert(!"unsupported type");
+            fatal_error();
     };
 };
 
@@ -743,6 +769,7 @@ void obj_subtract(obj *op1, obj *op2, obj *result)
             break;
         default:
             oassert(!"unsupported type");
+            fatal_error();
     };
 };
 
@@ -766,6 +793,7 @@ void obj_add(obj *op1, obj *op2, obj *result)
             break;
         default:
             oassert(!"unsupported type");
+            fatal_error();
     };
 };
 
@@ -789,6 +817,51 @@ void obj_XOR(obj *op1, obj *op2, obj *result)
             break;
         default:
             oassert(!"unsupported type");
+            fatal_error();
+    };
+};
+
+void obj_NOT(obj *op1, obj *result)
+{
+    switch (op1->t)
+    {
+        case OBJ_OCTABYTE:
+            obj_octabyte2 (~op1->u.ob, result);
+            break;
+        case OBJ_TETRABYTE:
+            obj_tetrabyte2 (~op1->u.tb, result);
+            break;
+        case OBJ_WYDE:
+            obj_wyde2 (~op1->u.w, result);
+            break;
+        case OBJ_BYTE:
+            obj_byte2 (~op1->u.b, result);
+            break;
+        default:
+            oassert(!"unsupported type");
+            fatal_error();
+    };
+};
+
+void obj_NEG(obj *op1, obj *result)
+{
+    switch (op1->t)
+    {
+        case OBJ_OCTABYTE:
+            obj_octabyte2 (-op1->u.ob, result);
+            break;
+        case OBJ_TETRABYTE:
+            obj_tetrabyte2 (-op1->u.tb, result);
+            break;
+        case OBJ_WYDE:
+            obj_wyde2 (-op1->u.w, result);
+            break;
+        case OBJ_BYTE:
+            obj_byte2 (-op1->u.b, result);
+            break;
+        default:
+            oassert(!"unsupported type");
+            fatal_error();
     };
 };
 
@@ -812,6 +885,7 @@ void obj_AND(obj *op1, obj *op2, obj *result)
             break;
         default:
             oassert(!"unsupported type");
+            fatal_error();
     };
 };
 
@@ -835,6 +909,7 @@ void obj_OR(obj *op1, obj *op2, obj *result)
             break;
         default:
             oassert(!"unsupported type");
+            fatal_error();
     };
 };
 
@@ -930,6 +1005,7 @@ void obj_AND_with(obj* op1, byte op2)
             break;
         default:
             oassert(!"unsupported type");
+            fatal_error();
     };
 };
 

@@ -131,6 +131,7 @@ bool obj_is_zero(obj* o);
 void obj2_sign_extended_shift_right (obj *op1, byte op2, obj *out);
 void obj_zero_extend (obj *in, enum obj_type out_type, obj* out);
 void obj_sign_extend (obj *in, enum obj_type out_type, obj* out);
+void obj_increment(obj *i);
 void obj_decrement(obj *i);
 int obj_compare(obj *op1, obj *op2);
 void obj_add(obj *op1, obj *op2, obj *result);
@@ -138,5 +139,7 @@ void obj_subtract(obj *op1, obj *op2, obj *result);
 void obj_OR(obj *op1, obj *op2, obj *result);
 void obj_AND(obj *op1, obj *op2, obj *result);
 void obj_XOR(obj *op1, obj *op2, obj *result);
+void obj_NOT(obj *op1, obj *result);
+void obj_NEG(obj *op1, obj *result);
 
 /* vim: set expandtab ts=4 sw=4 : */
