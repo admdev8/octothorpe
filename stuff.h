@@ -56,7 +56,11 @@ void make_REG_compact_hex (REG a, strbuf* out);
 void make_compact_list_of_REGs (REG *regs, unsigned regs_total, strbuf *out, unsigned limit);
 void regcomp_or_die (regex_t *_Restrict_ preg, const char *_Restrict_ pattern, int cflags);
 
-int strtol_or_strtoll(const char *nptr, char **endptr, int base);
+#ifdef _WIN64
+octabyte strtol_or_strtoll(const char *nptr, char **endptr, int base);
+#else
+tetrabyte strtol_or_strtoll(const char *nptr, char **endptr, int base);
+#endif    
 const char *bool_to_string(bool b);
 
 //#ifndef _MSC_VER

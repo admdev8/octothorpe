@@ -20,6 +20,7 @@
 #include "stuff.h"
 #include "logging.h"
 #include "memutils.h"
+#include "oassert.h"
 
 int main()
 {
@@ -54,6 +55,13 @@ int main()
     make_compact_list_of_REGs (b, 17, &sb, 7);
     printf ("%s\n", sb.buf);
     strbuf_deinit(&sb);
+
+#ifdef _WIN64
+    oassert(strtol_or_strtoll("0xAB12345678", NULL, 16)==0xAB12345678);
+#else
+    oassert(strtol_or_strtoll("0x12345678", NULL, 16)==0x12345678);
+#endif
+
 };
 
 /* vim: set expandtab ts=4 sw=4 : */
