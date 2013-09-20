@@ -6,6 +6,7 @@ bsuffix=debug
 CPPFLAGS=-D_DEBUG -DUSE_DMALLOC
 else
 bsuffix=release
+#CPPFLAGS=
 CPPFLAGS=-O3
 endif
 

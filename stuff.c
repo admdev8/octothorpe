@@ -221,7 +221,7 @@ void make_compact_list_of_REGs (REG *regs, unsigned regs_total, strbuf *out, uns
 void regcomp_or_die (regex_t *_Restrict_ preg, const char *_Restrict_ pattern, int cflags)
 {
     int rc=regcomp(preg, pattern, cflags);
-    if (rc!=0)
+    if (rc!=_REG_NOERROR)
     {
         char buffer[100];
         regerror(rc, preg, buffer, 100);
@@ -246,7 +246,7 @@ const char *bool_to_string(bool b)
 {
     if (b)
         return "true";
-    return false;
+    return "false";
 };
 
 /* vim: set expandtab ts=4 sw=4 : */
