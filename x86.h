@@ -112,6 +112,13 @@ void DR7_to_str (tetrabyte DR7, strbuf* out);
 void dump_DR6 (fds* s, tetrabyte DR6);
 void dump_DR7 (fds* s, tetrabyte DR7);
 void MXCSR_to_str (tetrabyte a, strbuf *out);
+
+#define FPU_TAG_NON_ZERO 0
+#define FPU_TAG_ZERO 1
+#define FPU_TAG_NAN 2
+#define FPU_TAG_EMPTY 3
+
+#define FPU_TOP(r) (((r)>>11)&7)
 void FCW_to_str (uint16_t a, strbuf *out);
 void FSW_to_str (uint16_t a, strbuf *out);
 

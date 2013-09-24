@@ -17,7 +17,7 @@
 
 #include "FPU_stuff.h"
 
-double __cdecl cvt80to64 (byte *p)
+double __cdecl cvt80to64 (const byte *p)
 {
     return (double)*((long double*)p);
 };

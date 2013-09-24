@@ -646,18 +646,25 @@ void list_of_wydes_to_array (wyde** array, unsigned *array_len, obj* o)
     //    printf ("idx=%d, %04X\n", i, (*array)[i]);
 };
 
-void obj_REG2_and_set_type(enum obj_type t, REG v, obj* out)
+void obj_REG2_and_set_type(enum obj_type t, REG v, double f, obj* out)
 {
     switch (t)
     {
         case OBJ_BYTE:      
-            obj_byte2(v&0xFF, out); break;
+            obj_byte2(v&0xFF, out);
+            break;
         case OBJ_WYDE:      
-            obj_wyde2(v&0xFFFF, out); break;
+            obj_wyde2(v&0xFFFF, out);
+            break;
         case OBJ_TETRABYTE: 
-            obj_tetrabyte2(v&0xFFFFFFFF, out); break;
+            obj_tetrabyte2(v&0xFFFFFFFF, out);
+            break;
         case OBJ_OCTABYTE:  
-            obj_octabyte2(v, out); break;
+            obj_octabyte2(v, out);
+            break;
+        case OBJ_DOUBLE:
+            obj_double2(f, out);
+            break;
         default:
             oassert(!"other types are not supported");
             fatal_error();

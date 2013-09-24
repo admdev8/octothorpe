@@ -119,7 +119,7 @@ char* obj_get_as_cstring(obj* o);
 byte* obj_get_as_xmm(obj* o);
 // terminated with NULL
 obj* create_list(obj* o, ...);
-void obj_REG2_and_set_type(enum obj_type t, REG v, obj* out);
+void obj_REG2_and_set_type(enum obj_type t, REG v, double f, obj* out);
 double obj_get_as_double(obj* o);
 void list_of_bytes_to_array (byte** array, unsigned *array_len, obj* o);
 void list_of_wydes_to_array (wyde** array, unsigned *array_len, obj* o);

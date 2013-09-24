@@ -25,12 +25,12 @@ extern "C" {
 
 #ifdef _WIN64
 
-double cvt80to64 (byte *p);
+double cvt80to64 (const byte *p);
 void cvt64to80 (double in, byte *out);
 
 #else
 
-double __cdecl cvt80to64 (byte *p);
+double __cdecl cvt80to64 (const byte *p);
 void __cdecl cvt64to80 (double in, byte *out);
 
 #endif

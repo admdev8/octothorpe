@@ -174,7 +174,7 @@ void FSW_to_str (uint16_t a, strbuf *out)
 {
     if (IS_SET (a, 1<<15)) strbuf_addstr(out, "B ");
     if (IS_SET (a, 1<<14)) strbuf_addstr(out, "C3 ");
-    //L ("TOP=%d ", (ctx->FloatSave.StatusWord>>11)&7);
+    strbuf_addf (out, "TOP=%d ", FPU_TOP(a));
     if (IS_SET (a, 1<<10)) strbuf_addstr(out, "C2 ");
     if (IS_SET (a, 1<<9)) strbuf_addstr(out, "C1 ");
     if (IS_SET (a, 1<<8)) strbuf_addstr(out, "C0 ");
