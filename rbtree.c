@@ -40,7 +40,7 @@ Retrieved from: http://en.literateprograms.org/Red-black_tree_(C)?oldid=18555
 */
 
 #include "rbtree.h"
-#include <assert.h>
+#include "oassert.h"
 #include <stdlib.h>
 #include "dmalloc.h"
 #include "oassert.h"
@@ -87,15 +87,15 @@ static void delete_case6(rbtree* t, node* n);
 
 rbtree_node* grandparent(rbtree_node* n) 
 {
-    assert (n != NULL);
-    assert (n->parent != NULL); /* Not the root node */
-    assert (n->parent->parent != NULL); /* Not child of root */
+    oassert (n != NULL);
+    oassert (n->parent != NULL); /* Not the root node */
+    oassert (n->parent->parent != NULL); /* Not child of root */
     return n->parent->parent;
 }
 rbtree_node* sibling(rbtree_node* n) 
 {
-    assert (n != NULL);
-    assert (n->parent != NULL); /* Root node has no sibling */
+    oassert (n != NULL);
+    oassert (n->parent != NULL); /* Root node has no sibling */
     if (n == n->parent->left)
         return n->parent->right;
     else
@@ -103,9 +103,9 @@ rbtree_node* sibling(rbtree_node* n)
 }
 rbtree_node* uncle(rbtree_node* n) 
 {
-    assert (n != NULL);
-    assert (n->parent != NULL); /* Root node has no uncle */
-    assert (n->parent->parent != NULL); /* Children of root have no uncle */
+    oassert (n != NULL);
+    oassert (n->parent != NULL); /* Root node has no uncle */
+    oassert (n->parent->parent != NULL); /* Children of root have no uncle */
     return sibling(n->parent);
 }
 void verify_properties(rbtree* t) 
@@ -120,14 +120,14 @@ void verify_properties(rbtree* t)
 }
 #ifdef VERIFY_RBTREE
 void verify_property_1(node* n) {
-    assert(node_color(n) == RED || node_color(n) == BLACK);
+    oassert(node_color(n) == RED || node_color(n) == BLACK);
     if (n == NULL) return;
     verify_property_1(n->left);
     verify_property_1(n->right);
 }
 void verify_property_2(node* root) 
 {
-    assert(node_color(root) == BLACK);
+    oassert(node_color(root) == BLACK);
 }
 #endif
 color node_color(node* n) 
@@ -139,9 +139,9 @@ void verify_property_4(node* n)
 {
     if (node_color(n) == RED) 
     {
-        assert (node_color(n->left)   == BLACK);
-        assert (node_color(n->right)  == BLACK);
-        assert (node_color(n->parent) == BLACK);
+        oassert (node_color(n->left)   == BLACK);
+        oassert (node_color(n->right)  == BLACK);
+        oassert (node_color(n->parent) == BLACK);
     }
     if (n == NULL) return;
     verify_property_4(n->left);
@@ -162,7 +162,7 @@ void verify_property_5_helper(node* n, int black_count, int* path_black_count)
         if (*path_black_count == -1) {
             *path_black_count = black_count;
         } else {
-            assert (black_count == *path_black_count);
+            oassert (black_count == *path_black_count);
         }
         return;
     }
@@ -266,7 +266,7 @@ node* lookup_node(rbtree* t, void* key)
         } 
         else 
         {
-            assert(comp_result > 0);
+            oassert(comp_result > 0);
             n = n->right;
         }
     }
@@ -441,7 +441,7 @@ void replace_node(rbtree* t, node* oldn, node* newn)
 void rbtree_insert(rbtree* t, void* key, void* value) 
 {
     rbtree_node* inserted_node = new_node(t, key, value, RED, NULL, NULL);
-    assert (t);
+    oassert (t);
     if (t->root == NULL) 
     {
         t->root = inserted_node;
@@ -476,7 +476,7 @@ void rbtree_insert(rbtree* t, void* key, void* value)
             } 
             else 
             {
-                assert (comp_result > 0);
+                oassert (comp_result > 0);
                 if (n->right == NULL) 
                 {
                     n->right = inserted_node;
@@ -545,7 +545,7 @@ void insert_case5(rbtree* t, node* n)
     } 
     else 
     {
-        assert (n == n->parent->right && n->parent == grandparent(n)->right);
+        oassert (n == n->parent->right && n->parent == grandparent(n)->right);
         rotate_left(t, grandparent(n));
     }
 }
@@ -565,7 +565,7 @@ void rbtree_delete(rbtree* t, void* key)
         n = pred;
     }
 
-    assert(n->left == NULL || n->right == NULL);
+    oassert(n->left == NULL || n->right == NULL);
     child = n->right == NULL ? n->left  : n->right;
     if (node_color(n) == BLACK) 
     {
@@ -587,7 +587,7 @@ void rbtree_delete(rbtree* t, void* key)
  *
 static rbtree_node* maximum_node(node* n) 
 {
-    assert (n != NULL);
+    oassert (n != NULL);
     while (n->right != NULL) 
     {
         n = n->right;
@@ -669,13 +669,13 @@ void delete_case6(rbtree* t, node* n)
     n->parent->color = BLACK;
     if (n == n->parent->left) 
     {
-        assert (node_color(sibling(n)->right) == RED);
+        oassert (node_color(sibling(n)->right) == RED);
         sibling(n)->right->color = BLACK;
         rotate_left(t, n->parent);
     }
     else
     {
-        assert (node_color(sibling(n)->left) == RED);
+        oassert (node_color(sibling(n)->left) == RED);
         sibling(n)->left->color = BLACK;
         rotate_right(t, n->parent);
     }
@@ -715,7 +715,7 @@ int compare_size_t(void* leftp, void* rightp)
         return 1;
     else 
     {
-        assert (left == right);
+        oassert (left == right);
         return 0;
     };
 };
@@ -729,7 +729,7 @@ int compare_int(void* leftp, void* rightp)
         return 1;
     else 
     {
-        assert (left == right);
+        oassert (left == right);
         return 0;
     };
 };
@@ -743,7 +743,7 @@ int compare_tetrabytes(void* leftp, void* rightp)
         return 1;
     else 
     {
-        assert (left == right);
+        oassert (left == right);
         return 0;
     };
 };
@@ -821,7 +821,7 @@ bool rbtree_empty (rbtree* t)
 {
     if (t==NULL)
     {
-        assert (!"rbtree_empty: NULL pointer passed");
+        oassert (!"rbtree_empty: NULL pointer passed");
     };
 
     return t->root==NULL ? true : false;

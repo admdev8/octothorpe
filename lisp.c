@@ -310,6 +310,7 @@ void obj_dump(obj *o)
             break;
         default:
             oassert(0);
+            fatal_error();
             break;
     };
 };
@@ -489,6 +490,7 @@ void obj_free_conses_of_list(obj* o)
             break;
         default:
             oassert(0);
+            fatal_error();
             break;
     };
     DFREE(o);
@@ -1034,6 +1036,7 @@ void obj2_sign_extended_shift_right (obj *op1, byte op2, obj *out)
             break;
         default:
             oassert(0);
+            fatal_error();
             break;
     };
 };
@@ -1075,6 +1078,7 @@ void obj_sign_extend (obj *in, enum obj_type out_type, obj* out)
             else
             {
                 oassert(0);
+                fatal_error();
             };
             break;
 
@@ -1088,11 +1092,13 @@ void obj_sign_extend (obj *in, enum obj_type out_type, obj* out)
             else
             {
                 oassert(0);
+                fatal_error();
             };
             break;
 
         default:
             oassert (!"other types are not yet supported");
+            fatal_error();
     };
 };
 

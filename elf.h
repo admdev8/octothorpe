@@ -21,7 +21,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <memory.h>
-#include <assert.h>
+#include "oassert.h"
 #include <stdarg.h>
 
 #include "datatypes.h"

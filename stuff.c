@@ -19,7 +19,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <memory.h>
-#include <assert.h>
+#include "oassert.h"
 #include <ctype.h>
 
 #include "datatypes.h"
@@ -63,7 +63,7 @@ _Noreturn void die (const char * fmt, ...)
 void* memdup (void *p, size_t s)
 {
     void *rt=malloc (s);
-    assert(rt!=NULL);
+    oassert(rt!=NULL);
     memcpy(rt, p, s);
     return rt;
 };
@@ -181,7 +181,7 @@ void make_compact_list_of_REGs (REG *regs, unsigned regs_total, strbuf *out, uns
 {
     if (limit>0 && regs_total>limit)
     {
-        assert (limit>=2);
+        oassert (limit>=2);
         unsigned part_length=limit/2;
         make_compact_list_of_REGs (regs, part_length, out, 0);
         strbuf_addf (out, " (%d items skipped) ", regs_total-part_length*2);

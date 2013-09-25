@@ -18,7 +18,7 @@
 #ifdef _WIN32
 #include <windows.h>
 #endif
-#include <assert.h>
+#include "oassert.h"
 #include <memory.h>
 #include <stdlib.h>
 #include <ctype.h>
@@ -64,7 +64,7 @@ void L_init (const char* fname)
     if (cur_fds.fd2==NULL)
         die ("Can't create %s for writing.\n", fname);
     i=setvbuf(cur_fds.fd2, NULL, _IONBF, 0);
-    assert(i==0);
+    oassert(i==0);
     atexit(L_deinit);
 };
 
@@ -92,7 +92,8 @@ void L_fds_va (fds *s, const char * fmt, va_list va)
             fprintf (s->fd2, "[%04d-%02d-%02d %02d:%02d:%02d:%03d] ", 
                     t.wYear, t.wMonth, t.wDay, t.wHour, t.wMinute, t.wSecond, t.wMilliseconds);
 #else
-       assert(!"to be implemented!");
+       oassert(!"to be implemented!");
+       fatal_error();
 #endif
     };
 

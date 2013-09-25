@@ -15,7 +15,7 @@
  *
  */
 
-#include <assert.h>
+#include "oassert.h"
 
 #include "lisp.h"
 #include "dmalloc.h"

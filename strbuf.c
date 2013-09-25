@@ -19,7 +19,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <assert.h>
+#include "oassert.h"
 
 #include "oassert.h"
 #include "strbuf.h"
@@ -35,7 +35,7 @@ void strbuf_init (strbuf *sb, size_t size)
     if (sb->buf && sb->buf!=strbuf_dummybuf)
     {
         //DFREE (sb->buf); // do not do this. existing strbuf shouldn't be reinitialized!
-        assert(!"strbuf is already have something");
+        oassert(!"strbuf is already have something");
     };
 #endif
     sb->buf=DMALLOC(char, size, "strbuf");
@@ -99,7 +99,7 @@ void strbuf_addstr_range_be (strbuf *sb, const char *s, unsigned begin, unsigned
 {
     int i;
 
-    assert (begin<end);
+    oassert (begin<end);
    
     // FIXME: to be optimized
  
@@ -161,7 +161,8 @@ void strbuf_vaddf (strbuf *sb, const char *fmt, va_list va)
    if (vsnprintf (sb->buf + sb->strlen, sz+1, fmt, va)==-1)
 #endif
    {
-       assert(0);
+       oassert(0);
+       fatal_error();
    };
    sb->strlen+=sz;
 };
@@ -198,7 +199,7 @@ void make_SIZE_T_compact (size_t a, strbuf* out)
         make_uint32_compact (a, out);
     else
     {
-        assert (0);
+        oassert (0);
     };
 };
 
@@ -293,7 +294,7 @@ char *strbuf_detach(strbuf *s, size_t *out_size)
 
 char strbuf_last_char (strbuf *s)
 {
-    assert (s->strlen!=0);
+    oassert (s->strlen!=0);
     return s->buf[s->strlen-1];
 };
 
@@ -306,7 +307,7 @@ void strbuf_trim_last_char (strbuf *s)
 
 void strbuf_make_shorter (strbuf *sb, unsigned new_size)
 {
-    assert (new_size < sb->strlen);
+    oassert (new_size < sb->strlen);
     sb->buf[new_size]=0;
     sb->strlen=new_size;
 };

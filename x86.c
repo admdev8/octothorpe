@@ -15,7 +15,7 @@
  *
  */
 
-#include <assert.h>
+#include "oassert.h"
 
 #include "datatypes.h"
 
@@ -147,7 +147,7 @@ void FCW_to_str (uint16_t a, strbuf *out)
         case 1: strbuf_addstr(out, "RC=DOWN "); break;
         case 2: strbuf_addstr(out, "RC=UP "); break;
         case 3: strbuf_addstr(out, "RC=ZERO "); break;
-        default: assert (0);
+        default: oassert (0);
     };
 
     switch ((a>>8)&3)
@@ -156,7 +156,7 @@ void FCW_to_str (uint16_t a, strbuf *out)
         case 1: strbuf_addstr(out, "PC=?? "); break;
         case 2: strbuf_addstr(out, "PC=53bits "); break;
         case 3: strbuf_addstr(out, "PC=64bits "); break;
-        default: assert (0);
+        default: oassert (0);
     };
 
     if (IS_SET (a, 1<<7)) strbuf_addstr(out, "IEM ");

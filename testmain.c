@@ -43,7 +43,7 @@ Retrieved from: http://en.literateprograms.org/Red-black_tree_(C)?oldid=18555
 
 #include "rbtree.h"
 #include <stdio.h>
-#include <assert.h>
+#include "oassert.h"
 #include <stdlib.h> /* rand() */
 
 static int compare_int(void* left, void* right);
@@ -58,7 +58,7 @@ int compare_int(void* leftp, void* rightp) {
     else if (left > right)
         return 1;
     else {
-        assert (left == right);
+        oassert (left == right);
         return 0;
     }
 }
@@ -105,7 +105,7 @@ int main() {
         printf("Inserting %d -> %d\n\n", x, y);
 #endif
         rbtree_insert(t, (void*)x, (void*)y, compare_int);
-        assert(rbtree_lookup(t, (void*)x, compare_int) == (void*)y);
+        oassert(rbtree_lookup(t, (void*)x, compare_int) == (void*)y);
     }
     for(i=0; i<60000; i++) {
         int x = rand() % 10000;

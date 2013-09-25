@@ -17,7 +17,7 @@
 
 #include <stdio.h>
 #include "datatypes.h"
-#include <assert.h>
+#include "oassert.h"
 #include <memory.h>
 #include <stdlib.h>
 
@@ -180,14 +180,14 @@ void* drealloc (void* ptr, size_t size, const char * filename, unsigned line, co
         store_info (newptr, size, filename, line, function, structname);
 
         tmp=rbtree_lookup(tbl, ptr);
-        assert(tmp && "drealloc(ptr): ptr isn't present in our records"); // ensure it's present
+        oassert(tmp && "drealloc(ptr): ptr isn't present in our records"); // ensure it's present
         free(tmp);
         rbtree_delete(tbl, ptr);
     }
     else
     {
         tmp=rbtree_lookup(tbl, ptr);
-        assert(tmp && "drealloc(ptr): ptr isn't present in our records"); // ensure it's present
+        oassert(tmp && "drealloc(ptr): ptr isn't present in our records"); // ensure it's present
         tmp->user_size=size; // set new size
     };
 #endif
@@ -210,7 +210,7 @@ char* dstrdup (const char *str, const char * filename, unsigned line, const char
     size_t len;
     void *newp;
 
-    assert (str);
+    oassert (str);
 
     len=strlen(str)+1;
 
@@ -291,7 +291,7 @@ void dfree2 (void* ptr, const char *filename, unsigned line, const char *funcnam
     //printf ("dfree (0x%p)\n", ptr);
     tmp=rbtree_lookup(tbl, ptr);
 
-    //assert(tmp && "dfree(ptr): ptr isn't present in our records"); // ensure it's present
+    //oassert(tmp && "dfree(ptr): ptr isn't present in our records"); // ensure it's present
     if (tmp==NULL)
     {
         fprintf (stderr, "%s(0x%p): ptr isn't present in our records\n", __FUNCTION__, ptr);
@@ -325,8 +325,8 @@ static void dump_unfreed_block(void *k, struct dmalloc_info *i)
     fds _fds={ NULL, NULL};
     _fds.fd1=stdout;
 
-    assert(k!=NULL);
-    assert(i!=NULL);
+    oassert(k!=NULL);
+    oassert(i!=NULL);
     dump_blk_info (i);
     
     L_print_buf_ofs_fds (&_fds, k, i->user_size < 0x20 ? i->user_size : 0x20, k);
@@ -335,9 +335,9 @@ static void dump_unfreed_block(void *k, struct dmalloc_info *i)
 
 void* dmemdup (void *p, size_t s, const char * filename, unsigned line, const char * function, const char * structname)
 {
-    assert (p);
+    oassert (p);
     void *rt=dmalloc (s, filename, line, function, structname);
-    assert(rt!=NULL);
+    oassert(rt!=NULL);
     memcpy(rt, p, s);
     return rt;
 };

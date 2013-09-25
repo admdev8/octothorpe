@@ -55,7 +55,7 @@ bool elf_chk_header(byte *buf)
         printf ("Not a LSB ELF\n");
         return false;
     };
-    assert (hdr->e_ident[EI_VERSION]==EV_CURRENT);
+    oassert (hdr->e_ident[EI_VERSION]==EV_CURRENT);
 
     if (hdr->e_ident[EI_OSABI]!=ELFOSABI_LINUX && hdr->e_ident[EI_OSABI]!=ELFOSABI_NONE)
     {
@@ -75,9 +75,9 @@ bool elf_chk_header(byte *buf)
         return false;
     };
 
-    assert (hdr->e_version==EV_CURRENT);
+    oassert (hdr->e_version==EV_CURRENT);
 
-    assert (hdr->e_shentsize == sizeof (Elf32_Shdr));
+    oassert (hdr->e_shentsize == sizeof (Elf32_Shdr));
 
     return true;
 };
@@ -100,7 +100,7 @@ void elf_dump_hdr (byte *buf)
 
 byte* elf_get_ptr_to_section_start(byte* buf, int sect_n)
 {
-    assert (sect_n < elf_get_sections_total(buf));
+    oassert (sect_n < elf_get_sections_total(buf));
     return buf + elf_get_ptr_to_section_struc (buf, sect_n)->sh_offset;
 };
 
@@ -113,7 +113,7 @@ Elf32_Half elf_find_symtab_section (byte *buf)
     for (i=0,s=elf_get_first_section(buf); i<elf_get_sections_total (buf); i++, s++)
         if (s->sh_type==SHT_SYMTAB)
         {
-            assert (s->sh_entsize == sizeof (Elf32_Sym)); // just to be sure 
+            oassert (s->sh_entsize == sizeof (Elf32_Sym)); // just to be sure 
             return i;
         };
 
@@ -200,7 +200,7 @@ void elf_dump_section (byte* buf, Elf32_Shdr *sect)
 
 Elf32_Sym *elf_get_n_symbol(byte* buf, int n)
 {
-    assert (n < elf_get_symbols_total(buf));
+    oassert (n < elf_get_symbols_total(buf));
     return (Elf32_Sym *)elf_get_first_symbol(buf) + n;
 };
 
@@ -322,7 +322,7 @@ Elf32_Shdr* elf_find_rel_section_for_section(byte *buf, int sect_n)
         // sh_info - section of which relocs are applied
         if (s->sh_type==SHT_REL && s->sh_info==sect_n)
         {
-            assert (s->sh_entsize==sizeof(Elf32_Rel));
+            oassert (s->sh_entsize==sizeof(Elf32_Rel));
             return s;
         };
     };
@@ -374,7 +374,7 @@ Elf32_Rel* elf_find_reloc_for_sect_and_ofs (byte* buf, int sect_n, Elf32_Addr of
     Elf32_Rel *first_reloc, *r;
 
     rel_section=elf_find_rel_section_for_section(buf, sect_n);
-    assert (rel_section);
+    oassert (rel_section);
 
     // enum all relocs
 
@@ -435,7 +435,7 @@ byte *elf_dereference_tetrabyte_in_buf (byte *buf, tetrabyte* point)
     if (r==NULL) // no reloc here
         return NULL; // yet
 
-    assert (ELF32_R_TYPE(r->r_info)==R_386_32);
+    oassert (ELF32_R_TYPE(r->r_info)==R_386_32);
 
     return elf_get_ptr_to_symbol_start (buf, sym) + *point;
 };

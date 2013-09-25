@@ -15,7 +15,7 @@
  *
  */
 
-#include <assert.h>
+#include "oassert.h"
 #include "rand.h"
 
 /* A C-program for MT19937: Integer     version                   */
@@ -113,7 +113,7 @@ unsigned long genrand()
 
 int rand_reg (int begin, int end)
 {
-	assert (end>begin);
+	oassert (end>begin);
 	return (genrand()/(0xFFFFFFFF/(end-begin+1)))+begin;
 };
 

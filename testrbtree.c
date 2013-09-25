@@ -17,7 +17,7 @@
 
 #include <stdio.h>
 #include <string.h> // strcmp
-#include <assert.h>
+#include "oassert.h"
 #include <stdlib.h> /* rand() */
 #include <stdint.h>
 
@@ -34,7 +34,7 @@ int compare_tetrabyte(void* leftp, void* rightp)
     else if (left > right)
         return 1;
     else {
-        assert (left == right);
+        oassert (left == right);
         return 0;
     }
 }
@@ -98,7 +98,7 @@ int main()
 
     rbtree_insert(t, (void*)12345, (void*)"value1");
     printf ("rbtree_empty (should be present something): %d\n", rbtree_empty(t));
-    assert(strcmp (rbtree_lookup(t, (void*)12345), "value1")==0);
+    oassert(strcmp (rbtree_lookup(t, (void*)12345), "value1")==0);
 
     rbtree_insert(t, (void*)12346, (void*)"value2");
     printf ("rbtree_empty (should be present something): %d\n", rbtree_empty(t));
