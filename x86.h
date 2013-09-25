@@ -127,19 +127,77 @@ void XMM_to_strbuf (byte* p, strbuf *sb);
 bool sse_supported();
 bool sse2_supported();
 
+#ifdef _WIN64
+#define AX_REGISTER_NAME "RAX"
+#define BX_REGISTER_NAME "RBX"
+#define CX_REGISTER_NAME "RCX"
+#define DX_REGISTER_NAME "RDX"
+#define SI_REGISTER_NAME "RSI"
+#define BP_REGISTER_NAME "RBP"
+#else
+#define AX_REGISTER_NAME "EAX"
+#define BX_REGISTER_NAME "EBX"
+#define CX_REGISTER_NAME "ECX"
+#define DX_REGISTER_NAME "EDX"
+#define SI_REGISTER_NAME "ESI"
+#define BP_REGISTER_NAME "EBP"
+#endif
+
 // used for testing in tracer/cc and bolt/x86 emulator
 #define X86_INC_EAX "\x40"
 #define X86_INC_EAX_LEN 1
+#define X64_INC_RAX "\x48\xFF\xC0"
+#define X64_INC_RAX_LEN 3
+#ifdef _WIN64
+#define X86_OR_X64_INC_AX       X64_INC_RAX
+#define X86_OR_X64_INC_AX_LEN   X64_INC_RAX_LEN
+#else
+#define X86_OR_X64_INC_AX       X86_INC_EAX
+#define X86_OR_X64_INC_AX_LEN   X86_INC_EAX_LEN
+#endif
+
 #define X86_MOV_EAX_ESI "\x89\xF0"
 #define X86_MOV_EAX_ESI_LEN 2
+#define X64_MOV_RAX_RSI "\x48\x89\xF0"
+#define X64_MOV_RAX_RSI_LEN 3
+#ifdef _WIN64
+#define X86_OR_X64_MOV_AX_SI        X64_MOV_RAX_RSI
+#define X86_OR_X64_MOV_AX_SI_LEN    X64_MOV_RAX_RSI_LEN
+#else
+#define X86_OR_X64_MOV_AX_SI        X86_MOV_EAX_ESI
+#define X86_OR_X64_MOV_AX_SI_LEN    X86_MOV_EAX_ESI_LEN
+#endif
+
 #define X86_FSTP_ESI "\xD9\x1E"
 #define X86_FSTP_ESI_LEN 2
-#define X86_JA_NEXT "\x77\x00"
-#define X86_JA_NEXT_LEN 2
-#define X86_CALL_EAX "\xFF\xD0"
-#define X86_CALL_EAX_LEN 2
+#define X64_FSTP_RSI "\x48\xDD\x1E"
+#define X64_FSTP_RSI_LEN 3
+#ifdef _WIN64
+#define X86_OR_X64_FSTP_SI      X64_FSTP_RSI
+#define X86_OR_X64_FSTP_SI_LEN  X64_FSTP_RSI_LEN
+#else
+#define X86_OR_X64_FSTP_SI      X86_FSTP_ESI
+#define X86_OR_X64_FSTP_SI_LEN  X86_FSTP_ESI_LEN
+#endif
+
+#define X86_OR_X64_JA_NEXT "\x77\x00"
+#define X86_OR_X64_JA_NEXT_LEN 2
+
+#define X86_OR_X64_CALL_xAX "\xFF\xD0"
+#define X86_OR_X64_CALL_xAX_LEN 2
+
 #define X86_CMP_EAX_EBX "\x39\xD8"
 #define X86_CMP_EAX_EBX_LEN 2
+#define X64_CMP_RAX_RBX "\x48\x39\xD8"
+#define X64_CMP_RAX_RBX_LEN 3
+#ifdef _WIN64
+#define X86_OR_X64_CMP_xAX_xBX      X64_CMP_RAX_RBX 
+#define X86_OR_X64_CMP_xAX_xBX_LEN  X64_CMP_RAX_RBX_LEN
+#else
+#define X86_OR_X64_CMP_xAX_xBX      X86_CMP_EAX_EBX 
+#define X86_OR_X64_CMP_xAX_xBX_LEN  X86_CMP_EAX_EBX_LEN
+#endif
+
 #define X86_SHR_OP_ESI_CP_CL "\xD3\x2E"
 #define X86_SHR_OP_ESI_CP_CL_LEN 2
 #define X86_SHL_OP_ESI_CP_CL "\xD3\x26"
