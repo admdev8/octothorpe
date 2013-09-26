@@ -41,6 +41,9 @@ extern "C" {
 #define OPTIONAL
 #endif
 
+#define SMASH(x, y) x##y
+#define WIDEN(x) SMASH(L,x)
+
 unsigned most_significant_hex_number(octabyte x);
 _Noreturn void die (const char * fmt, ...);
 void* memdup (void *p, size_t s);
