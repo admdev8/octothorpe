@@ -21,19 +21,20 @@
 extern "C" {
 #endif
 
+#include <stdbool.h>
 #include <stdio.h>
 #include "datatypes.h"
 
-// to add: wydefill
-void bytefill (void* ptr, size_t size, byte val);
-void tetrabytefill (void* ptr, size_t size, tetrabyte val);
+	// to add: wydefill
+	void bytefill (void* ptr, size_t size, byte val);
+	void tetrabytefill (void* ptr, size_t size, tetrabyte val);
 
 #ifndef bzero
-void bzero (void* ptr, size_t s);
+	void bzero (void* ptr, size_t s);
 #endif
+
+	bool is_blk_zero (void *ptr, size_t s);
 
 #ifdef  __cplusplus
 }
 #endif
-
-/* vim: set expandtab ts=4 sw=4 : */

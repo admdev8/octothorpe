@@ -32,201 +32,201 @@
 
 unsigned most_significant_hex_number(octabyte x)
 {
-    octabyte t=x;
-    int i;
+	octabyte t=x;
+	int i;
 
-    // _BitScanReverse64 can be used here, probably (?)
+	// _BitScanReverse64 can be used here, probably (?)
 
-    for (i=0; i<(64/4); i++)
-    {
-        if (t&0xF000000000000000)
-        {
-            //printf (__func__"(0x%016llX) -> 0x%X\n", x, t>>(64-4));
-            return t>>(64-4);
-        }
-        else
-            t=t<<4;
-    };
-    //printf (__func__"(0x%016llX) -> 0\n", x);
-    return 0;
+	for (i=0; i<(64/4); i++)
+	{
+		if (t&0xF000000000000000)
+		{
+			//printf (__func__"(0x%016llX) -> 0x%X\n", x, t>>(64-4));
+			return t>>(64-4);
+		}
+		else
+			t=t<<4;
+	};
+	//printf (__func__"(0x%016llX) -> 0\n", x);
+	return 0;
 };
 
 _Noreturn void die (const char * fmt, ...)
 {
-    va_list va;
-    va_start (va, fmt);
+	va_list va;
+	va_start (va, fmt);
 
-    vprintf (fmt, va);
-    exit(0);
+	vprintf (fmt, va);
+	exit(0);
 };
 
 void* memdup (void *p, size_t s)
 {
-    void *rt=malloc (s);
-    oassert(rt!=NULL);
-    memcpy(rt, p, s);
-    return rt;
+	void *rt=malloc (s);
+	oassert(rt!=NULL);
+	memcpy(rt, p, s);
+	return rt;
 };
 
 void print_string_range (const char *s, int begin, size_t size)
 {
-    for (int i=0; i<size; i++)
-        putc(s[begin+i], stdout);
+	for (int i=0; i<size; i++)
+		putc(s[begin+i], stdout);
 };
 
 byte* load_file_or_die (const char* fname, size_t *fsize)
 {
-    byte* rt;
-    FILE* f;
+	byte* rt;
+	FILE* f;
 
-    f=fopen (fname, "rb");
-    if (f==NULL)
-        die ("Cannot open file %s\n", fname);
+	f=fopen (fname, "rb");
+	if (f==NULL)
+		die ("Cannot open file %s\n", fname);
 
-    if (fseek (f, 0, SEEK_END)!=0)
-        die ("fseek()\n");
+	if (fseek (f, 0, SEEK_END)!=0)
+		die ("fseek()\n");
 
-    *fsize=ftell (f);
-    //printf ("*fsize=%d\n", *fsize);
-    rt=(byte*)malloc (*fsize);
+	*fsize=ftell (f);
+	//printf ("*fsize=%d\n", *fsize);
+	rt=(byte*)malloc (*fsize);
 
-    if (fseek (f, 0, SEEK_SET)!=0)
-        die ("fseek()\n");
+	if (fseek (f, 0, SEEK_SET)!=0)
+		die ("fseek()\n");
 
-    if (fread (rt, *fsize, 1, f)!=1)
-        die ("Cannot read file %s\n", fname);
+	if (fread (rt, *fsize, 1, f)!=1)
+		die ("Cannot read file %s\n", fname);
 
-    fclose (f);
-    return rt;
+	fclose (f);
+	return rt;
 };
 
 char* str_trim_one_char_right (char *in)
 {
-    if (strlen(in)==0)
-        return in;
+	if (strlen(in)==0)
+		return in;
 
-    in[strlen(in)-1]=0;
-    return in;
+	in[strlen(in)-1]=0;
+	return in;
 };
 
 char* str_trim_all_lf_cr_right (char *in)
 {
-    size_t slen=strlen(in);
-    if (slen==0)
-        return in;
-    int last_char_pos=slen-1;
+	size_t slen=strlen(in);
+	if (slen==0)
+		return in;
+	int last_char_pos=slen-1;
 
-    if (in[last_char_pos]=='\n' || in[last_char_pos]=='\r')
-    {
-        in[last_char_pos]=0;
-        str_trim_all_lf_cr_right(in);
-    };
+	if (in[last_char_pos]=='\n' || in[last_char_pos]=='\r')
+	{
+		in[last_char_pos]=0;
+		str_trim_all_lf_cr_right(in);
+	};
 
-    return in;
+	return in;
 };
 
 char *remove_char_begin_end_if_present (char *s, char c)
 {
-    size_t slen=strlen(s);
-    if (slen==0)
-        return s;
-    int last_char_pos=slen-1;
-    if (s[0]==c && s[last_char_pos]==c)
-    {
-        s[last_char_pos]=0;
-        strcpy (s, s+1);
-    };
-    return s;
+	size_t slen=strlen(s);
+	if (slen==0)
+		return s;
+	int last_char_pos=slen-1;
+	if (s[0]==c && s[last_char_pos]==c)
+	{
+		s[last_char_pos]=0;
+		strcpy (s, s+1);
+	};
+	return s;
 };
 
 void debugger_breakpoint()
 {
 #ifdef _MSC_VER
-    __debugbreak();
+	__debugbreak();
 #else
-   __asm__("int $3");
+	__asm__("int $3");
 #endif
 };
 
 FILE *fopen_or_die(const char* fname, const char* mode)
 {
-    FILE *rt=fopen (fname, mode);
-    if (rt==NULL)
-        die ("%s(): Can't open %s file in mode '%s'\n", __func__, fname, mode);
-    return rt;
+	FILE *rt=fopen (fname, mode);
+	if (rt==NULL)
+		die ("%s(): Can't open %s file in mode '%s'\n", __func__, fname, mode);
+	return rt;
 };
 
 int stricmp_range (const char *s1, int s1_begin, int s1_end, const char *s2)
 {
-    for (int i=s1_begin; i<s1_end; i++)
-    {
-        char c1=tolower(s1[i]), c2=tolower(s2[i]);
-        if (c1!=c2)
-            return c1-c2;
-    };
-    return 0;
+	for (int i=s1_begin; i<s1_end; i++)
+	{
+		char c1=tolower(s1[i]), c2=tolower(s2[i]);
+		if (c1!=c2)
+			return c1-c2;
+	};
+	return 0;
 };
 
 void make_REG_compact_hex (REG a, strbuf* out)
 {
-    if (a<10)
-        strbuf_addf(out, PRI_SIZE_T_DEC, a);
-    else
-        strbuf_addf(out, "0x" PRI_SIZE_T_HEX, a);
+	if (a<10)
+		strbuf_addf(out, PRI_SIZE_T_DEC, a);
+	else
+		strbuf_addf(out, "0x" PRI_SIZE_T_HEX, a);
 };
 
 // regs must be sorted before!
 // if limit==0, then there are no limit
 void make_compact_list_of_REGs (REG *regs, unsigned regs_total, strbuf *out, unsigned limit)
 {
-    if (limit>0 && regs_total>limit)
-    {
-        oassert (limit>=2);
-        unsigned part_length=limit/2;
-        make_compact_list_of_REGs (regs, part_length, out, 0);
-        strbuf_addf (out, " (%d items skipped) ", regs_total-part_length*2);
-        make_compact_list_of_REGs (regs+regs_total-part_length, part_length, out, 0);
-        return;
-    }
+	if (limit>0 && regs_total>limit)
+	{
+		oassert (limit>=2);
+		unsigned part_length=limit/2;
+		make_compact_list_of_REGs (regs, part_length, out, 0);
+		strbuf_addf (out, " (%d items skipped) ", regs_total-part_length*2);
+		make_compact_list_of_REGs (regs+regs_total-part_length, part_length, out, 0);
+		return;
+	}
 
-    for(unsigned i=0; i < regs_total; i++)
-    {
-        unsigned step=0;
-        if (i+2<regs_total)
-            for (step=8; step!=0; step=step>>1) // 8, 4, 2, 1
-                if (regs[i]+step==regs[i+1] && regs[i+1]+step==regs[i+2])
-                {
-                    unsigned i_start=i;
-                    REG n=regs[i];
-                    for (; n+step==regs[i+1] && i<regs_total; i++)
-                        n=regs[i+1];
+	for(unsigned i=0; i < regs_total; i++)
+	{
+		unsigned step=0;
+		if (i+2<regs_total)
+			for (step=8; step!=0; step=step>>1) // 8, 4, 2, 1
+				if (regs[i]+step==regs[i+1] && regs[i+1]+step==regs[i+2])
+				{
+					unsigned i_start=i;
+					REG n=regs[i];
+					for (; n+step==regs[i+1] && i<regs_total; i++)
+						n=regs[i+1];
 
-                    make_REG_compact_hex(regs[i_start], out);
-                    strbuf_addstr (out, "..");
-                    make_REG_compact_hex(regs[i], out);
-                    if (step>1)
-                        strbuf_addf (out, "(step=%d)", step);
+					make_REG_compact_hex(regs[i_start], out);
+					strbuf_addstr (out, "..");
+					make_REG_compact_hex(regs[i], out);
+					if (step>1)
+						strbuf_addf (out, "(step=%d)", step);
 
-                    break;
-                };
+					break;
+				};
 
-        if (step==0)
-            make_REG_compact_hex(regs[i], out);
+		if (step==0)
+			make_REG_compact_hex(regs[i], out);
 
-        if (i+1 < regs_total)
-            strbuf_addstr (out, ", ");
-    };
+		if (i+1 < regs_total)
+			strbuf_addstr (out, ", ");
+	};
 };
 
 void regcomp_or_die (regex_t *_Restrict_ preg, const char *_Restrict_ pattern, int cflags)
 {
-    int rc=regcomp(preg, pattern, cflags);
-    if (rc!=_REG_NOERROR)
-    {
-        char buffer[100];
-        regerror(rc, preg, buffer, 100);
-        die("Regular expression compiling failed for pattern '%s' (%s)", pattern, buffer);
-    };
+	int rc=regcomp(preg, pattern, cflags);
+	if (rc!=_REG_NOERROR)
+	{
+		char buffer[100];
+		regerror(rc, preg, buffer, 100);
+		die("Regular expression compiling failed for pattern '%s' (%s)", pattern, buffer);
+	};
 };
 
 #ifdef _WIN64
@@ -236,17 +236,30 @@ tetrabyte strtol_or_strtoll(const char *nptr, char **endptr, int base)
 #endif    
 {
 #ifdef _WIN64
-    return strtoll(nptr, endptr, base);
+	return strtoll(nptr, endptr, base);
 #else
-    return strtol(nptr, endptr, base);
+	return strtol(nptr, endptr, base);
 #endif
 };
 
 const char *bool_to_string(bool b)
 {
-    if (b)
-        return "true";
-    return "false";
+	if (b)
+		return "true";
+	return "false";
 };
 
-/* vim: set expandtab ts=4 sw=4 : */
+unsigned NULL_terminated_array_of_pointers_size(void **a)
+{
+	unsigned i;
+
+	for (i=0; a[i]; i++);
+
+	return i;
+};
+
+// this function was taken from http://www.blog.codereversing.com/infect4.pdf
+unsigned align_to_boundary(unsigned address, unsigned boundary) 
+{
+	return ((address + boundary - 1) / boundary) * boundary;
+};

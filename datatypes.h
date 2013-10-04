@@ -28,6 +28,8 @@ typedef int32_t tetrabyte_s;
 typedef uint64_t octabyte;
 typedef int64_t octabyte_s;
 
+#define WYDE_LEN_IN_BYTES sizeof(wyde)
+
 #ifdef __GNUC__
 #define OCTABYTE_1 1LL
 #endif

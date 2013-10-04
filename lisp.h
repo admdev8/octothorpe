@@ -141,5 +141,6 @@ void obj_AND(obj *op1, obj *op2, obj *result);
 void obj_XOR(obj *op1, obj *op2, obj *result);
 void obj_NOT(obj *op1, obj *result);
 void obj_NEG(obj *op1, obj *result);
+unsigned obj_width_in_bits(obj *o);
 
 /* vim: set expandtab ts=4 sw=4 : */

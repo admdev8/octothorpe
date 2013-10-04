@@ -44,34 +44,37 @@ extern "C" {
 #define SMASH(x, y) x##y
 #define WIDEN(x) SMASH(L,x)
 
-unsigned most_significant_hex_number(octabyte x);
-_Noreturn void die (const char * fmt, ...);
-void* memdup (void *p, size_t s);
-void print_string_range (const char *s, int begin, size_t size);
-byte* load_file_or_die (const char* fname, size_t *fsize);
-char* str_trim_one_char_right (char *in);
-char* str_trim_all_lf_cr_right (char *in);
-char *remove_char_begin_end_if_present (char *s, char c);
-void debugger_breakpoint();
-FILE *fopen_or_die(const char* fname, const char* mode);
-int stricmp_range (const char *s1, int s1_begin, int s1_end, const char *s2);
-void make_REG_compact_hex (REG a, strbuf* out);
-void make_compact_list_of_REGs (REG *regs, unsigned regs_total, strbuf *out, unsigned limit);
-void regcomp_or_die (regex_t *_Restrict_ preg, const char *_Restrict_ pattern, int cflags);
+#define VAL_IN_BOUNDS_INCL(val,begin,end) ((val)>=(begin) && (val)<=(end))
+
+	unsigned most_significant_hex_number(octabyte x);
+	_Noreturn void die (const char * fmt, ...);
+	void* memdup (void *p, size_t s);
+	void print_string_range (const char *s, int begin, size_t size);
+	byte* load_file_or_die (const char* fname, size_t *fsize);
+	char* str_trim_one_char_right (char *in);
+	char* str_trim_all_lf_cr_right (char *in);
+	char *remove_char_begin_end_if_present (char *s, char c);
+	void debugger_breakpoint();
+	FILE *fopen_or_die(const char* fname, const char* mode);
+	int stricmp_range (const char *s1, int s1_begin, int s1_end, const char *s2);
+	void make_REG_compact_hex (REG a, strbuf* out);
+	void make_compact_list_of_REGs (REG *regs, unsigned regs_total, strbuf *out, unsigned limit);
+	void regcomp_or_die (regex_t *_Restrict_ preg, const char *_Restrict_ pattern, int cflags);
 
 #ifdef _WIN64
-octabyte strtol_or_strtoll(const char *nptr, char **endptr, int base);
+	octabyte strtol_or_strtoll(const char *nptr, char **endptr, int base);
 #else
-tetrabyte strtol_or_strtoll(const char *nptr, char **endptr, int base);
+	tetrabyte strtol_or_strtoll(const char *nptr, char **endptr, int base);
 #endif    
-const char *bool_to_string(bool b);
+	const char *bool_to_string(bool b);
 
-//#ifndef _MSC_VER
-//#define stricmp strcasecmp
-//#endif
+	unsigned NULL_terminated_array_of_pointers_size(void **a);
+	unsigned align_to_boundary(unsigned address, unsigned boundary);
+
+	//#ifndef _MSC_VER
+	//#define stricmp strcasecmp
+	//#endif
 
 #ifdef  __cplusplus
 }
 #endif
-
-/* vim: set expandtab ts=4 sw=4 : */

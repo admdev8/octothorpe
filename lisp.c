@@ -315,6 +315,29 @@ void obj_dump(obj *o)
     };
 };
 
+unsigned obj_width_in_bits(obj *o)
+{
+    oassert(o);
+    
+    switch (o->t)
+    {
+        case OBJ_BYTE:
+            return 8;
+        case OBJ_WYDE:
+            return 16;
+        case OBJ_TETRABYTE:
+            return 32;
+        case OBJ_OCTABYTE:
+            return 64;
+        case OBJ_XMM:
+            return 16*8;
+        default:
+            oassert(!"type not supported");
+            fatal_error();
+            break;
+    };
+};
+
 // shallow copy
 void obj_copy2 (obj *dst, obj *src)
 {

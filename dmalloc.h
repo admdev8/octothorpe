@@ -27,13 +27,13 @@ extern "C" {
 #include <memory.h>
 
 void* dmalloc (size_t size, const char * filename, unsigned line, const char * function, const char * structname);
-#define DMALLOC(type, size, comment) ((type*)dmalloc(sizeof(type)*size, __FILE__, __LINE__, __func__, comment))
+#define DMALLOC(type, size, comment) ((type*)dmalloc(sizeof(type)*(size), __FILE__, __LINE__, __func__, comment))
 
 void* drealloc (void* ptr, size_t size, const char * filename, unsigned line, const char * function, const char * structname);
-#define DREALLOC(ptr, type, size, comment) ((type*)drealloc(ptr, sizeof(type)*size, __FILE__, __LINE__, __func__, comment))
+#define DREALLOC(ptr, type, size, comment) ((type*)drealloc(ptr, sizeof(type)*(size), __FILE__, __LINE__, __func__, comment))
 
 void* dcalloc (size_t size, const char * filename, unsigned line, const char * function, const char * structname);
-#define DCALLOC(type, size, comment) ((type*)dcalloc(sizeof(type)*size, __FILE__, __LINE__, __func__, comment))
+#define DCALLOC(type, size, comment) ((type*)dcalloc(sizeof(type)*(size), __FILE__, __LINE__, __func__, comment))
 
 void dfree (void* ptr);
 void dfree2 (void* ptr, const char *filename, unsigned line, const char *funcname);
