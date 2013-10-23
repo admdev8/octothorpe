@@ -16,8 +16,8 @@
  */
 
 #include <stdbool.h>
+#include <memory.h>
 #include "datatypes.h"
-#include "memory.h"
 
 void bytefill (void* ptr, size_t size, byte val)
 {
@@ -59,4 +59,16 @@ bool is_blk_zero (void *ptr, size_t s)
 		if (p[i])
 			return false;
 	return true;
+};
+
+bool is_element_in_array (unsigned e, unsigned* array, size_t size)
+{
+#ifdef __linux__
+	return !!memmem (array, size*sizeof(unsigned), &e, sizeof(unsigned)); // absent in MinGW?
+#else
+	for (int i=0; i<size; i++)
+		if (array[i]==e)
+			return true;
+	return false;
+#endif
 };

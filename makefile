@@ -18,7 +18,7 @@ SOURCES=dmalloc.c memutils.c rbtree.c rand.c strbuf.c stuff.c logging.c x86.c st
 	elf.c lisp.c regex.c dlist.c FPU_stuff_GCC.c files.c set.c oassert.c x86_intrin.c \
 	fsave.c
 TEST_SOURCES=testrbtree.c strbuf_test.c logging_test.c dmalloc_test.c test-regex.c \
-	string_list_test.c lisp_test.c stuff_test.c dlist_test.c
+	string_list_test.c lisp_test.c stuff_test.c dlist_test.c memutils_test.c
 DEPFILES=$(SOURCES:.c=.d)
 OBJECTS=$(addprefix $(OUTDIR)/,$(SOURCES:.c=.o))
 TEST_OBJECTS=$(addprefix $(OUTDIR)/,$(TEST_SOURCES:.c=.o))

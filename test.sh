@@ -39,3 +39,7 @@ rm stuff_test.1
 $OUTDIR/dlist_test > dlist_test.1
 diff dlist_test.1 dlist_test.correct
 rm dlist_test.1
+
+$OUTDIR/memutils_test > memutils_test.1
+diff memutils_test.1 memutils_test.correct
+rm memutils_test.1

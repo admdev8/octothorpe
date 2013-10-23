@@ -115,7 +115,7 @@ void* dmalloc (size_t size, const char * filename, unsigned line, const char * f
         debugger_breakpoint();
 
 #ifdef ADD_GUARDS
-    rt=(byte*)malloc (size+8)+4;
+    rt=malloc (size+8)+4;
 #else    
     rt=malloc (size);
 #endif    

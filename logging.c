@@ -63,7 +63,7 @@ void L_init (const char* fname)
     cur_fds.fd2=fopen(fname, "w");
     if (cur_fds.fd2==NULL)
         die ("Can't create %s for writing.\n", fname);
-    i=setvbuf(cur_fds.fd2, NULL, _IONBF, 0);
+    i=setvbuf(cur_fds.fd2, NULL, _IONBF, 0); // no buffering
     oassert(i==0);
     atexit(L_deinit);
 };

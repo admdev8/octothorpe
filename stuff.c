@@ -88,7 +88,7 @@ byte* load_file_or_die (const char* fname, size_t *fsize)
 
 	*fsize=ftell (f);
 	//printf ("*fsize=%d\n", *fsize);
-	rt=(byte*)malloc (*fsize);
+	rt=malloc (*fsize);
 
 	if (fseek (f, 0, SEEK_SET)!=0)
 		die ("fseek()\n");
