@@ -151,19 +151,25 @@ bool strbuf_replace_if_possible (strbuf *sb, const char *s1, const char *s2)
 
 void strbuf_vaddf (strbuf *sb, const char *fmt, va_list va)
 {
-	size_t sz=_vscprintf (fmt, va); // MSVC-specific?
+#ifdef TARGET_IS_WINDOWS_2000
+	// temporary (?) kludge
+	char tmpbuf[1024];
+	size_t sz=vsnprintf (tmpbuf, sizeof(tmpbuf), fmt, va);
+#else
+	size_t sz=_vscprintf (fmt, va); // MSVC-specific? absent in Windows 2000 msvcrt.dll :( fuck.
+#endif
 
 	strbuf_grow(sb, sz);
 
 #ifdef _MSC_VER   
 	if (vsnprintf_s (sb->buf + sb->strlen, sz+1, sz, fmt, va)==-1) // MSVC-specific
 #else
-		if (vsnprintf (sb->buf + sb->strlen, sz+1, fmt, va)==-1)
+	if (vsnprintf (sb->buf + sb->strlen, sz+1, fmt, va)==-1)
 #endif
-		{
-			oassert(0);
-			fatal_error();
-		};
+	{
+		oassert(0);
+		fatal_error();
+	};
 	sb->strlen+=sz;
 };
 

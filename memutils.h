@@ -34,7 +34,6 @@ extern "C" {
 #endif
 
 	bool is_blk_zero (void *ptr, size_t s);
-	bool is_element_in_array (unsigned e, unsigned* array, size_t size);
 
 #ifdef  __cplusplus
 }

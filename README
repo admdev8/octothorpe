@@ -2,4 +2,8 @@ My own C library.
 
 Requires C11 compiler, like GCC >= 4.7.
 
+* Issues:
+
+For compiling for Windows 2000, set TARGET_IS_WINDOWS_2000.
+
 -- dennis(a)yurichev.com

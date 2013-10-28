@@ -46,6 +46,7 @@ extern "C" {
 
 #define VAL_IN_BOUNDS_INCL(val,begin,end) ((val)>=(begin) && (val)<=(end))
 
+	bool value_in(unsigned v, unsigned a1, unsigned a2, unsigned a3, unsigned a4, unsigned a5, unsigned a6, unsigned a7);
 	unsigned most_significant_hex_number(octabyte x);
 	_Noreturn void die (const char * fmt, ...);
 	void* memdup (void *p, size_t s);
@@ -70,6 +71,9 @@ extern "C" {
 
 	unsigned NULL_terminated_array_of_pointers_size(void **a);
 	unsigned align_to_boundary(unsigned address, unsigned boundary);
+
+	int find_string_in_array_of_strings(const char *s, const char **array, size_t array_size, 
+		bool case_insensitive, bool sorted);
 
 	//#ifndef _MSC_VER
 	//#define stricmp strcasecmp

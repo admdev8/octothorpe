@@ -17,6 +17,7 @@
 
 #include <stdarg.h>
 #include <stdio.h>
+#include <search.h>
 #include <stdlib.h>
 #include <memory.h>
 #include "oassert.h"
@@ -29,6 +30,11 @@
 #ifdef _MSC_VER
 #include <intrin.h>
 #endif
+
+bool value_in(unsigned v, unsigned a1, unsigned a2, unsigned a3, unsigned a4, unsigned a5, unsigned a6, unsigned a7)
+{
+	return (v==a1) || (v==a2) || (v==a3) || (v==a4) || (v==a5) || (v==a6) || (v==a7);
+};
 
 unsigned most_significant_hex_number(octabyte x)
 {
@@ -262,4 +268,32 @@ unsigned NULL_terminated_array_of_pointers_size(void **a)
 unsigned align_to_boundary(unsigned address, unsigned boundary) 
 {
 	return ((address + boundary - 1) / boundary) * boundary;
+};
+
+static int my_stricmp (const void *p1, const void *p2)
+{
+	//printf ("%s() p1=%s p2=%s\n", __FUNCTION__, (char*)p1, *(const char**)p2); // debug
+	return stricmp (p1, *(const char**)p2);
+};
+
+static int my_strcmp (const void *p1, const void *p2)
+{
+	//printf ("%s() p1=%s p2=%s\n", __FUNCTION__, (char*)p1, *(const char**)p2); // debug
+	return strcmp (p1, *(const char**)p2);
+};
+
+int find_string_in_array_of_strings(const char *s, const char **array, size_t array_size, 
+	bool case_insensitive, bool sorted)
+{
+	void *found;
+	
+	if (sorted)
+		found=bsearch (s, array, &array_size, sizeof(char*), case_insensitive ? my_stricmp : my_strcmp);
+	else
+		found=lfind (s, array, &array_size, sizeof(char*), case_insensitive ? my_stricmp : my_strcmp);
+
+	if (found)
+		return (const char**)found-array;
+	else
+		return -1; // string not found
 };
