@@ -15,8 +15,14 @@
  *
  */
 
+#include "datatypes.h"
 #include <stdbool.h>
 
 bool file_exist (const char *filename);
+bool is_file(const char* path);
+bool is_dir(const char* path); 
+byte* load_file_or_die (const char* fname, size_t *fsize);
 
-/* vim: set expandtab ts=4 sw=4 : */
+// simple function. will  return just NULL in case of error.
+unsigned char* load_file (const char* fname, size_t *fsize);
+

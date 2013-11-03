@@ -311,6 +311,12 @@ void strbuf_trim_last_char (strbuf *s)
 	s->buf[s->strlen]=0;
 };
 
+void strbuf_trim_chars_at_end (strbuf *s, const char *chars)
+{
+	while (strchr (chars, strbuf_last_char(s)))
+		strbuf_trim_last_char(s);
+};
+
 void strbuf_make_shorter (strbuf *sb, unsigned new_size)
 {
 	oassert (new_size < sb->strlen);

@@ -17,6 +17,7 @@
 
 #include "strbuf.h"
 #include "dmalloc.h"
+#include "oassert.h"
 #include <stdio.h>
 #include <limits.h>
 
@@ -81,6 +82,13 @@ int main()
     strbuf_deinit (&s2);
     
     strbuf_deinit(&s);
+
+    strbuf_init(&s, 0);
+    strbuf_addstr (&s, "test1\r\n");
+    strbuf_trim_chars_at_end (&s, "\n\r");
+    oassert (strcmp(s.buf, "test1")==0);
+    strbuf_deinit(&s);
+
     dump_unfreed_blocks();
     dmalloc_deinit();
 

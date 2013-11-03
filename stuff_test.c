@@ -70,4 +70,7 @@ int main()
 	printf ("%d\n", find_string_in_array_of_strings("Hello", strings, strings_t, true, false));
 	printf ("%d\n", find_string_in_array_of_strings("world2", strings, strings_t, true, false));
 	printf ("%d\n", find_string_in_array_of_strings("World", strings, strings_t, false, false));
+
+	oassert (string_is_ends_with ("hello", "lo")==true);
+	oassert (string_is_ends_with ("hello", "lo1")==false);
 };

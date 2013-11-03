@@ -20,9 +20,10 @@
 #include <search.h>
 #include <stdlib.h>
 #include <memory.h>
-#include "oassert.h"
 #include <ctype.h>
+#include <search.h>
 
+#include "oassert.h"
 #include "datatypes.h"
 #include "stuff.h"
 #include "fmt_utils.h"
@@ -78,32 +79,6 @@ void print_string_range (const char *s, int begin, size_t size)
 {
 	for (int i=0; i<size; i++)
 		putc(s[begin+i], stdout);
-};
-
-byte* load_file_or_die (const char* fname, size_t *fsize)
-{
-	byte* rt;
-	FILE* f;
-
-	f=fopen (fname, "rb");
-	if (f==NULL)
-		die ("Cannot open file %s\n", fname);
-
-	if (fseek (f, 0, SEEK_END)!=0)
-		die ("fseek()\n");
-
-	*fsize=ftell (f);
-	//printf ("*fsize=%d\n", *fsize);
-	rt=malloc (*fsize);
-
-	if (fseek (f, 0, SEEK_SET)!=0)
-		die ("fseek()\n");
-
-	if (fread (rt, *fsize, 1, f)!=1)
-		die ("Cannot read file %s\n", fname);
-
-	fclose (f);
-	return rt;
 };
 
 char* str_trim_one_char_right (char *in)
@@ -297,3 +272,71 @@ int find_string_in_array_of_strings(const char *s, const char **array, size_t ar
 	else
 		return -1; // string not found
 };
+
+const char *mon_name[12] = 
+{
+	"Jan", "Feb", "Mar", "Apr", "May", "Jun",
+	"Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+};
+
+bool string_is_ends_with (const char *s, const char *ending)
+{
+	return strcmp (s+strlen(s)-strlen(ending), ending)==0 ? true : false;
+};
+
+// MIME stuff
+
+struct string_pair
+{
+	const char *s1;
+	const char *s2;
+};
+
+struct string_pair mime_types[]={     
+	{ ".7z", "application/x-7z-compressed" },
+	{ ".css", "text/css" },
+	{ ".deb", "application/x-deb" },
+	{ ".gif", "image/gif" },
+	{ ".gz", "application/gzip" },
+	{ ".htm", "text/html" },
+	{ ".html", "text/html" },
+	{ ".jpeg", "image/jpeg" },
+	{ ".jpg", "image/jpeg" },
+	{ ".js", "application/javascript" },
+	{ ".mp3", "audio/mpeg" },
+	{ ".mp4", "video/mp4" },
+	{ ".ogg", "audio/ogg" },
+	{ ".pdf", "application/pdf" },
+	{ ".png", "image/png" },
+	{ ".ps", "application/postscript" },
+	{ ".rar", "application/x-rar-compressed" },
+	{ ".tar", "application/x-tar" },
+	{ ".txt", "text/plain" },
+	{ ".xml", "text/xml" },
+	{ ".zip", "application/zip" }
+};
+
+static int find_mime_type_by_filename (const void *filename, const void *struct_element)
+{
+	return string_is_ends_with (filename, ((const struct string_pair*)struct_element)->s1) ? 0 : 1;
+};
+
+const char *find_content_type_for_filename (const char *filename)
+{
+	size_t mime_types_size=sizeof(mime_types)/sizeof(struct string_pair);
+	struct string_pair *found=lfind (filename, mime_types, &mime_types_size, sizeof(struct string_pair), find_mime_type_by_filename);
+	const char *rt="application/octet-stream";
+
+	if (found)
+		rt=found->s2;
+
+	//printf ("%s(%s) -> %s\n", __FUNCTION__, filename, rt);
+	return rt;
+};
+/*
+	printf ("%s\n", find_content_type_for_filename ("index.html"));
+	printf ("%s\n", find_content_type_for_filename ("filename.ps"));
+	printf ("%s\n", find_content_type_for_filename ("filename.pdf"));
+	printf ("%s\n", find_content_type_for_filename ("filename.ext"));
+*/
+

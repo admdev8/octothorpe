@@ -51,7 +51,6 @@ extern "C" {
 	_Noreturn void die (const char * fmt, ...);
 	void* memdup (void *p, size_t s);
 	void print_string_range (const char *s, int begin, size_t size);
-	byte* load_file_or_die (const char* fname, size_t *fsize);
 	char* str_trim_one_char_right (char *in);
 	char* str_trim_all_lf_cr_right (char *in);
 	char *remove_char_begin_end_if_present (char *s, char c);
@@ -78,6 +77,10 @@ extern "C" {
 	//#ifndef _MSC_VER
 	//#define stricmp strcasecmp
 	//#endif
+
+	const char *mon_name[12];
+	bool string_is_ends_with (const char *s, const char *ending);
+	const char *find_content_type_for_filename (const char *filename);
 
 #ifdef  __cplusplus
 }

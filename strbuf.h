@@ -72,6 +72,7 @@ void env_vars_expansion(strbuf *sb);
 char *strbuf_detach(strbuf *s, size_t *out_size);
 char strbuf_last_char (strbuf *s);
 void strbuf_trim_last_char (strbuf *s);
+void strbuf_trim_chars_at_end (strbuf *s, const char *chars);
 void strbuf_make_shorter (strbuf *sb, unsigned new_size);
 // if sb->strlen>size, trim it and add str at the end
 void strbuf_trim_string_with_comment (strbuf *sb, unsigned size, const char *str);
