@@ -24,7 +24,7 @@
 #include <sys/types.h>
 
 //#ifdef _MSC_VER
-#define __USE_GNU
+//#define __USE_GNU
 #include <stdio.h>
 //#endif
 
@@ -40,7 +40,7 @@ extern "C" {
 /* Define __USE_GNU to declare GNU extensions that violate the
    POSIX name space rules.  */
 #ifdef _GNU_SOURCE
-# define __USE_GNU 1
+//# define __USE_GNU 1
 #endif
 
 #ifdef _REGEX_LARGE_OFFSETS
@@ -87,7 +87,8 @@ typedef unsigned long int active_reg_t;
    add or remove a bit, only one other definition need change.  */
 typedef unsigned long int reg_syntax_t;
 
-#ifdef __USE_GNU
+//#ifdef __USE_GNU
+#if 1
 /* If this bit is not set, then \ inside a bracket expression is literal.
    If set, then such a \ quotes the following character.  */
 # define RE_BACKSLASH_ESCAPE_IN_LISTS ((unsigned long int) 1)
@@ -226,7 +227,8 @@ typedef unsigned long int reg_syntax_t;
    already-compiled regexps.  */
 extern reg_syntax_t re_syntax_options;
 
-#ifdef __USE_GNU
+//#ifdef __USE_GNU
+#if 1
 /* Define combinations of the above bits for the standard possibilities.
    (The [[[ comments delimit what gets put into the Texinfo file, so
    don't delete them!)  */
@@ -418,16 +420,16 @@ typedef enum
 
 #ifndef RE_TRANSLATE_TYPE
 # define __RE_TRANSLATE_TYPE unsigned char *
-# ifdef __USE_GNU
+//# ifdef __USE_GNU
 #  define RE_TRANSLATE_TYPE __RE_TRANSLATE_TYPE
-# endif
+//# endif
 #endif
 
-#ifdef __USE_GNU
+//#ifdef __USE_GNU
 # define __REPB_PREFIX(name) name
-#else
-# define __REPB_PREFIX(name) __##name
-#endif
+//#else
+//# define __REPB_PREFIX(name) __##name
+//#endif
 
 struct re_pattern_buffer
 {
@@ -468,11 +470,11 @@ struct re_pattern_buffer
      for 'max (RE_NREGS, re_nsub + 1)' groups.
      If REGS_REALLOCATE, reallocate space if necessary.
      If REGS_FIXED, use what's there.  */
-#ifdef __USE_GNU
+//#ifdef __USE_GNU
 # define REGS_UNALLOCATED 0
 # define REGS_REALLOCATE 1
 # define REGS_FIXED 2
-#endif
+//#endif
   unsigned __REPB_PREFIX(regs_allocated) : 2;
 
   /* Set to zero when 're_compile_pattern' compiles a pattern; set to
@@ -509,7 +511,8 @@ typedef int regoff_t;
 #endif
 
 
-#ifdef __USE_GNU
+//#ifdef __USE_GNU
+#if 1
 /* This is the structure we store register match data in.  See
    regex.texinfo for a full description of what registers match.  */
 struct re_registers
@@ -540,7 +543,8 @@ typedef struct
 
 /* Declarations for routines.  */
 
-#ifdef __USE_GNU
+//#ifdef __USE_GNU
+#if 1
 /* Sets the current default syntax to SYNTAX, and return the old syntax.
    You can also simply assign to the 're_syntax_options' variable.  */
 extern reg_syntax_t re_set_syntax (reg_syntax_t __syntax);

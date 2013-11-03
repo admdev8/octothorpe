@@ -21,6 +21,10 @@
 #include <stdio.h>
 #include <limits.h>
 
+#ifndef LONG_LONG_MAX
+#define LONG_LONG_MAX 9223372036854775807LL
+#endif
+
 int main()
 {
     //strbuf s;

@@ -23,16 +23,13 @@
 extern "C" {
 #endif
 
-#ifdef _WIN64
-
 double cvt80to64 (const byte *p);
 void cvt64to80 (double in, byte *out);
 
-#else
-
+// if you will have to use FPU_stuff_MSVC.asm...
+#if 0
 double __cdecl cvt80to64 (const byte *p);
 void __cdecl cvt64to80 (double in, byte *out);
-
 #endif
 
 #ifdef  __cplusplus

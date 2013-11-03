@@ -29,6 +29,11 @@
 extern "C" {
 #endif
 
+#ifdef __linux__
+#include <string.h> // for strcasecmp()
+#define stricmp strcasecmp
+#endif
+
 #ifndef IN
 #define IN
 #endif

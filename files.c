@@ -15,8 +15,15 @@
  *
  */
 
+#ifdef __linux
+// for S_IFDIR macro, etc
+// (conflict with -std=c99...)
+#define _GNU_SOURCE
+#endif
+
 #include <stdio.h> 
 #include <stdlib.h>
+
 #include <sys/stat.h>
 
 #include "files.h"
@@ -37,14 +44,22 @@ bool is_file(const char* path)
 {
 	struct stat buf;
 	stat(path, &buf);
+#ifdef __linux__
+	return IS_SET(buf.st_mode, S_IFREG);
+#else
 	return IS_SET(buf.st_mode, _S_IFREG);
+#endif
 }
 
 bool is_dir(const char* path) 
 {
 	struct stat buf;
 	stat(path, &buf);
+#ifdef __linux__
+	return IS_SET(buf.st_mode, S_IFDIR);
+#else
 	return IS_SET(buf.st_mode, _S_IFDIR);
+#endif
 }
 
 byte* load_file_or_die (const char* fname, size_t *fsize)

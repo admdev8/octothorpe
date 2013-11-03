@@ -10,7 +10,17 @@ bsuffix=release
 CPPFLAGS=-O3
 endif
 
-OUTDIR=$(MSYSTEM)_$(bsuffix)
+ifeq ($(OS),Windows_NT)
+	# MinGW
+	OUTDIR=$(MSYSTEM)_$(bsuffix)
+	LIBRARY=$(OUTDIR)\octothorpe.a
+else
+	UNAME_S := $(shell uname -s)
+	UNAME_P := $(shell uname -p)
+	OUTDIR=$(UNAME_S)-$(UNAME_P)-$(bsuffix)
+	LIBRARY=$(OUTDIR)/octothorpe.a
+endif
+
 
 CFLAGS=-c -Wall -g -std=c11
 #CFLAGS=-c -Wall -g -std=gnu99
@@ -23,7 +33,6 @@ DEPFILES=$(SOURCES:.c=.d)
 OBJECTS=$(addprefix $(OUTDIR)/,$(SOURCES:.c=.o))
 TEST_OBJECTS=$(addprefix $(OUTDIR)/,$(TEST_SOURCES:.c=.o))
 TEST_EXECS=$(addprefix $(OUTDIR)/,$(TEST_SOURCES:.c=.exe))
-LIBRARY=$(OUTDIR)\octothorpe.a
 
 all: $(OUTDIR) $(LIBRARY)($(OBJECTS)) $(TEST_EXECS) $(DEPFILES) $(OUTDIR)/lisp.o
 	bash test.sh $(OUTDIR) $(bsuffix)
@@ -50,3 +59,4 @@ $(OUTDIR)/%.o: %.c
 
 %.exe: %.o $(LIBRARY)
 	$(CC) $< $(LIBRARY) -o $@
+

@@ -1,3 +1,4 @@
+#include <stdio.h>
 #include "fsave.h"
 
 void dump_FSAVE_info (struct FSAVE_info *info)

@@ -21,6 +21,10 @@
 #include <string.h>
 #include <stdarg.h>
 
+#ifdef __linux
+#include <inttypes.h>
+#endif
+
 #include "oassert.h"
 #include "dmalloc.h"
 #include "lisp.h"
@@ -282,7 +286,11 @@ void obj_dump(obj *o)
             fprintf (FILE_OUT, "0x%x", o->u.tb);
             break;
         case OBJ_OCTABYTE:
+#ifdef __linux__
+            fprintf (FILE_OUT, "0x%" PRIx64, o->u.ob);
+#else
             fprintf (FILE_OUT, "0x%I64x", o->u.ob);
+#endif
             break;
         case OBJ_DOUBLE:
             fprintf (FILE_OUT, "%f", o->u.d);

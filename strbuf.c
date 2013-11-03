@@ -155,6 +155,8 @@ void strbuf_vaddf (strbuf *sb, const char *fmt, va_list va)
 	// temporary (?) kludge
 	char tmpbuf[1024];
 	size_t sz=vsnprintf (tmpbuf, sizeof(tmpbuf), fmt, va);
+#elif __linux__
+	size_t sz=vsnprintf (NULL, 0, fmt, va);
 #else
 	size_t sz=_vscprintf (fmt, va); // MSVC-specific? absent in Windows 2000 msvcrt.dll :( fuck.
 #endif
@@ -262,6 +264,10 @@ void strbuf_cvt_to_C_string (const char *in, strbuf *out, bool treat_as_binary)
 	for (size_t i=0; i<len; i++)
 		strbuf_addc_C_escaped (out, in[i], treat_as_binary);
 };
+
+#ifdef __linux
+extern char** environ;
+#endif
 
 // replace %substring% to environment variable, if possible
 void env_vars_expansion(strbuf *sb)
