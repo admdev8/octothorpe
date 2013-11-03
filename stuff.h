@@ -53,6 +53,7 @@ extern "C" {
 	void print_string_range (const char *s, int begin, size_t size);
 	char* str_trim_one_char_right (char *in);
 	char* str_trim_all_lf_cr_right (char *in);
+	char str_last_char (const char *s);
 	char *remove_char_begin_end_if_present (char *s, char c);
 	void debugger_breakpoint();
 	FILE *fopen_or_die(const char* fname, const char* mode);

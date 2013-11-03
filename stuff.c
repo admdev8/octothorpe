@@ -90,6 +90,11 @@ char* str_trim_one_char_right (char *in)
 	return in;
 };
 
+char str_last_char (const char *s)
+{
+	return s[strlen(s)-1];
+};
+
 char* str_trim_all_lf_cr_right (char *in)
 {
 	size_t slen=strlen(in);
