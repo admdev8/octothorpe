@@ -21,7 +21,7 @@
 #include <string.h>
 #include <stdarg.h>
 
-#ifdef __linux
+#ifdef __GNUC__
 #include <inttypes.h>
 #endif
 
@@ -58,7 +58,7 @@ void obj_octabyte2 (octabyte i, obj* o)
 
 void obj_REG2 (REG i, obj* o)
 {
-#ifdef _WIN64
+#ifdef O_BITS64
     obj_octabyte2 (i, o);
 #else
     obj_tetrabyte2 (i, o);
@@ -286,11 +286,7 @@ void obj_dump(obj *o)
             fprintf (FILE_OUT, "0x%x", o->u.tb);
             break;
         case OBJ_OCTABYTE:
-#ifdef __linux__
             fprintf (FILE_OUT, "0x%" PRIx64, o->u.ob);
-#else
-            fprintf (FILE_OUT, "0x%I64x", o->u.ob);
-#endif
             break;
         case OBJ_DOUBLE:
             fprintf (FILE_OUT, "%f", o->u.d);
@@ -571,7 +567,7 @@ wyde obj_get_as_wyde(obj* o)
 };
 REG obj_get_as_REG(obj* o)
 {
-#ifdef _WIN64
+#ifdef O_BITS64
     return obj_get_as_octabyte(o);
 #else
     return obj_get_as_tetrabyte(o);
@@ -607,7 +603,7 @@ REG zero_extend_to_REG(obj* o)
         case OBJ_TETRABYTE:
             return o->u.tb;
         case OBJ_OCTABYTE:
-#ifdef _WIN64
+#ifdef O_BITS64
             return o->u.ob;
 #else
             oassert(!"cannot convert octabyte to REG");

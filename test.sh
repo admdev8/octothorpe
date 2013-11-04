@@ -16,6 +16,11 @@ else
 	fi
 fi
 
+if [[ $OUTDIR == *Darwin* ]]
+then
+	BITS="64"
+fi
+
 if [ -z "$BITS" ]; then echo OS is not determined; exit 0; fi
 
 BUILD_SUFFIX=$2

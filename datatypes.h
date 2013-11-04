@@ -18,6 +18,7 @@
 #pragma once
 
 #include <stdint.h>
+#include "arch.h"
 
 // D.Knuth's MMIX datatypes
 
@@ -32,12 +33,13 @@ typedef int64_t octabyte_s;
 
 #ifdef __GNUC__
 #define OCTABYTE_1 1LL
-#endif
-#ifdef _MSC_VER
+#elif _MSC_VER
 #define OCTABYTE_1 1i64
+#else
+#error "compiler was not detected"
 #endif
 
-#ifdef _WIN64
+#ifdef O_BITS64
 #define REG_1 OCTABYTE_1
 typedef octabyte REG;
 typedef octabyte_s SIGNED_REG;
@@ -49,12 +51,10 @@ typedef tetrabyte_s SIGNED_REG;
 #define REG_SIZE 4
 #endif
 
-#ifdef _WIN64
+#ifdef O_BITS64
 typedef octabyte address;
 typedef octabyte_s address_offset;
 #else
 typedef tetrabyte address;
 typedef tetrabyte_s address_offset;
 #endif
-
-/* vim: set expandtab ts=4 sw=4 : */

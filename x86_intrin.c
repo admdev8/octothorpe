@@ -18,8 +18,7 @@
 #include "x86_intrin.h"
 #include "x86.h"
 
-#ifdef _WIN64
-#else
+#ifdef O_BITS32
 
 void intrin_SHL (IN tetrabyte value, IN uint8_t shift_value, OUT tetrabyte* result, IN OUT tetrabyte* flags)
 {

@@ -16,8 +16,12 @@ ifeq ($(OS),Windows_NT)
 	LIBRARY=$(OUTDIR)\octothorpe.a
 else
 	UNAME_S := $(shell uname -s)
-	UNAME_P := $(shell uname -p)
-	OUTDIR=$(UNAME_S)-$(UNAME_P)-$(bsuffix)
+	ifeq ($(UNAME_S),Darwin)
+		OUTDIR=$(UNAME_S)-x86_64-$(bsuffix)
+	else
+		UNAME_P := $(shell uname -p)
+		OUTDIR=$(UNAME_S)-$(UNAME_P)-$(bsuffix)
+	endif
 	LIBRARY=$(OUTDIR)/octothorpe.a
 endif
 
@@ -32,6 +36,8 @@ TEST_SOURCES=testrbtree.c strbuf_test.c logging_test.c dmalloc_test.c test-regex
 DEPFILES=$(SOURCES:.c=.d)
 OBJECTS=$(addprefix $(OUTDIR)/,$(SOURCES:.c=.o))
 TEST_OBJECTS=$(addprefix $(OUTDIR)/,$(TEST_SOURCES:.c=.o))
+.SECONDARY: $(TEST_OBJECTS)
+
 TEST_EXECS=$(addprefix $(OUTDIR)/,$(TEST_SOURCES:.c=.exe))
 
 all: $(OUTDIR) $(LIBRARY)($(OBJECTS)) $(TEST_EXECS) $(DEPFILES) $(OUTDIR)/lisp.o
