@@ -17,10 +17,14 @@
 
 #pragma once
 
-#ifdef _WIN64
-#define PRI_SIZE_T_HEX "%I64x"
-#define PRI_SIZE_T_HEX_PAD "%016I64x"
-#define PRI_SIZE_T_DEC "%I64d"
+#ifdef __GNUC__
+#include <inttypes.h>
+#endif
+
+#ifdef O_BITS64
+#define PRI_SIZE_T_HEX "%" PRIx64
+#define PRI_SIZE_T_HEX_PAD "%016" PRIx64
+#define PRI_SIZE_T_DEC "%" PRId64
 #else
 #define PRI_SIZE_T_HEX "%x"
 #define PRI_SIZE_T_HEX_PAD "%08x"

@@ -20,6 +20,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "oassert.h"
+#include <inttypes.h>
 
 #include "oassert.h"
 #include "strbuf.h"
@@ -151,19 +152,23 @@ bool strbuf_replace_if_possible (strbuf *sb, const char *s1, const char *s2)
 
 void strbuf_vaddf (strbuf *sb, const char *fmt, va_list va)
 {
-#ifdef TARGET_IS_WINDOWS_2000
+	va_list va2;
+	va_copy (va2, va);
+
+#if defined(TARGET_IS_WINDOWS_2000) || defined (__APPLE__)
 	// temporary (?) kludge
 	char tmpbuf[1024];
-	size_t sz=vsnprintf (tmpbuf, sizeof(tmpbuf), fmt, va);
+	size_t sz=vsnprintf (tmpbuf, sizeof(tmpbuf), fmt, va2);
+	oassert (sz<sizeof(tmpbuf)-1);
 #elif __linux__
-	size_t sz=vsnprintf (NULL, 0, fmt, va);
+	size_t sz=vsnprintf (NULL, 0, fmt, va2);
 #else
-	size_t sz=_vscprintf (fmt, va); // MSVC-specific? absent in Windows 2000 msvcrt.dll :( fuck.
+	size_t sz=_vscprintf (fmt, va2); // MSVC-specific? absent in Windows 2000 msvcrt.dll :( fuck.
 #endif
 
 	strbuf_grow(sb, sz);
 
-#ifdef _MSC_VER   
+#ifdef _MSC_VER
 	if (vsnprintf_s (sb->buf + sb->strlen, sz+1, sz, fmt, va)==-1) // MSVC-specific
 #else
 	if (vsnprintf (sb->buf + sb->strlen, sz+1, fmt, va)==-1)
@@ -194,9 +199,9 @@ void make_uint32_compact (tetrabyte a, strbuf* out)
 void make_uint64_compact (octabyte a, strbuf* out)
 {
 	if (a<10)
-		strbuf_addf (out, "%I64lld", a);
+		strbuf_addf (out, "%" PRId64, a);
 	else
-		strbuf_addf (out, "0x%I64llx", a);
+		strbuf_addf (out, "0x%" PRIx64, a);
 };
 
 void make_SIZE_T_compact (size_t a, strbuf* out)
@@ -265,7 +270,7 @@ void strbuf_cvt_to_C_string (const char *in, strbuf *out, bool treat_as_binary)
 		strbuf_addc_C_escaped (out, in[i], treat_as_binary);
 };
 
-#ifdef __linux
+#if defined(__linux__) || defined(__APPLE__)
 extern char** environ;
 #endif
 

@@ -56,7 +56,7 @@ int main()
 	printf ("%s\n", sb.buf);
 	strbuf_deinit(&sb);
 
-#ifdef _WIN64
+#ifdef O_BITS64
 	oassert(strtol_or_strtoll("0xAB12345678", NULL, 16)==0xAB12345678);
 #else
 	oassert(strtol_or_strtoll("0x12345678", NULL, 16)==0x12345678);

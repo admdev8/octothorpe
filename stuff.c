@@ -215,13 +215,13 @@ void regcomp_or_die (regex_t *_Restrict_ preg, const char *_Restrict_ pattern, i
 	};
 };
 
-#ifdef _WIN64
+#ifdef O_BITS64
 octabyte strtol_or_strtoll(const char *nptr, char **endptr, int base)
 #else
 tetrabyte strtol_or_strtoll(const char *nptr, char **endptr, int base)
 #endif    
 {
-#ifdef _WIN64
+#ifdef O_BITS64
 	return strtoll(nptr, endptr, base);
 #else
 	return strtol(nptr, endptr, base);

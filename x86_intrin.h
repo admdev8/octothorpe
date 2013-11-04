@@ -22,8 +22,7 @@
 #include "stuff.h"
 #include "datatypes.h"
 
-#ifdef _WIN64
-#else
+#ifdef O_BITS32
 
 void intrin_SHL (IN tetrabyte value, IN uint8_t shift_value, OUT tetrabyte* result, IN OUT tetrabyte* flags);
 void intrin_SHR (IN tetrabyte value, IN uint8_t shift_value, OUT tetrabyte* result, IN OUT tetrabyte* flags);

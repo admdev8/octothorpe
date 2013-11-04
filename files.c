@@ -15,7 +15,7 @@
  *
  */
 
-#ifdef __linux
+#if defined(__linux__) || defined(__APPLE__)
 // for S_IFDIR macro, etc
 // (conflict with -std=c99...)
 #define _GNU_SOURCE
@@ -44,10 +44,10 @@ bool is_file(const char* path)
 {
 	struct stat buf;
 	stat(path, &buf);
-#ifdef __linux__
+#if defined(__linux__) || defined(__APPLE__)
 	return IS_SET(buf.st_mode, S_IFREG);
 #else
-	return IS_SET(buf.st_mode, _S_IFREG);
+	return IS_SET(buf.st_mode, _S_IFREG); // win32
 #endif
 }
 
@@ -55,10 +55,10 @@ bool is_dir(const char* path)
 {
 	struct stat buf;
 	stat(path, &buf);
-#ifdef __linux__
+#if defined(__linux__) || defined(__APPLE__)
 	return IS_SET(buf.st_mode, S_IFDIR);
 #else
-	return IS_SET(buf.st_mode, _S_IFDIR);
+	return IS_SET(buf.st_mode, _S_IFDIR); // win32
 #endif
 }
 

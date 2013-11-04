@@ -29,6 +29,7 @@
 #include "rbtree.h"
 #include "strbuf.h"
 #include "stuff.h"
+#include "inttypes.h"
 
 // rationale: writting to both stdout and log-file
 fds cur_fds={ NULL, NULL };
@@ -179,8 +180,8 @@ void L_print_buf_ofs_fds (fds *s, byte *buf, size_t size, size_t ofs)
         else
             wpn=size-pos;
 
-#ifdef _WIN64
-        L_fds (s, "%016I64x: ", starting_offset + pos + ofs);
+#ifdef O_BITS64
+        L_fds (s, "%016" PRIx64 ": ", starting_offset + pos + ofs);
 #else
         L_fds (s, "%08X: ", starting_offset + pos + ofs);
 #endif
@@ -233,8 +234,8 @@ void L_print_bufs_diff (byte *buf1, byte *buf2, size_t size)
 
         if (memcmp (buf1+pos, buf2+pos, wpn)!=0) // any changes in the whole line?
         {
-#ifdef _WIN64
-            L ("%016I64x: ", starting_offset + pos);
+#ifdef O_BITS64
+            L ("%016" PRIx64 ": ", starting_offset + pos);
 #else
             L ("%08X: ", starting_offset + pos);
 #endif
