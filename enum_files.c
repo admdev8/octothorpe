@@ -10,8 +10,10 @@
 #include <sys/stat.h>
 #include <dirent.h>
 #include <errno.h>
+#include <string.h>
 #endif
 
+#include "stuff.h"
 #include "bitfields.h"
 #include "strbuf.h"
 #include "enum_files.h"
@@ -48,15 +50,20 @@ void enum_files_in_dir(const char* path, callback_fn cb, void *param)
 
 	strbuf tmp2=STRBUF_INIT;
 
-	while (t=readdir(DIR_V))
+	while ((t=readdir(DIR_V))!=NULL)
 	{
 		if (strcasecmp(t->d_name, ".")==0)
 			continue;
-
+		
+		strbuf_reinit(&tmp2, 0);
 		strbuf_addf (&tmp2, "%s/%s", path, t->d_name);
 		struct stat st;
 		if (stat (tmp2.buf, &st)==-1)
 			die ("stat(%s) failed: %s\n", tmp2.buf, strerror(errno));
+// conflict with c99...
+#ifndef DT_DIR
+#define DT_DIR 4
+#endif
 		cb (t->d_name, tmp2.buf, st.st_mtime, IS_SET(t->d_type, DT_DIR), param);
 	};
 	
