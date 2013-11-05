@@ -22,7 +22,7 @@
 
 #ifdef _WIN32
 #include <io.h>
-#elif defined(__linux__) || defined (__CYGWIN__)
+#elif defined(__linux__) || defined (__CYGWIN__) || defined (__APPLE__)
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <dirent.h>
@@ -37,6 +37,7 @@
 
 void enum_files_in_dir(const char* path, callback_fn cb, void *param)
 {
+	assert(path);
 #ifdef _WIN32
 	strbuf tmp=STRBUF_INIT;
 	strbuf_addf (&tmp, "%s\\*", path);
@@ -60,10 +61,11 @@ void enum_files_in_dir(const char* path, callback_fn cb, void *param)
 	_findclose (fh);
 	strbuf_deinit(&tmp2);
 	strbuf_deinit (&tmp);
-#elif defined(__linux__) || defined(__CYGWIN__)
+#elif defined(__linux__) || defined(__CYGWIN__) || defined (__APPLE__)
 	DIR* DIR_V = opendir(path);
 	struct dirent* t = NULL;
-	assert (DIR_V);
+	if (DIR_V==NULL)
+		die ("opendir(%s) failed: %s\n", path, strerror(errno));
 
 	strbuf tmp2=STRBUF_INIT;
 
@@ -86,5 +88,7 @@ void enum_files_in_dir(const char* path, callback_fn cb, void *param)
 	
 	strbuf_deinit(&tmp2);
 	closedir(DIR_V);
+#else
+#warning "undetermined compiler"
 #endif
 };

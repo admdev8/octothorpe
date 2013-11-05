@@ -18,6 +18,10 @@
 #include <stdio.h>
 #include <time.h>
 
+#include <unistd.h>
+#include <errno.h>
+
+#include "stuff.h"
 #include "enum_files.h"
 
 void cb (const char *name, const char *pathname, size_t size, time_t t, bool is_dir, void *param)
@@ -30,5 +34,7 @@ void cb (const char *name, const char *pathname, size_t size, time_t t, bool is_
 int main()
 {
 	char tmp[256];
-	enum_files_in_dir (getcwd (tmp, sizeof(tmp)), cb, NULL);
+	if (getcwd (tmp, sizeof(tmp))==NULL)
+		die ("getcwd failed: %s\n", strerror(errno));
+	enum_files_in_dir (tmp, cb, NULL);
 };
