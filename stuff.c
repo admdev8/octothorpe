@@ -318,6 +318,9 @@ struct string_pair mime_types[]={
 	{ ".tar", "application/x-tar" },
 	{ ".txt", "text/plain" },
 	{ ".xml", "text/xml" },
+	{ ".asm", "text/x-asm" },
+	{ ".c", "text/x-c" },
+	{ ".c", "text/x-cpp" },
 	{ ".zip", "application/zip" }
 };
 

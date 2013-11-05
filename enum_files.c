@@ -1,3 +1,20 @@
+/*
+ *             _        _   _                           
+ *            | |      | | | |                          
+ *   ___   ___| |_ ___ | |_| |__   ___  _ __ _ __   ___ 
+ *  / _ \ / __| __/ _ \| __| '_ \ / _ \| '__| '_ \ / _ \
+ * | (_) | (__| || (_) | |_| | | | (_) | |  | |_) |  __/
+ *  \___/ \___|\__\___/ \__|_| |_|\___/|_|  | .__/ \___|
+ *                                          | |         
+ *                                          |_|
+ *
+ * Written by Dennis Yurichev <dennis(a)yurichev.com>, 2013
+ *
+ * This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivs 3.0 Unported License. 
+ * To view a copy of this license, visit http://creativecommons.org/licenses/by-nc-nd/3.0/.
+ *
+ */
+
 #include <stdbool.h>
 #include <stdio.h>
 #include <time.h>
@@ -36,7 +53,7 @@ void enum_files_in_dir(const char* path, callback_fn cb, void *param)
 		strbuf_reinit(&tmp2, 0);
 		strbuf_addf (&tmp2, "%s\\%s", path, d.name);
 
-		cb (d.name, tmp2.buf, d.time_write, IS_SET(d.attrib, _A_SUBDIR), param);
+		cb (d.name, tmp2.buf, d.size, d.time_write, IS_SET(d.attrib, _A_SUBDIR), param);
 
 	} while (_findnext(fh, &d)==0);
 
@@ -64,7 +81,7 @@ void enum_files_in_dir(const char* path, callback_fn cb, void *param)
 #ifndef DT_DIR
 #define DT_DIR 4
 #endif
-		cb (t->d_name, tmp2.buf, st.st_mtime, IS_SET(t->d_type, DT_DIR), param);
+		cb (t->d_name, tmp2.buf, st.size, st.st_mtime, IS_SET(t->d_type, DT_DIR), param);
 	};
 	
 	strbuf_deinit(&tmp2);
