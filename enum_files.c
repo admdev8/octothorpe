@@ -81,7 +81,7 @@ void enum_files_in_dir(const char* path, callback_fn cb, void *param)
 #ifndef DT_DIR
 #define DT_DIR 4
 #endif
-		cb (t->d_name, tmp2.buf, st.size, st.st_mtime, IS_SET(t->d_type, DT_DIR), param);
+		cb (t->d_name, tmp2.buf, st.st_size, st.st_mtime, IS_SET(t->d_type, DT_DIR), param);
 	};
 	
 	strbuf_deinit(&tmp2);
