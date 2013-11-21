@@ -142,17 +142,6 @@ FILE *fopen_or_die(const char* fname, const char* mode)
 	return rt;
 };
 
-int stricmp_range (const char *s1, int s1_begin, int s1_end, const char *s2)
-{
-	for (int i=s1_begin; i<s1_end; i++)
-	{
-		char c1=tolower(s1[i]), c2=tolower(s2[i]);
-		if (c1!=c2)
-			return c1-c2;
-	};
-	return 0;
-};
-
 void make_REG_compact_hex (REG a, strbuf* out)
 {
 	if (a<10)

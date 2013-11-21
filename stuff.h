@@ -62,7 +62,6 @@ extern "C" {
 	char *remove_char_begin_end_if_present (char *s, char c);
 	void debugger_breakpoint();
 	FILE *fopen_or_die(const char* fname, const char* mode);
-	int stricmp_range (const char *s1, int s1_begin, int s1_end, const char *s2);
 	void make_REG_compact_hex (REG a, strbuf* out);
 	void make_compact_list_of_REGs (REG *regs, unsigned regs_total, strbuf *out, unsigned limit);
 	void regcomp_or_die (regex_t *_Restrict_ preg, const char *_Restrict_ pattern, int cflags);
