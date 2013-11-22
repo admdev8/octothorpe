@@ -367,22 +367,22 @@ void dmalloc_break_at_seq_n (unsigned seq_n)
     seq_n_to_break_on=seq_n;
 };
 
-void* memdup_range (void *s, int begin, size_t size)
+void* memdup_range (void *s, size_t size)
 {
     void *rt;
 
     rt=DMALLOC(char, size, "char");
-    memcpy (rt, s+begin, size);
+    memcpy (rt, s, size);
     
     return rt;
 };
 
-char *strdup_range (const char *s, int begin, size_t size)
+char *strndup (const char *s, size_t size)
 {
     char *rt;
 
     rt=DMALLOC(char, size+1, "char"); // including terminate zero
-    memcpy (rt, s+begin, size);
+    memcpy (rt, s, size);
     rt[size]=0;
 
     return rt;

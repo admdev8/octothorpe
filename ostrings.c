@@ -124,3 +124,10 @@ bool string_is_ends_with (const char *s, const char *ending)
 	return strcmp (s+strlen(s)-strlen(ending), ending)==0 ? true : false;
 };
 
+unsigned str_common_prefix_len (const char *s1, const char *s2)
+{
+	unsigned i=0;
+	for (;s1[i] && s2[i] && s1[i]==s2[i];i++);
+	return i;
+};
+

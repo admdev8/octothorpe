@@ -39,4 +39,10 @@ int main()
 
 	oassert (string_is_ends_with ("hello", "lo")==true);
 	oassert (string_is_ends_with ("hello", "lo1")==false);
+	
+	oassert (str_common_prefix_len("asd", "das")==0);
+	oassert (str_common_prefix_len("asd", "as2")==2);
+	oassert (str_common_prefix_len("asd", "as")==2);
+	oassert (str_common_prefix_len("asd", "asd")==3);
+	oassert (str_common_prefix_len("asd", "abb")==1);
 };

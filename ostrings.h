@@ -40,6 +40,7 @@ extern "C" {
 		bool case_insensitive, bool sorted);
 	const char *mon_name[12];
 	bool string_is_ends_with (const char *s, const char *ending);
+	unsigned str_common_prefix_len (const char *s1, const char *s2);
 
 #ifdef  __cplusplus
 }
