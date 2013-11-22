@@ -75,12 +75,6 @@ void* memdup (void *p, size_t s)
 	return rt;
 };
 
-void print_string_range (const char *s, int begin, size_t size)
-{
-	for (int i=0; i<size; i++)
-		putc(s[begin+i], stdout);
-};
-
 char* str_trim_one_char_right (char *in)
 {
 	if (strlen(in)==0)

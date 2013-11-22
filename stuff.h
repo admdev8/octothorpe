@@ -55,7 +55,6 @@ extern "C" {
 	unsigned most_significant_hex_number(octabyte x);
 	_Noreturn void die (const char * fmt, ...);
 	void* memdup (void *p, size_t s);
-	void print_string_range (const char *s, int begin, size_t size);
 	char* str_trim_one_char_right (char *in);
 	char* str_trim_all_lf_cr_right (char *in);
 	char str_last_char (const char *s);
