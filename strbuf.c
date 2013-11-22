@@ -227,15 +227,36 @@ void strbuf_asmhex(strbuf *out, octabyte v)
 			strbuf_addf (out, "0%llXh", v);
 };
 
+// TODO: remove it
 void strbuf_puts (strbuf *sb)
 {
 	puts (sb->buf);
 };
 
+void strbuf_fprint (strbuf *sb, FILE *f)
+{
+	fprintf (f, "%s", sb->buf);
+};
+
+void strbuf_fprint_short (strbuf *sb, unsigned limit, FILE *f)
+{
+	if (sb->strlen<limit)
+		strbuf_fprint(sb, f);
+	else
+	{
+		int size_of_part=limit/2-8; // let's pretend "...(%d skipped)..." string has size ~16 bytes
+		oassert(size_of_part>0);
+		fprintf (f, "%.*s...(%d skipped)...%.*s", 
+				size_of_part, sb->buf,
+				size_of_part,
+				size_of_part, sb->buf + sb->strlen - size_of_part);
+	};
+};
+
 void strbuf_addc_C_escaped (strbuf *s, char c, bool treat_any_as_binary)
 {
 	if (treat_any_as_binary)
-		strbuf_addf (s, "\\x%02X", c);
+		strbuf_addf (s, "\\x%02X", (unsigned char)c);
 	else
 	{
 		switch (c)

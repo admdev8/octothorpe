@@ -69,7 +69,7 @@ byte* load_file_or_die (const char* fname, size_t *fsize)
 
 	f=fopen (fname, "rb");
 	if (f==NULL)
-		die ("Cannot open file %s\n", fname);
+		die ("Cannot open file %s\n", fname); // TODO: add errno, etc
 
 	if (fseek (f, 0, SEEK_END)!=0)
 		die ("fseek()\n");
@@ -82,7 +82,7 @@ byte* load_file_or_die (const char* fname, size_t *fsize)
 		die ("fseek()\n");
 
 	if (fread (rt, *fsize, 1, f)!=1)
-		die ("Cannot read file %s\n", fname);
+		die ("Cannot read file %s\n", fname); // TODO: add errno, etc
 
 	fclose (f);
 	return rt;

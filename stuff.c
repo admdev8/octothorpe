@@ -21,12 +21,12 @@
 #include <stdlib.h>
 #include <memory.h>
 #include <ctype.h>
-#include <search.h>
 
 #include "oassert.h"
 #include "datatypes.h"
 #include "stuff.h"
 #include "fmt_utils.h"
+#include "ostrings.h"
 
 #ifdef _MSC_VER
 #include <intrin.h>
@@ -73,50 +73,6 @@ void* memdup (void *p, size_t s)
 	oassert(rt!=NULL);
 	memcpy(rt, p, s);
 	return rt;
-};
-
-char* str_trim_one_char_right (char *in)
-{
-	if (strlen(in)==0)
-		return in;
-
-	in[strlen(in)-1]=0;
-	return in;
-};
-
-char str_last_char (const char *s)
-{
-	return s[strlen(s)-1];
-};
-
-char* str_trim_all_lf_cr_right (char *in)
-{
-	size_t slen=strlen(in);
-	if (slen==0)
-		return in;
-	int last_char_pos=slen-1;
-
-	if (in[last_char_pos]=='\n' || in[last_char_pos]=='\r')
-	{
-		in[last_char_pos]=0;
-		str_trim_all_lf_cr_right(in);
-	};
-
-	return in;
-};
-
-char *remove_char_begin_end_if_present (char *s, char c)
-{
-	size_t slen=strlen(s);
-	if (slen==0)
-		return s;
-	int last_char_pos=slen-1;
-	if (s[0]==c && s[last_char_pos]==c)
-	{
-		s[last_char_pos]=0;
-		strcpy (s, s+1);
-	};
-	return s;
 };
 
 void debugger_breakpoint()
@@ -198,26 +154,6 @@ void regcomp_or_die (regex_t *_Restrict_ preg, const char *_Restrict_ pattern, i
 	};
 };
 
-#ifdef O_BITS64
-octabyte strtol_or_strtoll(const char *nptr, char **endptr, int base)
-#else
-tetrabyte strtol_or_strtoll(const char *nptr, char **endptr, int base)
-#endif    
-{
-#ifdef O_BITS64
-	return strtoll(nptr, endptr, base);
-#else
-	return strtol(nptr, endptr, base);
-#endif
-};
-
-const char *bool_to_string(bool b)
-{
-	if (b)
-		return "true";
-	return "false";
-};
-
 unsigned NULL_terminated_array_of_pointers_size(void **a)
 {
 	unsigned i;
@@ -231,45 +167,6 @@ unsigned NULL_terminated_array_of_pointers_size(void **a)
 unsigned align_to_boundary(unsigned address, unsigned boundary) 
 {
 	return ((address + boundary - 1) / boundary) * boundary;
-};
-
-static int my_stricmp (const void *p1, const void *p2)
-{
-	//printf ("%s() p1=%s p2=%s\n", __FUNCTION__, (char*)p1, *(const char**)p2); // debug
-	return stricmp (p1, *(const char**)p2);
-};
-
-static int my_strcmp (const void *p1, const void *p2)
-{
-	//printf ("%s() p1=%s p2=%s\n", __FUNCTION__, (char*)p1, *(const char**)p2); // debug
-	return strcmp (p1, *(const char**)p2);
-};
-
-int find_string_in_array_of_strings(const char *s, const char **array, size_t array_size, 
-	bool case_insensitive, bool sorted)
-{
-	void *found;
-	
-	if (sorted)
-		found=bsearch (s, array, &array_size, sizeof(char*), case_insensitive ? my_stricmp : my_strcmp);
-	else
-		found=lfind (s, array, &array_size, sizeof(char*), case_insensitive ? my_stricmp : my_strcmp);
-
-	if (found)
-		return (const char**)found-array;
-	else
-		return -1; // string not found
-};
-
-const char *mon_name[12] = 
-{
-	"Jan", "Feb", "Mar", "Apr", "May", "Jun",
-	"Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
-};
-
-bool string_is_ends_with (const char *s, const char *ending)
-{
-	return strcmp (s+strlen(s)-strlen(ending), ending)==0 ? true : false;
 };
 
 // MIME stuff

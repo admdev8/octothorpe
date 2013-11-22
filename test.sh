@@ -67,3 +67,6 @@ $OUTDIR/memutils_test.exe > memutils_test.1
 diff -b memutils_test.1 memutils_test.correct
 rm memutils_test.1
 
+$OUTDIR/ostrings_test.exe > ostrings_test.1
+diff -b ostrings_test.1 ostrings_test.correct
+rm ostrings_test.1

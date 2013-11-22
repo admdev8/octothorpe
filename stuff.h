@@ -29,11 +29,6 @@
 extern "C" {
 #endif
 
-#if defined(__linux__) || defined(__APPLE__)
-#include <string.h> // for strcasecmp()
-#define stricmp strcasecmp
-#endif
-
 #ifndef IN
 #define IN
 #endif
@@ -55,35 +50,15 @@ extern "C" {
 	unsigned most_significant_hex_number(octabyte x);
 	_Noreturn void die (const char * fmt, ...);
 	void* memdup (void *p, size_t s);
-	char* str_trim_one_char_right (char *in);
-	char* str_trim_all_lf_cr_right (char *in);
-	char str_last_char (const char *s);
-	char *remove_char_begin_end_if_present (char *s, char c);
 	void debugger_breakpoint();
 	FILE *fopen_or_die(const char* fname, const char* mode);
 	void make_REG_compact_hex (REG a, strbuf* out);
 	void make_compact_list_of_REGs (REG *regs, unsigned regs_total, strbuf *out, unsigned limit);
 	void regcomp_or_die (regex_t *_Restrict_ preg, const char *_Restrict_ pattern, int cflags);
 
-#ifdef O_BITS64
-	octabyte strtol_or_strtoll(const char *nptr, char **endptr, int base);
-#else
-	tetrabyte strtol_or_strtoll(const char *nptr, char **endptr, int base);
-#endif    
-	const char *bool_to_string(bool b);
-
 	unsigned NULL_terminated_array_of_pointers_size(void **a);
 	unsigned align_to_boundary(unsigned address, unsigned boundary);
 
-	int find_string_in_array_of_strings(const char *s, const char **array, size_t array_size, 
-		bool case_insensitive, bool sorted);
-
-	//#ifndef _MSC_VER
-	//#define stricmp strcasecmp
-	//#endif
-
-	const char *mon_name[12];
-	bool string_is_ends_with (const char *s, const char *ending);
 	const char *find_content_type_for_filename (const char *filename);
 
 #ifdef  __cplusplus
