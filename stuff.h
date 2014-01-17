@@ -41,10 +41,11 @@ extern "C" {
 #define OPTIONAL
 #endif
 
-#define SMASH(x, y) x##y
-#define WIDEN(x) SMASH(L,x)
+#define CONCAT(x, y) x##y
+#define WIDEN(x) CONCAT(L,x)
 
 #define VAL_IN_BOUNDS_INCL(val,begin,end) ((val)>=(begin) && (val)<=(end))
+#define OVERLAPPING_INTERVALS(begin1,end1,begin2,end2) (VAL_IN_BOUNDS_INCL(begin2,begin1,end1) || VAL_IN_BOUNDS_INCL(end2,begin1,end1))
 
 	bool value_in(unsigned v, unsigned a1, unsigned a2, unsigned a3, unsigned a4, unsigned a5, unsigned a6, unsigned a7);
 	unsigned most_significant_hex_number(octabyte x);

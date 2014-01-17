@@ -18,6 +18,7 @@
 #include "strbuf.h"
 #include "dmalloc.h"
 #include "oassert.h"
+#include "fmt_utils.h"
 #include <stdio.h>
 #include <limits.h>
 
@@ -98,7 +99,33 @@ int main()
 	strbuf_fprint_short (&s, 50, stdout);
 	printf ("\n");
 	strbuf_deinit(&s);
+/*	
+	strbuf_init (&s, 0);
+	strbuf_fancy_size (&s, 1200000000000);
+	strbuf_puts (&s);
+	printf ("\n");
+	strbuf_deinit (&s);
+*/	
+	strbuf_init (&s, 0);
+	strbuf_fancy_size (&s, 1200000000);
+	oassert (strcmp(s.buf, "1.2GB")==0);
+	strbuf_deinit (&s);
 	
+	strbuf_init (&s, 0);
+	strbuf_fancy_size (&s, 1200000);
+	oassert (strcmp(s.buf, "1.2MB")==0);
+	strbuf_deinit (&s);
+	
+	strbuf_init (&s, 0);
+	strbuf_fancy_size (&s, 1200);
+	oassert (strcmp(s.buf, "1.2KB")==0);
+	strbuf_deinit (&s);
+
+	strbuf_init (&s, 0);
+	strbuf_addf (&s, "%s!0x" PRI_ADR_HEX, "hello", 0x123412341234);
+	oassert (strcmp(s.buf, "hello!0x123412341234")==0);
+	strbuf_deinit (&s);
+
 	dump_unfreed_blocks();
 	dmalloc_deinit();
 

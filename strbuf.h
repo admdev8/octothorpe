@@ -35,7 +35,7 @@ extern "C" {
 
 	typedef struct _strbuf
 	{
-		char *buf; // in future, short string may be placed instead of pointer here (?)
+		char *buf; // in future, short string may be placed instead of pointer here, like in MSVC std::string (?)
 		unsigned strlen; // known string length (without trailing zero)
 		unsigned buflen; // allocated buffer length
 	} strbuf;
@@ -78,6 +78,7 @@ extern "C" {
 	void strbuf_make_shorter (strbuf *sb, unsigned new_size);
 	// if sb->strlen>size, trim it and add str at the end
 	void strbuf_trim_string_with_comment (strbuf *sb, unsigned size, const char *str);
+	void strbuf_fancy_size (strbuf* out, size_t size);
 
 	// TODO: bool strbuf_eq
 

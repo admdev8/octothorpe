@@ -24,8 +24,10 @@ int main()
 {
 #ifdef O_BITS64
 	oassert(strtol_or_strtoll("0xAB12345678", NULL, 16)==0xAB12345678);
-#else
+#elif defined O_BITS32
 	oassert(strtol_or_strtoll("0x12345678", NULL, 16)==0x12345678);
+#else
+#error "O_BITS64 or O_BITS32 should be defined"
 #endif
 
 	const char* strings[]={"string1", "hello", "world", "another string"};
@@ -41,6 +43,7 @@ int main()
 	oassert (string_is_ends_with ("hello", "lo1")==false);
 	
 	oassert (str_common_prefix_len("asd", "das")==0);
+	oassert (str_common_prefix_len(" & Her Lover", " Cook, the Thief, His Wife & Her Lover")==1);
 	oassert (str_common_prefix_len("asd", "as2")==2);
 	oassert (str_common_prefix_len("asd", "as")==2);
 	oassert (str_common_prefix_len("asd", "asd")==3);

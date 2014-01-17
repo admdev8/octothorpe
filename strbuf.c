@@ -364,3 +364,39 @@ void strbuf_trim_string_with_comment (strbuf *sb, unsigned size, const char *str
 	strbuf_make_shorter(sb, size - strlen(str));
 	strbuf_addstr (sb, str);
 };
+
+#define KB 1000
+#define MB 1000000
+#define GB 1000000000
+//#define TB 1000000000000
+
+void strbuf_fancy_size (strbuf* out, size_t size)
+{
+	/*
+	if (size>TB)
+	{
+		strbuf_addf (out, "%.1fTB", (double)size/(double)TB);
+		return;
+	};
+	*/
+	if (size>GB)
+	{
+		strbuf_addf (out, "%.1fGB", (double)size/(double)GB);
+		return;
+	};
+	
+	if (size>MB)
+	{
+		strbuf_addf (out, "%.1fMB", (double)size/(double)MB);
+		return;
+	};
+
+	if (size>KB)
+	{
+		strbuf_addf (out, "%.1fKB", (double)size/(double)KB);
+		return;
+	};
+
+	strbuf_addf (out, "%d", size);
+};
+

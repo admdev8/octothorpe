@@ -43,12 +43,16 @@ typedef int64_t octabyte_s;
 #define REG_1 OCTABYTE_1
 typedef octabyte REG;
 typedef octabyte_s SIGNED_REG;
+#define REG_MAX UINT64_MAX
 #define REG_SIZE 8
-#else
+#elif defined O_BITS32
 #define REG_1 1
 typedef tetrabyte REG;
 typedef tetrabyte_s SIGNED_REG;
+#define REG_MAX UINT32_MAX
 #define REG_SIZE 4
+#else
+#error "O_BITS64 or O_BITS32 should be defined"
 #endif
 
 #ifdef O_BITS64

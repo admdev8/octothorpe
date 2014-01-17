@@ -15,7 +15,11 @@
  *
  */
 
+#pragma once
+
+#include "arch.h"
 #include "datatypes.h"
+#include <stdbool.h>
 
 #if defined(__linux__) || defined(__APPLE__)
 #include <string.h> // for strcasecmp()
@@ -32,8 +36,10 @@ extern "C" {
 	char *remove_char_begin_end_if_present (char *s, char c);
 #ifdef O_BITS64
 	octabyte strtol_or_strtoll(const char *nptr, char **endptr, int base);
-#else
+#elif defined O_BITS32
 	tetrabyte strtol_or_strtoll(const char *nptr, char **endptr, int base);
+#else
+#error "O_BITS64 or O_BITS32 should be defined"
 #endif    
 	const char *bool_to_string(bool b);
 	int find_string_in_array_of_strings(const char *s, const char **array, size_t array_size, 

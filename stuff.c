@@ -221,10 +221,4 @@ const char *find_content_type_for_filename (const char *filename)
 	//printf ("%s(%s) -> %s\n", __FUNCTION__, filename, rt);
 	return rt;
 };
-/*
-	printf ("%s\n", find_content_type_for_filename ("index.html"));
-	printf ("%s\n", find_content_type_for_filename ("filename.ps"));
-	printf ("%s\n", find_content_type_for_filename ("filename.pdf"));
-	printf ("%s\n", find_content_type_for_filename ("filename.ext"));
-*/
 

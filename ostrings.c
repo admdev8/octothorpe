@@ -15,10 +15,12 @@
  *
  */
 
+#include <stdio.h>
 #include <strings.h>
 #include <stdbool.h>
 #include <search.h>
 #include <stdlib.h>
+#include "fmt_utils.h"
 #include "datatypes.h"
 
 char* str_trim_one_char_right (char *in)
@@ -67,14 +69,18 @@ char *remove_char_begin_end_if_present (char *s, char c)
 
 #ifdef O_BITS64
 octabyte strtol_or_strtoll(const char *nptr, char **endptr, int base)
-#else
+#elif defined O_BITS32
 tetrabyte strtol_or_strtoll(const char *nptr, char **endptr, int base)
-#endif    
+#else
+#error "O_BITS64 or O_BITS32 should be defined"
+#endif
 {
 #ifdef O_BITS64
-	return strtoll(nptr, endptr, base);
+	octabyte rt=strtoll(nptr, endptr, base);
+	return rt;
 #else
-	return strtol(nptr, endptr, base);
+	tetrabyte rt=strtol(nptr, endptr, base);
+	return rt;
 #endif
 };
 
