@@ -172,12 +172,20 @@ bool sse2_supported();
 #define X86_FSTP_ESI_LEN 2
 #define X64_FSTP_RSI "\x48\xDD\x1E"
 #define X64_FSTP_RSI_LEN 3
+#define X86_CMP_ECX_1 "\x83\xF9\x01"
+#define X86_CMP_ECX_1_LEN 3
+#define X64_CMP_RCX_1 "\x48\x83\xF9\x01"
+#define X64_CMP_RCX_1_LEN 4
 #ifdef O_BITS64
 #define X86_OR_X64_FSTP_SI      X64_FSTP_RSI
 #define X86_OR_X64_FSTP_SI_LEN  X64_FSTP_RSI_LEN
+#define X86_OR_X64_CMP_xCX_1    X64_CMP_RCX_1
+#define X86_OR_X64_CMP_xCX_1_LEN X64_CMP_RCX_1_LEN
 #else
 #define X86_OR_X64_FSTP_SI      X86_FSTP_ESI
 #define X86_OR_X64_FSTP_SI_LEN  X86_FSTP_ESI_LEN
+#define X86_OR_X64_CMP_xCX_1    X86_CMP_ECX_1
+#define X86_OR_X64_CMP_xCX_1_LEN X86_CMP_ECX_1_LEN
 #endif
 
 #define X86_OR_X64_JA_NEXT "\x77\x00"
