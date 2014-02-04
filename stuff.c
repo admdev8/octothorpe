@@ -222,3 +222,36 @@ const char *find_content_type_for_filename (const char *filename)
 	return rt;
 };
 
+#define CRC32POLY 0xEDB88320ul
+
+static tetrabyte CRC32_table[256];
+static bool CRC32_table_generated=false;
+
+static void CRC32_gentab()
+{
+	for (int i = 0; i < 256; i++)
+	{
+		tetrabyte crc = i;
+		for (int j = 8; j > 0; j--)
+			if (crc & 1)
+				crc = (crc >> 1) ^ CRC32POLY;
+			else
+				crc >>= 1;
+		CRC32_table[i] = crc;
+	}
+	CRC32_table_generated=true;
+}
+
+tetrabyte CRC32 (byte *block, size_t length, tetrabyte in_CRC)
+{
+	if (CRC32_table_generated==false)
+		CRC32_gentab();
+
+	tetrabyte crc = in_CRC ^ 0xFFFFFFFF;
+	
+	for (size_t i = 0; i < length; i++)
+		crc = ((crc >> 8) & 0x00FFFFFF) ^ CRC32_table[(crc ^ *block++) & 0xFF];
+
+	return crc ^ 0xFFFFFFFF;
+}
+

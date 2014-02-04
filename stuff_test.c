@@ -55,4 +55,7 @@ int main()
 	make_compact_list_of_REGs (b, 17, &sb, 7);
 	printf ("%s\n", sb.buf);
 	strbuf_deinit(&sb);
+
+	oassert (CRC32((byte*)"123456789", 9, 0)==0xcbf43926);
+	oassert (CRC32((byte*)"123456789", 9, 0x11223344)==0xd360c638);
 };

@@ -121,10 +121,12 @@ int main()
 	oassert (strcmp(s.buf, "1.2KB")==0);
 	strbuf_deinit (&s);
 
+#ifdef O_BITS64
 	strbuf_init (&s, 0);
 	strbuf_addf (&s, "%s!0x" PRI_ADR_HEX, "hello", 0x123412341234);
 	oassert (strcmp(s.buf, "hello!0x123412341234")==0);
 	strbuf_deinit (&s);
+#endif
 
 	dump_unfreed_blocks();
 	dmalloc_deinit();

@@ -61,6 +61,7 @@ extern "C" {
 	unsigned align_to_boundary(unsigned address, unsigned boundary);
 
 	const char *find_content_type_for_filename (const char *filename);
+	tetrabyte CRC32 (byte *block, size_t length, tetrabyte in_CRC);
 
 #ifdef  __cplusplus
 }
