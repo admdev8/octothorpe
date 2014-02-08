@@ -63,6 +63,14 @@ extern "C" {
 	const char *find_content_type_for_filename (const char *filename);
 	tetrabyte CRC32 (byte *block, size_t length, tetrabyte in_CRC);
 
+	// used in rbtree
+	int compare_size_t(void* leftp, void* rightp);
+	int compare_int(void* leftp, void* rightp);
+	int compare_tetrabytes(const void* leftp, const void* rightp);
+
+	bool element_in_the_array_of_tetrabytes(tetrabyte i, tetrabyte *a, unsigned size);
+	bool element_in_the_array_of_size_t(size_t i, size_t *a, unsigned size);
+	void add_value_to_each_element_of_size_t_array (size_t *a, size_t s, size_t val);
 #ifdef  __cplusplus
 }
 #endif

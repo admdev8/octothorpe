@@ -43,4 +43,15 @@
 #define PRI_ADR_HEX_PAD PRI_SIZE_T_HEX_PAD
 #define PRI_ADR_DEC     PRI_SIZE_T_DEC
 
+// both MSVC and MinGW
+#ifdef _WIN32
+#define PRI_SIZE_T "%Iu"
+#define PRI_SSIZE_T "%Id"
+#elif defined(__GNUC__)
+#define PRI_SIZE_T "%zu"
+#define PRI_SIZE_T "%zd"
+#else
+#error "unknown compiler"
+#endif
+
 /* vim: set expandtab ts=4 sw=4 : */

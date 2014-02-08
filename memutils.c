@@ -18,6 +18,9 @@
 #include <stdbool.h>
 #include <memory.h>
 #include "datatypes.h"
+#include "stuff.h"
+#include "oassert.h"
+#include "dmalloc.h"
 
 void bytefill (void* ptr, size_t size, byte val)
 {
@@ -60,3 +63,56 @@ bool is_blk_zero (void *ptr, size_t s)
 			return false;
 	return true;
 };
+
+// by own GNU memmem() implementation
+
+byte *omemmem (byte *haystack, size_t haystack_size, byte *needle, size_t needle_size)
+{
+	if (needle_size > haystack_size)
+		return NULL;
+
+	// may be optimized, probably...
+	for (size_t i=0; i<haystack_size - needle_size + 1; i++)
+	{
+		if (memcmp (haystack+i, needle, needle_size)==0)
+			return haystack+i;
+	};
+	return NULL;
+};
+
+// like omemmem, but find all occurrences
+size_t* find_all_needles (byte *haystack, size_t haystack_size, byte* needle, size_t needle_size, 
+		OUT size_t* rt_size)
+{
+	oassert(rt_size);
+	size_t* rt=DMALLOC(size_t, 1, "size_t (1)");
+	size_t rt_allocated=1;
+	*rt_size=0;
+
+	for (byte* ptr=haystack; ptr < (haystack+haystack_size); *rt_size=(*rt_size)+1)
+	{
+		byte *new=omemmem (ptr, haystack_size-(ptr-haystack), needle, needle_size);
+		if (new==NULL)
+			return rt;
+		// put newly found occurrence to array
+		// shrink array if needed
+		if (*rt_size == rt_allocated)
+		{
+			rt=DREALLOC (rt, size_t, rt_allocated*2, "size_t");
+			rt_allocated*=2;
+		};
+		size_t pos=new-haystack;
+		rt[*rt_size]=pos;
+		ptr=new+needle_size;
+	};
+	return rt;
+};
+
+size_t omemmem_count (byte *haystack, size_t haystack_size, byte *needle, size_t needle_size)
+{
+	size_t rt;
+	size_t tmp=find_all_needles (haystack, haystack_size, needle, needle_size, &rt);
+	DFREE(tmp);
+	return rt;
+};
+

@@ -227,5 +227,7 @@ bool sse2_supported();
 #define X86_MOVSX_AX_AL "\x66\x0F\xBE\xC0"
 #define X86_NOT_EAX "\xF7\xD0"
 #define X86_NEG_EAX "\xF7\xD8"
+#define X64_XOR_RAX_RAX_RETN "\x48\x31\xC0\xC3"
+#define X64_XOR_RAX_RAX_RETN_LEN 4
 
 /* vim: set expandtab ts=4 sw=4 : */

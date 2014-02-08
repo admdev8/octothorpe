@@ -25,4 +25,5 @@ byte* load_file_or_die (const char* fname, size_t *fsize);
 
 // simple function. will  return just NULL in case of error.
 unsigned char* load_file (const char* fname, size_t *fsize);
+void save_file_or_die (const char* fname, byte *buf, size_t fsize);
 

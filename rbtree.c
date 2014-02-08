@@ -706,48 +706,6 @@ void rbtree_foreach(rbtree* t, void (*visitor_kv)(void*, void*),
         rbtree_foreach_helper (t->root, visitor_kv, visitor_k, visitor_v);
 };
 
-int compare_size_t(void* leftp, void* rightp)
-{
-    size_t left = (size_t)leftp, right = (size_t)rightp;
-    if (left < right)
-        return -1;
-    else if (left > right)
-        return 1;
-    else 
-    {
-        oassert (left == right);
-        return 0;
-    };
-};
-
-int compare_int(void* leftp, void* rightp)
-{
-    int left = (int)leftp, right = (int)rightp;
-    if (left < right)
-        return -1;
-    else if (left > right)
-        return 1;
-    else 
-    {
-        oassert (left == right);
-        return 0;
-    };
-};
-
-int compare_tetrabytes(void* leftp, void* rightp)
-{
-    tetrabyte left = (tetrabyte)leftp, right = (tetrabyte)rightp;
-    if (left < right)
-        return -1;
-    else if (left > right)
-        return 1;
-    else 
-    {
-        oassert (left == right);
-        return 0;
-    };
-};
-
 static struct rbtree_node_t* rbtree_minimum_helper(struct rbtree_node_t* n)
 {
     if (n->left)

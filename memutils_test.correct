@@ -1,0 +1,15 @@
+rt_size=4
+0: 6 [123 hh 123 qj 123 lql 123]
+1: 13 [123 qj 123 lql 123]
+2: 20 [123 lql 123]
+3: 28 [123]
+rt_size=4
+0: 0 [123 hh 123 qj 123 lql 123 haha]
+1: 7 [123 qj 123 lql 123 haha]
+2: 14 [123 lql 123 haha]
+3: 22 [123 haha]
+rt_size=4
+0: 4 [123 hh 123 qj 123 lql 123 haha]
+1: 11 [123 qj 123 lql 123 haha]
+2: 18 [123 lql 123 haha]
+3: 26 [123 haha]

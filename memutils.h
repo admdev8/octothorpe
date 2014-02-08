@@ -24,6 +24,7 @@ extern "C" {
 #include <stdbool.h>
 #include <stdio.h>
 #include "datatypes.h"
+#include "stuff.h"
 
 	// to add: wydefill
 	void bytefill (void* ptr, size_t size, byte val);
@@ -32,8 +33,12 @@ extern "C" {
 #ifndef bzero
 	void bzero (void* ptr, size_t s);
 #endif
-
+	
 	bool is_blk_zero (void *ptr, size_t s);
+	byte *omemmem (byte *haystack, size_t haystack_size, byte *needle, size_t needle_size);
+	size_t* find_all_needles (byte *haystack, size_t haystack_size, byte* needle, size_t needle_size, 
+		OUT size_t* rt_size);
+	size_t omemmem_count (byte *haystack, size_t haystack_size, byte *needle, size_t needle_size);
 
 #ifdef  __cplusplus
 }

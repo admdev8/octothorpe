@@ -248,10 +248,76 @@ tetrabyte CRC32 (byte *block, size_t length, tetrabyte in_CRC)
 		CRC32_gentab();
 
 	tetrabyte crc = in_CRC ^ 0xFFFFFFFF;
-	
+
 	for (size_t i = 0; i < length; i++)
 		crc = ((crc >> 8) & 0x00FFFFFF) ^ CRC32_table[(crc ^ *block++) & 0xFF];
 
 	return crc ^ 0xFFFFFFFF;
 }
+
+int compare_size_t(void* leftp, void* rightp)
+{
+	size_t left = (size_t)leftp, right = (size_t)rightp;
+	if (left < right)
+		return -1;
+	else if (left > right)
+		return 1;
+	else 
+	{
+		oassert (left == right);
+		return 0;
+	};
+};
+
+int compare_int(void* leftp, void* rightp)
+{
+	int left = (int)leftp, right = (int)rightp;
+	if (left < right)
+		return -1;
+	else if (left > right)
+		return 1;
+	else 
+	{
+		oassert (left == right);
+		return 0;
+	};
+};
+
+int compare_tetrabytes(const void* leftp, const void* rightp)
+{
+	tetrabyte left = (tetrabyte)leftp, right = (tetrabyte)rightp;
+	if (left < right)
+		return -1;
+	else if (left > right)
+		return 1;
+	else 
+	{
+		oassert (left == right);
+		return 0;
+	};
+};
+
+bool element_in_the_array_of_tetrabytes(tetrabyte i, tetrabyte *a, unsigned size)
+{
+	// SIMD can be used here
+	for (unsigned j=0; j<size; j++)
+		if (a[j]==i)
+			return true;
+	return false;
+};
+
+bool element_in_the_array_of_size_t(size_t i, size_t *a, unsigned size)
+{
+	// SIMD can be used here
+	for (unsigned j=0; j<size; j++)
+		if (a[j]==i)
+			return true;
+	return false;
+};
+
+void add_value_to_each_element_of_size_t_array (size_t *a, size_t s, size_t val)
+{
+	for (size_t i=0; i<s; i++)
+		a[i]+=val;
+};
 

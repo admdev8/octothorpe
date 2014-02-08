@@ -113,3 +113,17 @@ unsigned char* load_file (const char* fname, size_t *fsize)
 	return rt;
 };
 
+void save_file_or_die (const char* fname, byte *buf, size_t fsize)
+{
+	FILE* f;
+
+	f=fopen (fname, "wb");
+	if (f==NULL)
+		die ("Cannot open file for writing %s\n", fname); // TODO: add errno, etc
+
+	if (fwrite (buf, fsize, 1, f)!=1)
+		die ("Cannot write file %s\n", fname); // TODO: add errno, etc
+
+	fclose (f);
+};
+
