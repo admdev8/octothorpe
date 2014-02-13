@@ -229,5 +229,11 @@ bool sse2_supported();
 #define X86_NEG_EAX "\xF7\xD8"
 #define X64_XOR_RAX_RAX_RETN "\x48\x31\xC0\xC3"
 #define X64_XOR_RAX_RAX_RETN_LEN 4
+#define X64_JMP_REL_IMM32 "\x48\xFF\x25"
+#define X64_JMP_REL_IMM32_LEN 7
+#define X64_JMP_REL_IMM32_OFS_TO_IMM32 3
+#define X86_JMP_ABS_IMM32 "\xFF\x25"
+#define X86_JMP_ABS_IMM32_LEN 6
+#define X86_JMP_ABS_IMM32_OFS_TO_IMM32 2
 
 /* vim: set expandtab ts=4 sw=4 : */
