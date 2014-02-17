@@ -27,6 +27,7 @@
 #include "stuff.h"
 #include "fmt_utils.h"
 #include "ostrings.h"
+#include "dmalloc.h"
 
 #ifdef _MSC_VER
 #include <intrin.h>
@@ -320,4 +321,41 @@ void add_value_to_each_element_of_size_t_array (size_t *a, size_t s, size_t val)
 	for (size_t i=0; i<s; i++)
 		a[i]+=val;
 };
+
+int qsort_compare_tetrabytes(const void* leftp, const void* rightp)
+{
+	tetrabyte left = *(tetrabyte*)leftp, right = *(tetrabyte*)rightp;
+	if (left < right)
+		return -1;
+	else if (left > right)
+		return 1;
+	else 
+	{
+		oassert (left == right);
+		return 0;
+	};
+};
+
+void tetrabyte_array_remove_all_values(tetrabyte** array, tetrabyte val, size_t *size, bool call_drealloc)
+{
+	// remove all val elements from array
+	size_t dst=0;
+	size_t new_size=*size;
+	tetrabyte *a=*array;
+	for (size_t i=0; i<*size; i++)
+	{
+		if (a[i]==val)
+			new_size--;
+		else
+		{
+			if (dst!=i)
+				a[dst]=a[i];
+			dst++;
+		};
+	};
+	*size=new_size;
+	if (call_drealloc)
+		*array=DREALLOC(*array, tetrabyte, new_size, "");
+};
+
 

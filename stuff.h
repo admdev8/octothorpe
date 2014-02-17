@@ -71,6 +71,9 @@ extern "C" {
 	bool element_in_the_array_of_tetrabytes(tetrabyte i, tetrabyte *a, unsigned size);
 	bool element_in_the_array_of_size_t(size_t i, size_t *a, unsigned size);
 	void add_value_to_each_element_of_size_t_array (size_t *a, size_t s, size_t val);
+	int qsort_compare_tetrabytes(const void* leftp, const void* rightp);
+	void tetrabyte_array_remove_all_values(tetrabyte** array, tetrabyte val, size_t *size, bool call_drealloc);
+	
 #ifdef  __cplusplus
 }
 #endif

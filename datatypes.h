@@ -42,12 +42,14 @@ typedef int64_t octabyte_s;
 #ifdef O_BITS64
 #define REG_1 OCTABYTE_1
 typedef octabyte REG;
+#define REG_MSB 0x8000000000000000
 typedef octabyte_s SIGNED_REG;
 #define REG_MAX UINT64_MAX
 #define REG_SIZE 8
 #elif defined O_BITS32
 #define REG_1 1
 typedef tetrabyte REG;
+#define REG_MSB 0x80000000
 typedef tetrabyte_s SIGNED_REG;
 #define REG_MAX UINT32_MAX
 #define REG_SIZE 4
