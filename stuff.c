@@ -33,7 +33,12 @@
 #include <intrin.h>
 #endif
 
-bool value_in(unsigned v, unsigned a1, unsigned a2, unsigned a3, unsigned a4, unsigned a5, unsigned a6, unsigned a7)
+bool value_in2(unsigned v, unsigned a1, unsigned a2)
+{
+	return (v==a1) || (v==a2);
+};
+
+bool value_in7(unsigned v, unsigned a1, unsigned a2, unsigned a3, unsigned a4, unsigned a5, unsigned a6, unsigned a7)
 {
 	return (v==a1) || (v==a2) || (v==a3) || (v==a4) || (v==a5) || (v==a6) || (v==a7);
 };

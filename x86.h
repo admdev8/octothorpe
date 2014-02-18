@@ -233,7 +233,18 @@ bool sse2_supported();
 #define X64_JMP_REL_IMM32_LEN 7
 #define X64_JMP_REL_IMM32_OFS_TO_IMM32 3
 #define X86_JMP_ABS_IMM32 "\xFF\x25"
-#define X86_JMP_ABS_IMM32_LEN 6
-#define X86_JMP_ABS_IMM32_OFS_TO_IMM32 2
+#define X86_CALL_ABS_IMM32 "\xFF\x15"
+#define X86_JMP_or_CALL_ABS_IMM32_LEN 6
+#define X86_JMP_or_CALL_ABS_IMM32_OFS_TO_IMM32 2
+#define X86_PUSH_EBP "\x55"
+#define X86_PUSH_EBP_LEN 1
+
+#define X86_SUB_ESP_IMM8 "\x83\xEC"
+#define X86_SUB_ESP_IMM8_OFS_TO_IMM8 2
+#define X86_SUB_ESP_IMM8_LEN 3
+
+#define X86_RETN "\xC3"
+#define X86_RETN_LEN 1
+
 
 /* vim: set expandtab ts=4 sw=4 : */
