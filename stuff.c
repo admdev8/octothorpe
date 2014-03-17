@@ -363,4 +363,3 @@ void tetrabyte_array_remove_all_values(tetrabyte** array, tetrabyte val, size_t 
 		*array=DREALLOC(*array, tetrabyte, new_size, "");
 };
 
-

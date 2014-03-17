@@ -128,6 +128,7 @@ bool rbtree_empty (rbtree* t);
 unsigned rbtree_count(rbtree *t);
 // sorted. return as array. caller should allocate space
 void rbtree_return_all_keys (rbtree *t, void **out);
+unsigned rbtree_depth(rbtree *t);
 
 #ifdef  __cplusplus
 }

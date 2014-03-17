@@ -30,6 +30,7 @@ key=12347 value=value3
 freeing:
 rbtree_empty (should be empty after _clear): 1
 test 2 (lower/upper bounds)
+depth=3
 enumerate t2:
 key=50 value=value 50
 key=99 value=value 99

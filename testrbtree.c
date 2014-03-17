@@ -145,6 +145,8 @@ int main()
     rbtree_insert (t2, (void*)12301, "value 12301");
     rbtree_insert (t2, (void*)50000, "value 50000");
     rbtree_insert (t2, (void*)60000, "value 60000");
+    printf ("depth=%d\n", rbtree_depth(t2));
+    
     printf ("enumerate t2:\n");
     rbtree_foreach(t2, visitor, NULL, NULL);
     printf ("count: %d\n", rbtree_count (t2));

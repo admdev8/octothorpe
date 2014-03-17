@@ -44,6 +44,7 @@ Retrieved from: http://en.literateprograms.org/Red-black_tree_(C)?oldid=18555
 #include <stdlib.h>
 #include "dmalloc.h"
 #include "oassert.h"
+#include "stuff.h"
 
 #if 0
 #define VERIFY_RBTREE
@@ -785,20 +786,50 @@ bool rbtree_empty (rbtree* t)
     return t->root==NULL ? true : false;
 };
 
-unsigned rbtree_count(rbtree *t) // FIXME: might be faster
+static unsigned rbtree_count_helper(rbtree_node* n)
 {
-    unsigned rt=0;
+    unsigned rt=1;
 
-    for (struct rbtree_node_t *i=rbtree_minimum(t); i!=NULL; i=rbtree_succ(i))
-        rt++;
+    if (n->left!=NULL)
+        rt+=rbtree_count_helper(n->left);
+    
+    if (n->right!=NULL)
+        rt+=rbtree_count_helper(n->right);
 
     return rt;
+};
+
+unsigned rbtree_count(rbtree *t)
+{
+    if (t->root==NULL)
+        return 0;
+    return rbtree_count_helper (t->root);
 };
 
 void rbtree_return_all_keys (rbtree *t, void **out)
 {
     for (rbtree_node *i=rbtree_minimum(t); i; i=rbtree_succ(i))
         *out++=i->key;
+};
+
+static unsigned rbtree_depth_helper(rbtree_node* n)
+{
+    unsigned left_depth=0, right_depth=0;
+
+    if (n->left!=NULL)
+        left_depth=rbtree_depth_helper(n->left)+1;
+    
+    if (n->right!=NULL)
+        right_depth=rbtree_depth_helper(n->right)+1;
+
+    return max(left_depth, right_depth);
+};
+
+unsigned rbtree_depth(rbtree *t)
+{
+    if (t->root==NULL)
+        return 0;
+    return rbtree_depth_helper (t->root);
 };
 
 /* vim: set expandtab ts=4 sw=4 : */
