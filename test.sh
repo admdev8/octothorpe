@@ -36,7 +36,7 @@ diff -b lisp_test.correct lisp_test.1
 rm lisp_test.1
 
 $OUTDIR/logging_test.exe > logging_test.1
-diff -b logging_test.correct logging_test.1
+diff -b logging_test.correct_$BITS logging_test.1
 rm logging_test.1
 
 $OUTDIR/strbuf_test.exe > strbuf_test.1
