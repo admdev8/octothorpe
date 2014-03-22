@@ -19,6 +19,7 @@
 #include <stdio.h>
 #include <time.h>
 #include <assert.h>
+#include <strings.h>
 
 #ifdef _WIN32
 #include <io.h>

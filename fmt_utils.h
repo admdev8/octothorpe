@@ -49,7 +49,7 @@
 #define PRI_SSIZE_T "%Id"
 #elif defined(__GNUC__)
 #define PRI_SIZE_T "%zu"
-#define PRI_SIZE_T "%zd"
+#define PRI_SSIZE_T "%zd"
 #else
 #error "unknown compiler"
 #endif

@@ -17,17 +17,18 @@
 
 #include <stdio.h>
 #include <time.h>
-
+#include <strings.h>
 #include <unistd.h>
 #include <errno.h>
 
 #include "stuff.h"
+#include "fmt_utils.h"
 #include "enum_files.h"
 
 void cb (const char *name, const char *pathname, size_t size, time_t t, bool is_dir, void *param)
 {
 	struct tm *_tm=localtime(&t);
-	printf ("%s() name=%s pathname=%s size=%d is_dir=%d time=%s", 
+	printf ("%s() name=%s pathname=%s size=" PRI_SIZE_T " is_dir=%d time=%s", 
 		__FUNCTION__, name, pathname, size, is_dir, asctime(_tm));
 };
 

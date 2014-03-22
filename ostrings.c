@@ -22,6 +22,7 @@
 #include <stdlib.h>
 #include "fmt_utils.h"
 #include "datatypes.h"
+#include "ostrings.h"
 
 char* str_trim_one_char_right (char *in)
 {

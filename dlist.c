@@ -101,7 +101,7 @@ void dlist_dump(dlist *l)
 {
     if (l==NULL)
         return;
-    printf ("%s(0x%p) prev=0x%p next=0x%p data=%s\n", __func__, l, l->prev, l->next, l->data);
+    printf ("%s(0x%p) prev=0x%p next=0x%p data=%s\n", __func__, l, l->prev, l->next, (char*)l->data);
     if (l->next)
         dlist_dump(l->next);
 };
