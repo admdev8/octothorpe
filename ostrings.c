@@ -23,6 +23,7 @@
 #include "fmt_utils.h"
 #include "datatypes.h"
 #include "ostrings.h"
+#include "dmalloc.h"
 
 char* str_trim_one_char_right (char *in)
 {
@@ -138,3 +139,14 @@ unsigned str_common_prefix_len (const char *s1, const char *s2)
 	return i;
 };
 
+// output: len of buffer including two terminating zeroes
+byte* cvt_to_widestr_and_allocate (char *str, size_t *len)
+{
+	size_t str_len=strlen(str);
+	size_t buf_size=(str_len+1)*2;
+	byte* ustr=DCALLOC(byte, buf_size, "byte");
+	for (size_t i=0; i<str_len; i++)
+		ustr[i*2]=str[i];
+	*len=buf_size;
+	return ustr;
+};

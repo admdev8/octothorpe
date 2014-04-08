@@ -363,3 +363,25 @@ void tetrabyte_array_remove_all_values(tetrabyte** array, tetrabyte val, size_t 
 		*array=DREALLOC(*array, tetrabyte, new_size, "");
 };
 
+byte *hexstring_to_array_or_die (char *hexstring, size_t *out)
+{
+	size_t hexstring_len=strlen(hexstring);
+	size_t buflen=hexstring_len/2;
+	if (hexstring_len&1)
+		die ("Something wrong with hexstring [%s]\n", hexstring);
+	byte *rt=DMALLOC (byte, buflen, "byte");
+	char tmp[3];
+	tmp[2]=0;
+	for (int i=0; i<hexstring_len; i+=2)
+	{
+		tmp[0]=hexstring[i];
+		tmp[1]=hexstring[i+1];
+		//printf ("tmp=%s\n", tmp);
+		unsigned b;
+		if (sscanf (tmp, "%x", &b)!=1)
+			die ("Something wrong with string [%s]\n", tmp);
+		rt[i/2]=(byte)b;
+	};
+	*out=buflen;
+	return rt;
+};

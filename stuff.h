@@ -81,6 +81,7 @@ extern "C" {
 	void add_value_to_each_element_of_size_t_array (size_t *a, size_t s, size_t val);
 	int qsort_compare_tetrabytes(const void* leftp, const void* rightp);
 	void tetrabyte_array_remove_all_values(tetrabyte** array, tetrabyte val, size_t *size, bool call_drealloc);
+	byte *hexstring_to_array_or_die (char *hexstring, size_t *out);
 	
 #ifdef  __cplusplus
 }
