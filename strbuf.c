@@ -22,6 +22,7 @@
 #include "oassert.h"
 #include <inttypes.h>
 
+#include "fmt_utils.h"
 #include "oassert.h"
 #include "strbuf.h"
 #include "dmalloc.h"
@@ -222,9 +223,9 @@ void strbuf_asmhex(strbuf *out, octabyte v)
 		strbuf_addf(out, "%d", v);
 	else
 		if (most_significant_hex_number(v)<=9)
-			strbuf_addf (out, "%llXh", v);
+			strbuf_addf (out, "%" PRIX64 "h", v);
 		else
-			strbuf_addf (out, "0%llXh", v);
+			strbuf_addf (out, "0%" PRIX64 "h", v);
 };
 
 // TODO: remove it
