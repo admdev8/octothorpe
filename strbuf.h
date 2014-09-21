@@ -79,6 +79,7 @@ extern "C" {
 	// if sb->strlen>size, trim it and add str at the end
 	void strbuf_trim_string_with_comment (strbuf *sb, unsigned size, const char *str);
 	void strbuf_fancy_size (strbuf* out, size_t size);
+	void strbuf_add_space_if_not_empty (strbuf* out);
 
 	// TODO: bool strbuf_eq
 

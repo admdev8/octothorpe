@@ -26,6 +26,16 @@
 #define LONG_LONG_MAX 9223372036854775807LL
 #endif
 
+test_addc_and_addf()
+{
+	strbuf s=STRBUF_INIT;
+	strbuf_addstr (&s, "hello");
+	strbuf_addc (&s, ' ');
+	strbuf_addf (&s, "w%crld", 'o');
+	strbuf_puts (&s);
+	strbuf_deinit (&s);
+};
+
 int main()
 {
 	//strbuf s;
@@ -127,6 +137,8 @@ int main()
 	oassert (strcmp(s.buf, "hello!0x123412341234")==0);
 	strbuf_deinit (&s);
 #endif
+
+	test_addc_and_addf();
 
 	dump_unfreed_blocks();
 	dmalloc_deinit();

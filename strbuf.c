@@ -63,8 +63,6 @@ void strbuf_grow (strbuf *sb, size_t size)
 {
 	char* new_buf;
 
-	//printf (__func__"() size=%d\n", size);
-
 	if (size < (sb->buflen - sb->strlen))
 	{
 		//printf ("(no need to reallocate)\n");
@@ -172,12 +170,12 @@ void strbuf_vaddf (strbuf *sb, const char *fmt, va_list va)
 #ifdef _MSC_VER
 	if (vsnprintf_s (sb->buf + sb->strlen, sz+1, sz, fmt, va)==-1) // MSVC-specific
 #else
-	if (vsnprintf (sb->buf + sb->strlen, sz+1, fmt, va)==-1)
+		if (vsnprintf (sb->buf + sb->strlen, sz+1, fmt, va)==-1)
 #endif
-	{
-		oassert(0);
-		fatal_error();
-	};
+		{
+			oassert(0);
+			fatal_error();
+		};
 	sb->strlen+=sz;
 };
 
@@ -248,9 +246,9 @@ void strbuf_fprint_short (strbuf *sb, unsigned limit, FILE *f)
 		int size_of_part=limit/2-8; // let's pretend "...(%d skipped)..." string has size ~16 bytes
 		oassert(size_of_part>0);
 		fprintf (f, "%.*s...(%d skipped)...%.*s", 
-				size_of_part, sb->buf,
-				size_of_part,
-				size_of_part, sb->buf + sb->strlen - size_of_part);
+			 size_of_part, sb->buf,
+			 size_of_part,
+			 size_of_part, sb->buf + sb->strlen - size_of_part);
 	};
 };
 
@@ -262,24 +260,24 @@ void strbuf_addc_C_escaped (strbuf *s, char c, bool treat_any_as_binary)
 	{
 		switch (c)
 		{
-			case '\n':
-				strbuf_addstr (s, "\\n");
-				break;
-			case '\r':
-				strbuf_addstr (s, "\\r");
-				break;
-			case '"':
-				strbuf_addstr (s, "\\\"");
-				break;
-			case '\\':
-				strbuf_addstr (s, "\\\\");
-				break;
-			default:
-				if (c>0 && c<0x20)
-					strbuf_addf (s, "\\x%02X", c);
-				else
-					strbuf_addc (s, c);
-				break;
+		case '\n':
+			strbuf_addstr (s, "\\n");
+			break;
+		case '\r':
+			strbuf_addstr (s, "\\r");
+			break;
+		case '"':
+			strbuf_addstr (s, "\\\"");
+			break;
+		case '\\':
+			strbuf_addstr (s, "\\\\");
+			break;
+		default:
+			if (c>0 && c<0x20)
+				strbuf_addf (s, "\\x%02X", c);
+			else
+				strbuf_addc (s, c);
+			break;
 		};
 	};
 };
@@ -374,11 +372,11 @@ void strbuf_trim_string_with_comment (strbuf *sb, unsigned size, const char *str
 void strbuf_fancy_size (strbuf* out, size_t size)
 {
 	/*
-	if (size>TB)
-	{
-		strbuf_addf (out, "%.1fTB", (double)size/(double)TB);
-		return;
-	};
+	  if (size>TB)
+	  {
+	  strbuf_addf (out, "%.1fTB", (double)size/(double)TB);
+	  return;
+	  };
 	*/
 	if (size>GB)
 	{
@@ -401,3 +399,8 @@ void strbuf_fancy_size (strbuf* out, size_t size)
 	strbuf_addf (out, "%d", size);
 };
 
+void strbuf_add_space_if_not_empty (strbuf* out)
+{
+	if (out->strlen)
+		strbuf_addc (out, ' ');
+};
