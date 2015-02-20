@@ -1,3 +1,25 @@
 Requires C11 compiler, like GCC >= 4.7.
 
-Usually built in MinGW environment, just run ./make_all.sh (or ./clean_all.sh for opposite effect).
+Recommended build:
+
+=================================================
+mkdir build
+cd build
+../configure
+make
+make check
+make install
+=================================================
+
+Thus, the headers files are goes to /usr/local/include/octothorpe and library file to /usr/local/lib.
+
+Debug build:
+
+=================================================
+mkdir build
+cd build
+../configure --enable-debug=yes
+make
+make check
+make install
+=================================================

@@ -2,3 +2,7 @@
 
     * This is a first public version, uploaded to github.com.
 
+2014-02-20  Dennis Yurichev <dennis@yurichev.com>
+
+    * Switching to GNU autotools
+
