@@ -1,6 +1,6 @@
 Requires C11 compiler, like GCC >= 4.7.
 
-Recommended build:
+* Recommended build:
 
 =================================================
 mkdir build
@@ -8,12 +8,12 @@ cd build
 ../configure
 make
 make check
-make install
+[sudo] make install
 =================================================
 
 Thus, the headers files are goes to /usr/local/include/octothorpe and library file to /usr/local/lib.
 
-Debug build:
+* Debug build:
 
 =================================================
 mkdir build
@@ -21,5 +21,19 @@ cd build
 ../configure --enable-debug=yes
 make
 make check
-make install
+[sudo] make install
 =================================================
+
+* MinGW:
+
+How to set up both x86 and x64 MinGW compilers: http://yurichev.com/refs/mingw.html
+
+'configure' without options generates i686 binaries in MinGW x86 environment.
+
+To generate x64 ones in MinGW x64 environment, add this to 'configure' invokation:
+
+=================================================
+../configure --host=x86_64-w64-mingw32
+=================================================
+
+Additional option is required because MSYS is still i686.

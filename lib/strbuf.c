@@ -291,12 +291,8 @@ void strbuf_cvt_to_C_string (const char *in, strbuf *out, bool treat_as_binary)
 		strbuf_addc_C_escaped (out, in[i], treat_as_binary);
 };
 
-//#if defined(__linux__) || defined(__APPLE__)
-extern char** environ;
-//#endif
-
 // replace %substring% to environment variable, if possible
-void env_vars_expansion(strbuf *sb)
+void env_vars_expansion(strbuf *sb, char** environ)
 {
 	int i=0;
 	while (environ[i])

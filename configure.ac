@@ -1,5 +1,4 @@
-AC_INIT([octothorpe], [0.1], [dennis@yurichev.com])
-AC_PACKAGE_URL([http://github.com/dennis714/octothorpe])
+AC_INIT([octothorpe], [0.1], [dennis@yurichev.com], [octothorpe], [http://github.com/dennis714/octothorpe])
 AM_INIT_AUTOMAKE([foreign -Wall -Werror])
 
 CFLAGS="-Wall -std=c11"

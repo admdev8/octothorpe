@@ -582,7 +582,7 @@ PACKAGE_TARNAME='octothorpe'
 PACKAGE_VERSION='0.1'
 PACKAGE_STRING='octothorpe 0.1'
 PACKAGE_BUGREPORT='dennis@yurichev.com'
-PACKAGE_URL=''
+PACKAGE_URL='http://github.com/dennis714/octothorpe'
 
 ac_subst_vars='am__EXEEXT_FALSE
 am__EXEEXT_TRUE
@@ -1338,6 +1338,7 @@ Use these variables to override the choices made by `configure' or to help
 it to find libraries and programs with nonstandard names/locations.
 
 Report bugs to <dennis@yurichev.com>.
+octothorpe home page: <http://github.com/dennis714/octothorpe>.
 _ACEOF
 ac_status=$?
 fi
@@ -1914,7 +1915,6 @@ ac_cpp='$CPP $CPPFLAGS'
 ac_compile='$CC -c $CFLAGS $CPPFLAGS conftest.$ac_ext >&5'
 ac_link='$CC -o conftest$ac_exeext $CFLAGS $CPPFLAGS $LDFLAGS conftest.$ac_ext $LIBS >&5'
 ac_compiler_gnu=$ac_cv_c_compiler_gnu
-
 
 
 am__api_version='1.14'
@@ -4568,7 +4568,8 @@ $config_headers
 Configuration commands:
 $config_commands
 
-Report bugs to <dennis@yurichev.com>."
+Report bugs to <dennis@yurichev.com>.
+octothorpe home page: <http://github.com/dennis714/octothorpe>."
 
 _ACEOF
 cat >>$CONFIG_STATUS <<_ACEOF || ac_write_fail=1

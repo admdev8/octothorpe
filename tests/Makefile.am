@@ -45,7 +45,7 @@ AM_CPPFLAGS = -I$(top_srcdir)/include
 EXTRA_DIST = run-dlist_test.sh run-dmalloc_test.sh run-lisp_test.sh run-logging_test.sh \
 	run-memutils_test.sh run-ostrings_test.sh run-regex_test.sh run-strbuf_test.sh \
 	run-string_list_test.sh run-stuff_test.sh run-testrbtree.sh \
-	dlist_test.correct dmalloc_test.correct lisp_test.correct logging_test.correct_32 \
+	dlist_test.correct lisp_test.correct logging_test.correct_32 \
 	logging_test.correct_64 memutils_test.correct ostrings_test.correct regex_test.correct \
 	strbuf_test.correct string_list_test.correct stuff_test.correct_32 stuff_test.correct_64 \
 	testrbtree.correct
