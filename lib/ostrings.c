@@ -93,10 +93,10 @@ const char *bool_to_string(bool b)
 	return "false";
 };
 
-static int my_stricmp (const void *p1, const void *p2)
+static int my_strcasecmp (const void *p1, const void *p2)
 {
 	//printf ("%s() p1=%s p2=%s\n", __FUNCTION__, (char*)p1, *(const char**)p2); // debug
-	return stricmp (p1, *(const char**)p2);
+	return strcasecmp (p1, *(const char**)p2);
 };
 
 static int my_strcmp (const void *p1, const void *p2)
@@ -111,9 +111,9 @@ int find_string_in_array_of_strings(const char *s, const char **array, size_t ar
 	void *found;
 	
 	if (sorted)
-		found=bsearch (s, array, &array_size, sizeof(char*), case_insensitive ? my_stricmp : my_strcmp);
+		found=bsearch (s, array, &array_size, sizeof(char*), case_insensitive ? my_strcasecmp : my_strcmp);
 	else
-		found=lfind (s, array, &array_size, sizeof(char*), case_insensitive ? my_stricmp : my_strcmp);
+		found=lfind (s, array, &array_size, sizeof(char*), case_insensitive ? my_strcasecmp : my_strcmp);
 
 	if (found)
 		return (const char**)found-array;

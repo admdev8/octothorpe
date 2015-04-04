@@ -49,7 +49,7 @@ void enum_files_in_dir(const char* path, callback_fn cb, void *param)
 
 	do
 	{
-		if (stricmp(d.name, ".")==0)
+		if (strcasecmp(d.name, ".")==0)
 			continue;
 		
 		strbuf_reinit(&tmp2, 0);

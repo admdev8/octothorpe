@@ -15,19 +15,19 @@ if test $stricmp = no; then
 	)
 fi
 
-AC_CANONICAL_HOST
-case "${host}" in
-  i[[3456]]86-*-*)
-	AC_SUBST([BITS],[32])
-        AC_DEFINE([O_BITS32], [], [ ])
-	;;
-  x86_64-*-*)
-	AC_SUBST([BITS],[64])
-        AC_DEFINE([O_BITS64], [], [ ])
-	;;
-  *)
-	AC_MSG_ERROR([Unsupported (so far) host: ${host}])
-	;;
+AC_CHECK_SIZEOF(size_t)
+
+case $ac_cv_sizeof_size_t in
+  4) 
+      AC_SUBST([BITS],[32])
+      AC_DEFINE([O_BITS32], [], [ ])
+      ;;
+  8) 
+      AC_SUBST([BITS],[64])
+      AC_DEFINE([O_BITS64], [], [ ])
+      ;;
+  *)  AC_MSG_ERROR([No type matching size_t in size])
+      ;;
 esac
 
 dnl Do not compile with debugging by default.

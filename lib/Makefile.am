@@ -1,6 +1,6 @@
-lib_LIBRARIES = liboctothrope.a
+lib_LIBRARIES = liboctothorpe.a
 
-liboctothrope_a_SOURCES = FPU_stuff_GCC.c dlist.c dmalloc.c elf.c enum_files.c files.c fsave.c \
+liboctothorpe_a_SOURCES = FPU_stuff_GCC.c dlist.c dmalloc.c elf.c enum_files.c files.c fsave.c \
 	lisp.c logging.c memutils.c oassert.c ostrings.c rand.c rbtree.c regex.c \
 	set.c strbuf.c string_list.c stuff.c x86.c x86_intrin.c
 

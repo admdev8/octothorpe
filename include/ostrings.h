@@ -21,11 +21,6 @@
 #include "datatypes.h"
 #include <stdbool.h>
 
-#if defined(__linux__) || defined(__APPLE__)
-#include <string.h> // for strcasecmp()
-#define stricmp strcasecmp
-#endif
-
 #ifdef  __cplusplus
 extern "C" {
 #endif

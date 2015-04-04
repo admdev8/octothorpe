@@ -27,13 +27,3 @@ make check
 * MinGW:
 
 How to set up both x86 and x64 MinGW compilers: http://yurichev.com/refs/mingw.html
-
-'configure' without options generates i686 binaries in MinGW x86 environment.
-
-To generate x64 ones in MinGW x64 environment, add this to 'configure' invokation:
-
-=================================================
-../configure --host=x86_64-w64-mingw32
-=================================================
-
-Additional option is required because MSYS is still i686.
