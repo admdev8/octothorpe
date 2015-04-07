@@ -38,6 +38,11 @@ bool value_in2(unsigned v, unsigned a1, unsigned a2)
 	return (v==a1) || (v==a2);
 };
 
+bool value_not_in2(unsigned v, unsigned a1, unsigned a2)
+{
+	return !((v==a1) || (v==a2));
+};
+
 bool value_in7(unsigned v, unsigned a1, unsigned a2, unsigned a3, unsigned a4, unsigned a5, unsigned a6, unsigned a7)
 {
 	return (v==a1) || (v==a2) || (v==a3) || (v==a4) || (v==a5) || (v==a6) || (v==a7);
@@ -385,3 +390,40 @@ byte *hexstring_to_array_or_die (char *hexstring, size_t *out)
 	*out=buflen;
 	return rt;
 };
+
+// negative values are OK
+void range_update (struct my_range *s, ssize_t val)
+{
+	if (s->min_present==false)
+	{
+		s->_min=val;
+		s->min_present=true;
+	}
+	else
+		s->_min=min(s->_min, val);
+
+	if (s->max_present==false)
+	{
+		s->_max=val;
+		s->max_present=true;
+	}
+	else
+		s->_max=max(s->_max, val);
+};
+
+// check if in range [begin, end). TODO: better fn name
+bool REG_in_range (REG v, REG begin, REG end)
+{
+	if (v<begin)
+		return false;
+	if (v>=end)
+		return false;
+	return true;
+};
+
+// check if in range [begin, begin+size). TODO: better fn name
+bool REG_in_range2 (REG v, REG begin, size_t size)
+{
+	return REG_in_range (v, begin, begin+size);
+};
+

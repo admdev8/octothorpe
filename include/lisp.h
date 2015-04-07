@@ -96,6 +96,7 @@ obj* create_obj_opaque(void* ptr, void (*dumper_fn) (void*), void (*free_fn) (vo
 bool LISTP(obj *o);
 void obj_dump_as_list(obj *o);
 void obj_dump(obj *o);
+obj* obj_dup (obj *src);
 bool EQL(obj *o1, obj* o2);
 unsigned LENGTH (obj *l);
 int get_lowest_byte(obj *i);
@@ -117,8 +118,8 @@ wyde obj_get_as_wyde(obj* o);
 REG obj_get_as_REG(obj* o);
 char* obj_get_as_cstring(obj* o);
 byte* obj_get_as_xmm(obj* o);
-// terminated with NULL
-obj* create_list(obj* o, ...);
+obj* create_list(obj* o, ...); // terminated with NULL
+obj* add_to_list(obj* l, obj* o);
 void obj_REG2_and_set_type(enum obj_type t, REG v, double f, obj* out);
 double obj_get_as_double(obj* o);
 void list_of_bytes_to_array (byte** array, unsigned *array_len, obj* o);

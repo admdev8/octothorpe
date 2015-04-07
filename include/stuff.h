@@ -44,6 +44,7 @@ extern "C" {
 #define CONCAT(x, y) x##y
 #define WIDEN(x) CONCAT(L,x)
 
+// FIXME get rid of these!
 #define VAL_IN_BOUNDS_INCL(val,begin,end) ((val)>=(begin) && (val)<=(end))
 #define OVERLAPPING_INTERVALS(begin1,end1,begin2,end2) (VAL_IN_BOUNDS_INCL(begin2,begin1,end1) || VAL_IN_BOUNDS_INCL(end2,begin1,end1))
 
@@ -54,7 +55,18 @@ extern "C" {
 #define min(a,b) (((a) < (b)) ? (a) : (b))
 #endif
 
+// can be initialized with bzero
+	struct my_range
+	{
+		ssize_t _min;
+		bool min_present;
+
+		ssize_t _max;
+		bool max_present;
+	};
+
 	bool value_in2(unsigned v, unsigned a1, unsigned a2);
+	bool value_not_in2(unsigned v, unsigned a1, unsigned a2);
 	bool value_in7(unsigned v, unsigned a1, unsigned a2, unsigned a3, unsigned a4, unsigned a5, unsigned a6, unsigned a7);
 	unsigned most_significant_hex_number(octabyte x);
 	_Noreturn void die (const char * fmt, ...);
@@ -82,6 +94,11 @@ extern "C" {
 	int qsort_compare_tetrabytes(const void* leftp, const void* rightp);
 	void tetrabyte_array_remove_all_values(tetrabyte** array, tetrabyte val, size_t *size, bool call_drealloc);
 	byte *hexstring_to_array_or_die (char *hexstring, size_t *out);
+
+// check if in range [begin, end). TODO: better fn name
+	bool REG_in_range (REG v, REG begin, REG end);
+// check if in range [begin, begin+size). TODO: better fn name
+	bool REG_in_range2 (REG v, REG begin, size_t size);
 	
 #ifdef  __cplusplus
 }

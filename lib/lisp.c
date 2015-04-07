@@ -385,6 +385,12 @@ void obj_copy2 (obj *dst, obj *src)
     dst->t=src->t;
 };
 
+// allocate memory and copy (shallow) object
+obj* obj_dup (obj *src)
+{
+	return DMEMDUP (src, sizeof(obj), "obj");
+};
+
 bool EQL(obj *o1, obj* o2)
 {
     if(o1==NULL && o2==NULL)
@@ -534,6 +540,17 @@ obj* create_list(obj* o, ...)
 
     va_end(args);
     return rt;
+};
+
+obj* add_to_list(obj* l, obj* o)
+{
+	if (l==NULL)
+		return cons(o, NULL);
+	else
+	{
+		oassert(LISTP(l));
+		return NCONC(l, cons(o, NULL));
+	};
 };
 
 tetrabyte obj_get_as_tetrabyte(obj* o)
