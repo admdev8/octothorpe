@@ -27,3 +27,7 @@ make check
 * MinGW:
 
 How to set up both x86 and x64 MinGW compilers: http://yurichev.com/refs/mingw.html
+
+* Windows 2000:
+
+While compiling for Windows 2000, set TARGET_IS_WINDOWS_2000.
