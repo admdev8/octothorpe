@@ -1,3 +1,7 @@
+2015-04-09  Dennis Yurichev <dennis@yurichev.com>
+
+	* New functions: kmp_search(), XOR_block()
+
 2015-04-06  Dennis Yurichev <dennis@yurichev.com>
 
 	* New functions: range_update(), REG_in_range(), REG_in_range2().

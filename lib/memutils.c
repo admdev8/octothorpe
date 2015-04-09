@@ -64,7 +64,8 @@ bool is_blk_zero (void *ptr, size_t s)
 	return true;
 };
 
-// by own GNU memmem() implementation
+// my own temporary GNU memmem() implementation
+// TODO rework
 
 byte *omemmem (byte *haystack, size_t haystack_size, byte *needle, size_t needle_size)
 {
@@ -80,6 +81,45 @@ byte *omemmem (byte *haystack, size_t haystack_size, byte *needle, size_t needle
 	return NULL;
 };
 
+// Knuth–Morris–Pratt algorithm
+// copypasted from http://cprogramming.com/snippets/source-code/knuthmorrispratt-kmp-string-search-algorithm
+const byte *kmp_search(const byte *haystack, size_t haystack_size, const byte *needle, size_t needle_size)
+{
+	int *T;
+	int i, j;
+	const byte *result = NULL;
+ 
+	if (needle_size==0)
+		return haystack;
+ 
+	/* Construct the lookup table */
+	T = (int*) malloc((needle_size+1) * sizeof(int)); // FIXME use DMALLOC
+	T[0] = -1;
+	for (i=0; i<needle_size; i++)
+	{
+		T[i+1] = T[i] + 1;
+		while (T[i+1] > 0 && needle[i] != needle[T[i+1]-1])
+			T[i+1] = T[T[i+1]-1] + 1;
+	}
+ 
+	/* Perform the search */
+	for (i=j=0; i<haystack_size; )
+	{
+		if (j < 0 || haystack[i] == needle[j])
+		{
+			++i, ++j;
+			if (j == needle_size) 
+			{
+				result = haystack+i-j;
+				break;
+			}
+		}
+		else j = T[j];
+	}
+ 
+	free(T); // FIXME use DFREE
+	return result;
+}
 // like omemmem, but find all occurrences
 size_t* find_all_needles (byte *haystack, size_t haystack_size, byte* needle, size_t needle_size, 
 		OUT size_t* rt_size)
@@ -91,11 +131,12 @@ size_t* find_all_needles (byte *haystack, size_t haystack_size, byte* needle, si
 
 	for (byte* ptr=haystack; ptr < (haystack+haystack_size); *rt_size=(*rt_size)+1)
 	{
-		byte *new=omemmem (ptr, haystack_size-(ptr-haystack), needle, needle_size);
+		//byte *new=omemmem (ptr, haystack_size-(ptr-haystack), needle, needle_size);
+		byte *new=kmp_search (ptr, haystack_size-(ptr-haystack), needle, needle_size);
 		if (new==NULL)
 			return rt;
 		// put newly found occurrence to array
-		// shrink array if needed
+		// expand array if needed
 		if (*rt_size == rt_allocated)
 		{
 			rt=DREALLOC (rt, size_t, rt_allocated*2, "size_t");
@@ -111,8 +152,15 @@ size_t* find_all_needles (byte *haystack, size_t haystack_size, byte* needle, si
 size_t omemmem_count (byte *haystack, size_t haystack_size, byte *needle, size_t needle_size)
 {
 	size_t rt;
-	size_t tmp=find_all_needles (haystack, haystack_size, needle, needle_size, &rt);
+	size_t *tmp=find_all_needles (haystack, haystack_size, needle, needle_size, &rt);
 	DFREE(tmp);
 	return rt;
+};
+
+void XOR_block (byte* a, byte* b, size_t s)
+{
+	// TODO SIMD?
+	for (int i=0; i<s; i++)
+		a[i]^=b[i];
 };
 

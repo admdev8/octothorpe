@@ -21,18 +21,36 @@ void find_all_needles_tests()
 	find_all_needles_test("ooo 123 hh 123 qj 123 lql 123 haha");
 };
 
+void must_be_or_exit1 (unsigned a, unsigned b, int line)
+{
+	if (a==b)
+		return;
+
+	printf ("%s() failed at line %d\n", __func__, line);
+	exit(1);
+};
+
+void omemmem_test()
+{
+	char *s="hello world!\n";
+	char *p="world";
+	must_be_or_exit1 (strcmp (omemmem ((byte*)s, strlen(s), (byte*)p, strlen(p)), "world!\n"), 0, __LINE__);
+	must_be_or_exit1 (strcmp (kmp_search ((byte*)s, strlen(s), (byte*)p, strlen(p)), "world!\n"), 0, __LINE__);
+};
+
 int main()
 {
 	char *buf1="123456789";
 	char *buf2="123 hello 123 oh oh 123";
 	char *buf3="begin 123 hello 123 oh oh 123 end";
 
-	oassert (omemmem_count ((byte*)buf1, strlen(buf1), (byte*)"--", 2)==0);
-	oassert (omemmem_count ((byte*)buf2, strlen(buf2), (byte*)"123", 3)==3);
-	oassert (omemmem_count ((byte*)buf3, strlen(buf3), (byte*)"123", 3)==3);
+	must_be_or_exit1 (omemmem_count ((byte*)buf1, strlen(buf1), (byte*)"--", 2), 0, __LINE__);
+	must_be_or_exit1 (omemmem_count ((byte*)buf2, strlen(buf2), (byte*)"123", 3), 3, __LINE__);
+	must_be_or_exit1 (omemmem_count ((byte*)buf3, strlen(buf3), (byte*)"123", 3), 3, __LINE__);
 
 	find_all_needles_tests();
-	
+
+	omemmem_test();	
 	dump_unfreed_blocks();
 
 	return 0;

@@ -63,10 +63,11 @@ bool is_dir(const char* path)
 #endif
 }
 
-byte* load_file_or_die (const char* fname, size_t *fsize)
+byte* load_file_or_die (const char* fname, size_t *fsize /* can be NULL*/)
 {
 	byte* rt;
 	FILE* f;
+	size_t fs;
 
 	f=fopen (fname, "rb");
 	if (f==NULL)
@@ -75,24 +76,28 @@ byte* load_file_or_die (const char* fname, size_t *fsize)
 	if (fseek (f, 0, SEEK_END)!=0)
 		die ("fseek()\n");
 
-	*fsize=ftell (f);
+	fs=ftell (f);
 	//printf ("*fsize=%d\n", *fsize);
-	rt=malloc (*fsize);
+	rt=malloc (fs);
 
 	if (fseek (f, 0, SEEK_SET)!=0)
 		die ("fseek()\n");
 
-	if (fread (rt, *fsize, 1, f)!=1)
+	if (fread (rt, fs, 1, f)!=1)
 		die ("Cannot read file %s\n", fname); // TODO: add errno, etc
 
 	fclose (f);
+	if (fsize)
+		*fsize=fs;
 	return rt;
 };
 
-unsigned char* load_file (const char* fname, size_t *fsize)
+// ... or return NULL
+unsigned char* load_file (const char* fname, size_t *fsize /* can be NULL*/)
 {
 	unsigned char* rt;
 	FILE* f;
+	size_t fs;
 
 	f=fopen (fname, "rb");
 	if (f==NULL)
@@ -101,16 +106,18 @@ unsigned char* load_file (const char* fname, size_t *fsize)
 	if (fseek (f, 0, SEEK_END)!=0)
 		return NULL;
 
-	*fsize=ftell (f);
-	rt=(unsigned char*)malloc (*fsize);
+	fs=ftell (f);
+	rt=(unsigned char*)malloc (fs);
 
 	if (fseek (f, 0, SEEK_SET)!=0)
 		return NULL;
 
-	if (fread (rt, *fsize, 1, f)!=1)
+	if (fread (rt, fs, 1, f)!=1)
 		return NULL;
 
 	fclose (f);
+	if (fsize)
+		*fsize=fs;
 	return rt;
 };
 

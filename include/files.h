@@ -23,7 +23,7 @@ bool is_file(const char* path);
 bool is_dir(const char* path); 
 byte* load_file_or_die (const char* fname, size_t *fsize);
 
-// simple function. will  return just NULL in case of error.
+// ... or return NULL
 unsigned char* load_file (const char* fname, size_t *fsize);
 void save_file_or_die (const char* fname, byte *buf, size_t fsize);
 
