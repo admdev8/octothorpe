@@ -292,12 +292,12 @@ void strbuf_cvt_to_C_string (const char *in, strbuf *out, bool treat_as_binary)
 };
 
 // replace %substring% to environment variable, if possible
-void env_vars_expansion(strbuf *sb, char** environ)
+void env_vars_expansion(strbuf *sb, char** env)
 {
-	int i=0;
-	while (environ[i])
+	oassert(env!=NULL);
+	for (int i=0; env[i]; i++)
 	{
-		char *s=DSTRDUP (environ[i], "env");
+		char *s=DSTRDUP (env[i], "env");
 		char *s1=strtok (s, "=");
 		char *s2=strtok (NULL, "=");
 		strbuf percented_env_var=STRBUF_INIT;
@@ -309,7 +309,6 @@ void env_vars_expansion(strbuf *sb, char** environ)
 
 		strbuf_deinit(&percented_env_var);
 		DFREE(s);
-		i++;
 	};
 };
 

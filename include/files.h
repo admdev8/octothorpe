@@ -24,6 +24,7 @@ bool is_dir(const char* path);
 byte* load_file_or_die (const char* fname, size_t *fsize);
 
 // ... or return NULL
+// FIXME: add OPTIONAL keyword
 unsigned char* load_file (const char* fname, size_t *fsize);
 void save_file_or_die (const char* fname, byte *buf, size_t fsize);
 

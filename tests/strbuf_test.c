@@ -36,8 +36,33 @@ test_addc_and_addf()
 	strbuf_deinit (&s);
 };
 
-int main()
+char **my_environ;
+
+void test_env_vars_expansion()
 {
+	strbuf s=STRBUF_INIT;
+	size_t init_len;
+
+	strbuf_addstr (&s, "hello %TMP% world");
+	init_len=s.strlen;
+	env_vars_expansion(&s, my_environ);
+
+	//strbuf_puts (&s);
+	if (s.strlen==init_len) // still?
+	{
+		printf ("%s() failed\n", __func__);
+		exit(1);
+	}
+	
+	strbuf_deinit (&s);
+};
+
+int main(int argc, char* argv[], char* envp[])
+{
+	my_environ=envp;
+
+	test_env_vars_expansion();
+
 	//strbuf s;
 	//strbuf_init (&s, 3);
 	strbuf s=STRBUF_INIT;

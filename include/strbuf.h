@@ -69,7 +69,7 @@ extern "C" {
 	void strbuf_addc_C_escaped (strbuf *s, char c, bool treat_any_as_binary);
 	void strbuf_cvt_to_C_string (const char *in, strbuf *out, bool treat_as_binary);
 
-	void env_vars_expansion(strbuf *sb, char** environ);
+	void env_vars_expansion(strbuf *sb, char** env);
 
 	char *strbuf_detach(strbuf *s, size_t *out_size);
 	char strbuf_last_char (strbuf *s);

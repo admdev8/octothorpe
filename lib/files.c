@@ -63,7 +63,7 @@ bool is_dir(const char* path)
 #endif
 }
 
-byte* load_file_or_die (const char* fname, size_t *fsize /* can be NULL*/)
+byte* load_file_or_die (const char* fname, size_t *fsize /* can be NULL */)
 {
 	byte* rt;
 	FILE* f;
@@ -93,7 +93,7 @@ byte* load_file_or_die (const char* fname, size_t *fsize /* can be NULL*/)
 };
 
 // ... or return NULL
-unsigned char* load_file (const char* fname, size_t *fsize /* can be NULL*/)
+unsigned char* load_file (const char* fname, size_t *fsize /* can be NULL */)
 {
 	unsigned char* rt;
 	FILE* f;
