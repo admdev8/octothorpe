@@ -22,6 +22,7 @@
 #include <memory.h>
 #include <stdlib.h>
 #include <ctype.h>
+#include <limits.h>
 
 #include "datatypes.h"
 #include "logging.h"
@@ -30,6 +31,7 @@
 #include "strbuf.h"
 #include "stuff.h"
 #include "inttypes.h"
+#include "fmt_utils.h"
 
 // rationale: writting to both stdout and log-file
 fds cur_fds={ NULL, NULL };
@@ -55,16 +57,19 @@ void L_deinit(void)
     };
 };
 
+void L_init_stdout_only ()
+{
+    cur_fds.fd1=stdout;
+};
+
 void L_init (const char* fname)
 {
-    int i;
-
     cur_fds.fd1=stdout;
 
     cur_fds.fd2=fopen(fname, "w");
     if (cur_fds.fd2==NULL)
         die ("Can't create %s for writing.\n", fname);
-    i=setvbuf(cur_fds.fd2, NULL, _IONBF, 0); // no buffering
+    int i=setvbuf(cur_fds.fd2, NULL, _IONBF, 0); // no buffering
     oassert(i==0);
     atexit(L_deinit);
 };
@@ -76,13 +81,13 @@ void L_va (const char * fmt, va_list va)
 
 void L_fds_va (fds *s, const char * fmt, va_list va)
 {
-    static bool last_char_was_cr_or_unknown=true;
+    static bool last_char_was_CR_or_unknown=true;
     // MinGW defines _WIN32
 #ifdef _WIN32
     SYSTEMTIME t; // win32 only yet
 #endif
 
-    if (L_timestamp && last_char_was_cr_or_unknown)
+    if (L_timestamp && last_char_was_CR_or_unknown)
     {
 #ifdef _WIN32
         GetLocalTime (&t);
@@ -98,12 +103,17 @@ void L_fds_va (fds *s, const char * fmt, va_list va)
 #endif
     };
 
-    last_char_was_cr_or_unknown=(strlen(fmt)>0 && fmt[strlen(fmt)-1]=='\n') ? true : false;
+    last_char_was_CR_or_unknown=(strlen(fmt)>0 && fmt[strlen(fmt)-1]=='\n') ? true : false;
+   
+    // we need this voodoo: http://stackoverflow.com/questions/15923210/is-it-possible-to-use-va-list-method-twice-in-a-function
+    va_list va_copied;
+    va_copy (va_copied, va);
 
     if (s->fd1)
         vfprintf (s->fd1, fmt, va);
+
     if (s->fd2)
-        vfprintf (s->fd2, fmt, va);
+        vfprintf (s->fd2, fmt, va_copied);
 };
 
 void L (const char * fmt, ...)
@@ -180,11 +190,8 @@ void L_print_buf_ofs_fds (fds *s, byte *buf, size_t size, size_t ofs)
         else
             wpn=size-pos;
 
-#ifdef O_BITS64
-        L_fds (s, "%016" PRIx64 ": ", starting_offset + pos + ofs);
-#else
-        L_fds (s, "%08X: ", starting_offset + pos + ofs);
-#endif
+        L_fds (s, PRI_SIZE_T_HEX_PAD ": ", starting_offset + pos + ofs);
+        
         for (i=0; i<wpn; i++)
             L_fds (s, "%02X%c", buf[pos+i], (i==7) ? '-' : ' ');
 
@@ -234,11 +241,8 @@ void L_print_bufs_diff (byte *buf1, byte *buf2, size_t size)
 
         if (memcmp (buf1+pos, buf2+pos, wpn)!=0) // any changes in the whole line?
         {
-#ifdef O_BITS64
-            L ("%016" PRIx64 ": ", starting_offset + pos);
-#else
-            L ("%08X: ", starting_offset + pos);
-#endif
+            L (PRI_SIZE_T_HEX_PAD ": ", starting_offset + pos);
+            
             for (i=0; i<wpn; i++)
             {
                 if (buf1[pos+i]!=buf2[pos+i])

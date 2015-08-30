@@ -18,7 +18,7 @@
 #pragma once
 
 #include <stdint.h>
-#include "config.h"
+#include <limits.h>
 
 // D.Knuth's MMIX datatypes
 
@@ -39,14 +39,16 @@ typedef int64_t octabyte_s;
 #error "compiler was not detected"
 #endif
 
-#ifdef O_BITS64
+#if __WORDSIZE==64
 #define REG_1 OCTABYTE_1
 typedef octabyte REG;
 #define REG_MSB 0x8000000000000000
 typedef octabyte_s SIGNED_REG;
 #define REG_MAX UINT64_MAX
 #define REG_SIZE 8
-#elif defined O_BITS32
+typedef octabyte address;
+typedef octabyte_s address_offset;
+#elif __WORDSIZE==32
 #define REG_1 1
 typedef tetrabyte REG;
 #define REG_MSB 0x80000000
@@ -54,13 +56,8 @@ typedef tetrabyte_s SIGNED_REG;
 #define REG_MAX UINT32_MAX
 #define REG_SIZE 4
 #else
-#error "O_BITS64 or O_BITS32 should be defined"
-#endif
-
-#ifdef O_BITS64
-typedef octabyte address;
-typedef octabyte_s address_offset;
-#else
+#error "__WORDSIZE is undefined"
 typedef tetrabyte address;
 typedef tetrabyte_s address_offset;
 #endif
+

@@ -38,8 +38,10 @@ test_addc_and_addf()
 
 char **my_environ;
 
+// FIXME: MinGW only!
 void test_env_vars_expansion()
 {
+#if 0
 	strbuf s=STRBUF_INIT;
 	size_t init_len;
 
@@ -55,6 +57,7 @@ void test_env_vars_expansion()
 	}
 	
 	strbuf_deinit (&s);
+#endif
 };
 
 int main(int argc, char* argv[], char* envp[])
@@ -159,7 +162,8 @@ int main(int argc, char* argv[], char* envp[])
 #ifdef O_BITS64
 	strbuf_init (&s, 0);
 	strbuf_addf (&s, "%s!0x" PRI_ADR_HEX, "hello", 0x123412341234);
-	oassert (strcmp(s.buf, "hello!0x123412341234")==0);
+	if (strcmp(s.buf, "hello!0x123412341234")!=0)
+		die ("s.buf=%s, but we need something else\n", s.buf);
 	strbuf_deinit (&s);
 #endif
 

@@ -44,6 +44,7 @@ extern fds cur_fds;
 
 //string gen_timestamp();
 void L_init (const char* fname);
+void L_init_stdout_only ();
 //void L (int level, const char * fmt, ...);
 void L_va (const char * fmt, va_list va);
 void L_fds_va (fds *s, const char * fmt, va_list va);

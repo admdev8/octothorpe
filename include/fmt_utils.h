@@ -17,22 +17,23 @@
 
 #pragma once
 
-#include "config.h"
+#include <limits.h>
 
 #ifdef __GNUC__
 #include <inttypes.h>
 #endif
 
-#ifdef O_BITS64
+// limits.h in GNU has __WORDSIZE
+#if __WORDSIZE==64
 #define PRI_SIZE_T_HEX "%" PRIx64
 #define PRI_SIZE_T_HEX_PAD "%016" PRIx64
 #define PRI_SIZE_T_DEC "%" PRId64
-#elif defined O_BITS32
+#elif __WORDSIZE==32
 #define PRI_SIZE_T_HEX "%x"
 #define PRI_SIZE_T_HEX_PAD "%08x"
 #define PRI_SIZE_T_DEC "%d"
 #else
-#error "O_BITS64 or O_BITS32 should be defined"
+#error "__WORDSIZE is undefined"
 #endif
 
 #define PRI_REG_HEX     PRI_SIZE_T_HEX
