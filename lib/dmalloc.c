@@ -27,6 +27,7 @@
 #include "stuff.h"
 #include "memutils.h"
 #include "stuff.h"
+#include "config.h"
 
 //#define LOGGING
 //#define BREAK_ON_UNKNOWN_BLOCK_BEING_FREED

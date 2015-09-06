@@ -55,6 +55,10 @@ extern "C" {
 #define min(a,b) (((a) < (b)) ? (a) : (b))
 #endif
 
+#define _1KiB 1024
+#define _1MiB (1024*1024)
+#define _1GiB (1024*1024*1024)
+
 // can be initialized with bzero
 	struct my_range
 	{

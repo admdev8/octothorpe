@@ -164,3 +164,13 @@ void XOR_block (byte* a, byte* b, size_t s)
 		a[i]^=b[i];
 };
 
+bool is_buf_printable (char *s, size_t size)
+{
+	for (size_t i=0; i<size; i++)
+	{
+		if (isprint(s[i])==0)
+			return false;
+	};
+	return true;
+};
+

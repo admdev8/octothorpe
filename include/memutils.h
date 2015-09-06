@@ -41,6 +41,7 @@ extern "C" {
 		OUT size_t* rt_size);
 	size_t omemmem_count (byte *haystack, size_t haystack_size, byte *needle, size_t needle_size);
 	void XOR_block (byte* a, byte* b, size_t s);
+	bool is_buf_printable (char *s, size_t size);
 
 #ifdef  __cplusplus
 }
