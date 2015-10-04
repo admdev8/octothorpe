@@ -15,6 +15,7 @@
  *
  */
 
+#include <stdint.h>
 #include "oassert.h"
 #include "rand.h"
 
@@ -110,6 +111,11 @@ unsigned long genrand()
 
 	return y; 
 }
+
+uint64_t genrand64()
+{
+    return genrand()<<32 | genrand();
+};
 
 int rand_reg (int begin, int end)
 {

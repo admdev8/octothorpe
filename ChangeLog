@@ -1,3 +1,7 @@
+2015-10-04  Dennis Yurichev <dennis@yurichev.com>
+
+	* New function: genrand64()
+
 2015-09-06  Dennis Yurichev <dennis@yurichev.com>
 
 	* New function: is_buf_printable()
