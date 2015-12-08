@@ -39,3 +39,9 @@ void intrin_NOT (IN tetrabyte op1, OUT tetrabyte* result, IN OUT tetrabyte* flag
 void intrin_NEG (IN tetrabyte op1, OUT tetrabyte* result, IN OUT tetrabyte* flags);
 
 #endif
+
+tetrabyte rotr32(tetrabyte x, byte r);
+tetrabyte rotl32(tetrabyte x, byte r);
+octabyte rotr64(octabyte x, byte r);
+octabyte rotl64(octabyte x, byte r);
+

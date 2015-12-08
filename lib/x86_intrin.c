@@ -281,3 +281,28 @@ void intrin_NEG (IN tetrabyte op1, OUT tetrabyte* result, IN OUT tetrabyte* flag
 };
 
 #endif
+
+tetrabyte rotr32(tetrabyte x, byte r)
+{
+	__asm("rorl %1,%0" : "+r" (x) : "c" (r));
+	return x;
+}
+
+tetrabyte rotl32(tetrabyte x, byte r)
+{
+	__asm("roll %1,%0" : "+r" (x) : "c" (r));
+	return x;
+}
+
+octabyte rotr64(octabyte x, byte r)
+{
+	__asm("rorq %1,%0" : "+r" (x) : "c" (r));
+	return x;
+}
+
+octabyte rotl64(octabyte x, byte r)
+{
+	__asm("rolq %1,%0" : "+r" (x) : "c" (r));
+	return x;
+}
+
