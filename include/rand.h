@@ -24,6 +24,7 @@ extern "C" {
 void sgenrand (unsigned long seed);
 unsigned long genrand();
 uint64_t genrand64();
+// [begin, end]
 int rand_reg (int begin, int end);
 double rand_double ();
 

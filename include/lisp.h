@@ -92,6 +92,7 @@ obj* obj_wyde_n_times (wyde i, int t);
 obj* obj_tetrabyte_n_times (tetrabyte i, int t);
 obj* obj_cstring (const char *s);
 obj* cons (obj* head, obj* tail);
+obj* setcdr (obj* cell, obj* new_tail);
 obj* create_obj_opaque(void* ptr, void (*dumper_fn) (void*), void (*free_fn) (void*));
 bool LISTP(obj *o);
 void obj_dump_as_list(obj *o);
@@ -118,6 +119,7 @@ wyde obj_get_as_wyde(obj* o);
 REG obj_get_as_REG(obj* o);
 char* obj_get_as_cstring(obj* o);
 byte* obj_get_as_xmm(obj* o);
+obj* create_list_1_element (obj *e);
 obj* create_list(obj* o, ...); // terminated with NULL
 obj* add_to_list(obj* l, obj* o);
 void obj_REG2_and_set_type(enum obj_type t, REG v, double f, obj* out);
@@ -143,5 +145,14 @@ void obj_XOR(obj *op1, obj *op2, obj *result);
 void obj_NOT(obj *op1, obj *result);
 void obj_NEG(obj *op1, obj *result);
 unsigned obj_width_in_bits(obj *o);
+obj* text_file_to_list (char *fname, bool trim_newlines);
+// destructive
+obj* split_list_into_sublists(obj* input, bool (*pred) (obj*));
+// destructive
+// may return NULL is the resulting list is empty
+obj* delete_if(obj* lst, bool (*predicate) (obj*));
+obj* nth (obj* lst, unsigned n); // starting at 0
+obj* list_pick_random (obj* lst);
+void print_list_of_strings (obj* input);
 
 /* vim: set expandtab ts=4 sw=4 : */

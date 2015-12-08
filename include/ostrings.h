@@ -17,7 +17,6 @@
 
 #pragma once
 
-#include "config.h"
 #include "datatypes.h"
 #include <stdbool.h>
 
@@ -29,13 +28,7 @@ extern "C" {
 	char* str_trim_all_lf_cr_right (char *in);
 	char str_last_char (const char *s);
 	char *remove_char_begin_end_if_present (char *s, char c);
-#ifdef O_BITS64
-	octabyte strtol_or_strtoll(const char *nptr, char **endptr, int base);
-#elif defined O_BITS32
-	tetrabyte strtol_or_strtoll(const char *nptr, char **endptr, int base);
-#else
-#error "O_BITS64 or O_BITS32 should be defined"
-#endif    
+	size_t strtol_or_strtoll(const char *nptr, char **endptr, int base);
 	const char *bool_to_string(bool b);
 	int find_string_in_array_of_strings(const char *s, const char **array, size_t array_size, 
 		bool case_insensitive, bool sorted);

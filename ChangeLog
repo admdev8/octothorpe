@@ -1,3 +1,7 @@
+2015-12-08  Dennis Yurichev <dennis@yurichev.com>
+	
+	* New functions: text_file_to_list(), split_list_into_sublists(), delete_if(), nth(), list_pick_random(), print_list_of_strings()
+
 2015-10-04  Dennis Yurichev <dennis@yurichev.com>
 
 	* New function: genrand64()

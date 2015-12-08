@@ -22,12 +22,10 @@
 
 int main()
 {
-#ifdef O_BITS64
+#if __WORDSIZE==64
 	oassert(strtol_or_strtoll("0xAB12345678", NULL, 16)==0xAB12345678);
-#elif defined O_BITS32
-	oassert(strtol_or_strtoll("0x12345678", NULL, 16)==0x12345678);
 #else
-#error "O_BITS64 or O_BITS32 should be defined"
+	oassert(strtol_or_strtoll("0x12345678", NULL, 16)==0x12345678);
 #endif
 
 	const char* strings[]={"string1", "hello", "world", "another string"};

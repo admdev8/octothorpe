@@ -69,20 +69,12 @@ char *remove_char_begin_end_if_present (char *s, char c)
 	return s;
 };
 
-#ifdef O_BITS64
-octabyte strtol_or_strtoll(const char *nptr, char **endptr, int base)
-#elif defined O_BITS32
-tetrabyte strtol_or_strtoll(const char *nptr, char **endptr, int base)
-#else
-#error "O_BITS64 or O_BITS32 should be defined"
-#endif
+size_t strtol_or_strtoll(const char *nptr, char **endptr, int base)
 {
-#ifdef O_BITS64
-	octabyte rt=strtoll(nptr, endptr, base);
-	return rt;
+#if __WORDSIZE==64
+	return strtoll(nptr, endptr, base);
 #else
-	tetrabyte rt=strtol(nptr, endptr, base);
-	return rt;
+	return strtol(nptr, endptr, base);
 #endif
 };
 

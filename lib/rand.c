@@ -117,6 +117,7 @@ uint64_t genrand64()
     return genrand()<<32 | genrand();
 };
 
+// [begin, end]
 int rand_reg (int begin, int end)
 {
 	oassert (end>begin);

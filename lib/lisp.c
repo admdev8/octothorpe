@@ -28,6 +28,7 @@
 #include "oassert.h"
 #include "dmalloc.h"
 #include "lisp.h"
+#include "rand.h"
 
 #define FILE_OUT stdout
 //#define FILE_OUT stderr
@@ -179,6 +180,13 @@ obj* cons (obj* head, obj* tail)
     return rt;
 };
 
+obj* setcdr (obj* cell, obj* new_tail)
+{
+    oassert (CONSP(cell));
+    cell->u.c->tail=new_tail;
+    return cell;
+};
+
 bool CONSP(obj* o)
 {
     oassert(o);
@@ -187,12 +195,14 @@ bool CONSP(obj* o)
 
 obj* car(obj* o)
 {
+    oassert(o);
     oassert (CONSP(o));
     return o->u.c->head;
 };
 
 obj* cdr(obj* o)
 {
+    oassert(o);
     oassert (CONSP(o));
     return o->u.c->tail;
 };
@@ -227,18 +237,17 @@ bool LISTP(obj *o)
 {
     oassert (o);
 
-    if (o->t!=OBJ_CONS)
+    // it is atom?
+    if (CONSP(o)==false)
         return false;
 
-    if (o->u.c->head->t==OBJ_CONS)
-        return false;
-
-    if (o->u.c->tail==NULL)
+    // 1-element list? OK
+    if (cdr(o)==NULL)
         return true;
 
-    if (o->u.c->tail->t==OBJ_CONS)
-        return LISTP (o->u.c->tail);
-    else // tail is not cons and not NULL
+    if (CONSP(cdr(o)))
+        return LISTP (cdr(o));
+    else // cdr is atom
         return false;
 };
 
@@ -249,7 +258,7 @@ void obj_dump_as_list(obj *o)
     // treat it as list!
 
     printf ("(");
-    for (obj* c=o; ; c=c->u.c->tail)
+    for (obj* c=o; c; c=cdr(c))
     {
         obj_dump(c->u.c->head);
         if (c->u.c->tail==NULL)
@@ -270,6 +279,7 @@ void obj_dump(obj *o)
 
     if (LISTP(o))
     {
+        //fprintf (FILE_OUT, "(dumping as list)");
         obj_dump_as_list(o);
         return;
     };
@@ -447,26 +457,31 @@ unsigned LENGTH (obj *l)
     return rt;
 };
 
+// return last cons cell
+// http://clhs.lisp.se/Body/f_last.htm
 obj* LAST(obj *l)
 {
     oassert (l->t==OBJ_CONS);
-    if (l->u.c->tail==NULL)
+    if (cdr(l)==NULL)
         return l;
     else
-        return LAST(l->u.c->tail);
+        return LAST(cdr(l));
 };
 
+// concatenate two lists
+// http://www.lispworks.com/documentation/lw60/CLHS/Body/f_nconc.htm
 obj* NCONC (obj *l1, obj *l2)
 {
-    oassert (CONSP(l2) && "l2 argument should be list too!"); 
+    oassert (CONSP(l2) && "l2 argument must be list too!"); 
 
     if (l1==NULL)
         return l2;
 
-    // find last element of l1. it should be NULL.
+    // find last cons of l1.
     obj *last=LAST(l1);
-    oassert(last->t==OBJ_CONS && "nconc: last element of l1 list should be cons cell");
-    last->u.c->tail=l2;
+    oassert(CONSP(last) && "nconc: last element of l1 list must be cons cell");
+    oassert(cdr(last)==NULL); // yet free
+    setcdr (last, l2);
     return l1;
 };
 
@@ -529,6 +544,11 @@ void obj_free_conses_of_list(obj* o)
     DFREE(o);
 };
 
+obj* create_list_1_element (obj *e)
+{
+    return cons(e, NULL);
+};
+
 obj* create_list(obj* o, ...)
 {
     va_list args;
@@ -536,7 +556,7 @@ obj* create_list(obj* o, ...)
     va_start(args, o);
 
     for (obj* i=o; i; i=va_arg(args, obj*))
-        rt=NCONC(rt, cons(i, NULL));
+        rt=NCONC(rt, create_list_1_element(i));
 
     va_end(args);
     return rt;
@@ -545,11 +565,11 @@ obj* create_list(obj* o, ...)
 obj* add_to_list(obj* l, obj* o)
 {
 	if (l==NULL)
-		return cons(o, NULL);
+		return create_list_1_element(o);
 	else
 	{
 		oassert(LISTP(l));
-		return NCONC(l, cons(o, NULL));
+		return NCONC(l, create_list_1_element(o));
 	};
 };
 
@@ -1144,6 +1164,118 @@ void obj_sign_extend (obj *in, enum obj_type out_type, obj* out)
             oassert (!"other types are not yet supported");
             fatal_error();
     };
+};
+
+obj* text_file_to_list (char *fname, bool trim_newlines)
+{
+	FILE* f=fopen_or_die (fname, "rt");
+
+	char buf[1024];
+	obj* rt=NULL;
+
+	while(fgets(buf, 1024, f)!=NULL)
+	{
+		if (trim_newlines)
+			str_trim_all_lf_cr_right (buf);
+
+		if (buf[0]!=0)
+			rt=NCONC(rt, create_list_1_element(obj_cstring(buf)));
+	};
+
+	fclose (f);
+	return rt;
+};
+
+// destructive
+obj* split_list_into_sublists(obj* input, bool (*pred) (obj*))
+{
+	obj *rt=NULL;
+	// add the first part to rt
+	rt=add_to_list (rt, input);
+    
+	// scan for the next "pred" element
+	for (obj* i=input; i; )
+		if ((*pred)(car(i)))
+		{
+			obj* tmp=cdr(i);
+			if (tmp)
+			{
+				rt=add_to_list(rt, tmp);
+				// cut input list at this place
+				setcdr(i, NULL);
+			}
+			else
+			{
+				// "pred" element was the last one
+			};
+			// skip the "pred" element
+			i=tmp;
+		}
+		else
+		{
+			// move along
+			i=cdr(i);
+		};
+	return rt;
+};
+
+// destructive
+// may return NULL is the resulting list is empty
+obj* delete_if(obj* lst, bool (*predicate) (obj*))
+{
+	oassert(lst);
+	obj* rt=lst;
+	obj* prev=lst;
+
+	for (obj* i=lst; i; )
+	{
+		if ((*predicate)(car(i)))
+		{
+			obj* next=cdr(i);
+			if (i==lst)
+			{
+				// first element is "pred" element
+				rt=next;
+			};
+			setcdr(prev, next);
+			obj_free(i);
+			// prev is still previous cons cell
+			i=next;
+		}
+		else
+		{
+			prev=i; i=cdr(i);
+		};
+	};
+	return rt;
+};
+
+obj* nth (obj* lst, unsigned n) // starting at 0
+{
+	oassert (LISTP(lst));
+	oassert (n<LENGTH(lst));
+
+	obj *tmp=lst;
+	
+	// skip n elements
+	for (int i=0; i<n; i++)
+		tmp=cdr(tmp);
+
+	return car(tmp);
+};
+
+obj* list_pick_random (obj* lst)
+{
+	return nth (lst, rand_reg(0, LENGTH(lst)-1));
+};
+
+void print_list_of_strings (obj* input)
+{
+	for (obj* i=input; i; i=cdr(i))
+	{
+		printf ("%s", obj_get_as_cstring(car(i)));
+		printf ("\n");
+	};
 };
 
 /* vim: set expandtab ts=4 sw=4 : */
