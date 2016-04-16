@@ -1,3 +1,8 @@
+2016-04-17  Dennis Yurichev <dennis@yurichev.com>
+	
+	* New functions: regmatch_len(), regmatch_dup(), regexec_to_array_of_string(), dstrndup(), read_text_file_by_line_or_die(),
+	streq(), strieq(), print_array_of_strings(), dfree_array_of_blocks(), uint64_log2()
+
 2015-12-08  Dennis Yurichev <dennis@yurichev.com>
 	
 	* New functions: text_file_to_list(), split_list_into_sublists(), delete_if(), nth(), list_pick_random(), print_list_of_strings()

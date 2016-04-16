@@ -58,4 +58,12 @@ int main()
 
 	oassert (CRC32((byte*)"123456789", 9, 0)==0xcbf43926);
 	oassert (CRC32((byte*)"123456789", 9, 0x11223344)==0xd360c638);
+
+	// uint64_log2() tests:
+	oassert (uint64_log2(1)==0);
+	oassert (uint64_log2(2)==1);
+	oassert (uint64_log2(4)==2);
+	oassert (uint64_log2(8)==3);
+	oassert (uint64_log2(65536)==16);
+	oassert (uint64_log2(0xFFFFFFFFFFFFFFFF)==63);
 };

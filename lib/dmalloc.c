@@ -221,6 +221,16 @@ char* dstrdup (const char *str, const char * filename, unsigned line, const char
     return newp;
 };
 
+// len is size of string without terminating zero
+char* dstrndup(char *str, size_t len, const char * filename, unsigned line, const char * function, const char * structname)
+{
+	char *rt=(char*)dmalloc (len+1, filename, line, function, structname);
+	rt[len]=0;
+	memcpy (rt, str, len);
+
+	return rt;
+};
+
 #ifdef ADD_GUARDS
 static void chk_guard (void *ptr, struct dmalloc_info *i)
 {

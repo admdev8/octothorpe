@@ -135,3 +135,15 @@ void save_file_or_die (const char* fname, byte *buf, size_t fsize)
 	fclose (f);
 };
 
+void read_text_file_by_line_or_die (char *fname, read_text_file_by_line_callback_fn cb, void *param)
+{
+	FILE *f=fopen_or_die (fname, "rt");
+
+	// FIXME: this is weird
+	char fbuf[1024];
+	while(fgets(fbuf, 1024, f)!=NULL)
+		cb (fbuf, param);
+
+	fclose (f);
+};
+

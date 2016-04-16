@@ -23,7 +23,9 @@
 #ifdef  __cplusplus
 extern "C" {
 #endif
-
+	
+	bool streq (char *s1, char *s2);
+	bool strieq (char *s1, char *s2);
 	char* str_trim_one_char_right (char *in);
 	char* str_trim_all_lf_cr_right (char *in);
 	char str_last_char (const char *s);

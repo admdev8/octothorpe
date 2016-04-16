@@ -1,7 +1,7 @@
 AC_INIT([octothorpe], [0.1], [dennis@yurichev.com], [octothorpe], [http://github.com/dennis714/octothorpe])
 AM_INIT_AUTOMAKE([foreign -Wall -Werror])
 
-CFLAGS="-Wall -std=c11"
+CFLAGS="-Wall -std=c11 -mlzcnt"
 
 AC_PROG_CC
 AC_PROG_RANLIB

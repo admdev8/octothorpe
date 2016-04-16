@@ -33,6 +33,9 @@
 #include <intrin.h>
 #endif
 
+// for lzcnt:
+#include <x86intrin.h>
+
 bool value_in2(unsigned v, unsigned a1, unsigned a2)
 {
 	return (v==a1) || (v==a2);
@@ -154,17 +157,7 @@ void make_compact_list_of_REGs (REG *regs, unsigned regs_total, strbuf *out, uns
 	};
 };
 
-void regcomp_or_die (regex_t *_Restrict_ preg, const char *_Restrict_ pattern, int cflags)
-{
-	int rc=regcomp(preg, pattern, cflags);
-	if (rc!=_REG_NOERROR)
-	{
-		char buffer[100];
-		regerror(rc, preg, buffer, 100);
-		die("Regular expression compiling failed for pattern '%s' (%s)", pattern, buffer);
-	};
-};
-
+// NULL-terminated array
 unsigned NULL_terminated_array_of_pointers_size(void **a)
 {
 	unsigned i;
@@ -172,6 +165,24 @@ unsigned NULL_terminated_array_of_pointers_size(void **a)
 	for (i=0; a[i]; i++);
 
 	return i;
+};
+
+// NULL-terminated array
+void print_array_of_strings (char **s)
+{
+	while (*s)
+		printf ("%s\n", *s++);
+};
+
+// NULL-terminated array
+void dfree_array_of_blocks (char **s)
+{
+	char **tmp=s;
+
+	while (*s)
+		DFREE (*s++);
+	
+	DFREE (tmp);
 };
 
 // this function was taken from http://www.blog.codereversing.com/infect4.pdf
@@ -425,5 +436,12 @@ bool REG_in_range (REG v, REG begin, REG end)
 bool REG_in_range2 (REG v, REG begin, size_t size)
 {
 	return REG_in_range (v, begin, begin+size);
+};
+
+uint64_t uint64_log2 (uint64_t i)
+{
+	oassert (i!=0);
+	
+	return __lzcnt64(i);
 };
 

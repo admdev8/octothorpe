@@ -25,6 +25,16 @@
 #include "ostrings.h"
 #include "dmalloc.h"
 
+bool streq (char *s1, char *s2)
+{
+	return strcmp(s1, s2)==0 ? true : false;
+};
+
+bool strieq (char *s1, char *s2)
+{
+	return strcasecmp(s1, s2)==0 ? true : false;
+};
+
 char* str_trim_one_char_right (char *in)
 {
 	if (strlen(in)==0)

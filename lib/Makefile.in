@@ -128,9 +128,9 @@ am_liboctothorpe_a_OBJECTS = FPU_stuff_GCC.$(OBJEXT) dlist.$(OBJEXT) \
 	files.$(OBJEXT) fsave.$(OBJEXT) lisp.$(OBJEXT) \
 	logging.$(OBJEXT) memutils.$(OBJEXT) oassert.$(OBJEXT) \
 	ostrings.$(OBJEXT) rand.$(OBJEXT) rbtree.$(OBJEXT) \
-	regex.$(OBJEXT) set.$(OBJEXT) strbuf.$(OBJEXT) \
-	string_list.$(OBJEXT) stuff.$(OBJEXT) x86.$(OBJEXT) \
-	x86_intrin.$(OBJEXT)
+	regex.$(OBJEXT) regex_helpers.$(OBJEXT) set.$(OBJEXT) \
+	strbuf.$(OBJEXT) string_list.$(OBJEXT) stuff.$(OBJEXT) \
+	x86.$(OBJEXT) x86_intrin.$(OBJEXT)
 liboctothorpe_a_OBJECTS = $(am_liboctothorpe_a_OBJECTS)
 AM_V_P = $(am__v_P_@AM_V@)
 am__v_P_ = $(am__v_P_@AM_DEFAULT_V@)
@@ -282,7 +282,7 @@ top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 lib_LIBRARIES = liboctothorpe.a
 liboctothorpe_a_SOURCES = FPU_stuff_GCC.c dlist.c dmalloc.c elf.c enum_files.c files.c fsave.c \
-	lisp.c logging.c memutils.c oassert.c ostrings.c rand.c rbtree.c regex.c \
+	lisp.c logging.c memutils.c oassert.c ostrings.c rand.c rbtree.c regex.c regex_helpers.c \
 	set.c strbuf.c string_list.c stuff.c x86.c x86_intrin.c
 
 AM_CPPFLAGS = -I$(top_srcdir)/include
@@ -379,6 +379,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/rand.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/rbtree.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/regex.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/regex_helpers.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/set.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/strbuf.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/string_list.Po@am__quote@

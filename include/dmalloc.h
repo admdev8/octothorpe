@@ -44,6 +44,10 @@ void dfree2 (void* ptr, const char *filename, unsigned line, const char *funcnam
 char* dstrdup (const char *str, const char * filename, unsigned line, const char * function, const char * structname);
 #define DSTRDUP(str,comment) (dstrdup(str, __FILE__, __LINE__, __func__, comment))
 
+// len is size of string without terminating zero
+char* dstrndup(char *str, size_t len, const char * filename, unsigned line, const char * function, const char * structname);
+#define DSTRNDUP(str,len,comment) (dstrndup(str, len, __FILE__, __LINE__, __func__, comment))
+
 void* dmemdup (void *p, size_t s, const char * filename, unsigned line, const char * function, const char * structname);
 
 #define DMEMDUP(ptr,size,comment) (dmemdup(ptr, size, __FILE__, __LINE__, __func__, comment))

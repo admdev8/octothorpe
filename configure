@@ -2848,7 +2848,7 @@ END
   fi
 fi
 
-CFLAGS="-Wall -std=c11"
+CFLAGS="-Wall -std=c11 -mlzcnt"
 
 ac_ext=c
 ac_cpp='$CPP $CPPFLAGS'

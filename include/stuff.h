@@ -79,9 +79,12 @@ extern "C" {
 	FILE *fopen_or_die(const char* fname, const char* mode);
 	void make_REG_compact_hex (REG a, strbuf* out);
 	void make_compact_list_of_REGs (REG *regs, unsigned regs_total, strbuf *out, unsigned limit);
-	void regcomp_or_die (regex_t *_Restrict_ preg, const char *_Restrict_ pattern, int cflags);
 
+	// all functions works with NULL-terminated arrays
 	unsigned NULL_terminated_array_of_pointers_size(void **a);
+	void print_array_of_strings (char **s);
+	void dfree_array_of_blocks (char **s);
+	
 	unsigned align_to_boundary(unsigned address, unsigned boundary);
 
 	const char *find_content_type_for_filename (const char *filename);
@@ -103,6 +106,8 @@ extern "C" {
 	bool REG_in_range (REG v, REG begin, REG end);
 // check if in range [begin, begin+size). TODO: better fn name
 	bool REG_in_range2 (REG v, REG begin, size_t size);
+
+	uint64_t uint64_log2 (uint64_t i);
 	
 #ifdef  __cplusplus
 }

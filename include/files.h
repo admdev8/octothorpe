@@ -28,3 +28,6 @@ byte* load_file_or_die (const char* fname, size_t *fsize);
 unsigned char* load_file (const char* fname, size_t *fsize);
 void save_file_or_die (const char* fname, byte *buf, size_t fsize);
 
+typedef void (*read_text_file_by_line_callback_fn)(char *line, void *param);
+void read_text_file_by_line_or_die (char *fname, read_text_file_by_line_callback_fn cb, void *param);
+
