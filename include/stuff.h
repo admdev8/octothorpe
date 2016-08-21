@@ -108,7 +108,8 @@ extern "C" {
 	bool REG_in_range2 (REG v, REG begin, size_t size);
 
 	uint64_t uint64_log2 (uint64_t i);
-	
+	int popcnt32 (uint32_t x);
+
 #ifdef  __cplusplus
 }
 #endif

@@ -1,3 +1,7 @@
+2016-08-21  Dennis Yurichev <dennis@yurichev.com>
+
+	* New function: popcnt32()
+
 2016-04-17  Dennis Yurichev <dennis@yurichev.com>
 	
 	* New functions: regmatch_len(), regmatch_dup(), regexec_to_array_of_string(), dstrndup(), read_text_file_by_line_or_die(),

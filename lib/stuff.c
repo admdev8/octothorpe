@@ -445,3 +445,12 @@ uint64_t uint64_log2 (uint64_t i)
 	return __lzcnt64(i);
 };
 
+// TODO rework
+int popcnt32 (uint32_t x)
+{
+	int count = 0;
+	for (int i = 0; i < 32; i++, x >>= 1)
+		count += (int)x & 1;
+	return count;
+}
+
