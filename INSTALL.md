@@ -6,6 +6,7 @@ C11 compiler, like GCC >= 4.7.
 Recommended build
 =================
 
+    autoreconf --install
     mkdir build
     cd build
     ../configure
@@ -18,6 +19,7 @@ Thus, the headers files are goes to **/usr/local/include/octothorpe** and librar
 Debug build
 ===========
 
+    autoreconf --install
     mkdir build
     cd build
     ../configure --enable-debug=yes
@@ -61,3 +63,4 @@ MSYS from x86 version could be copied right into **c:\mingw64\msys**.
 Windows 2000
 ============
 While compiling for Windows 2000, set **TARGET_IS_WINDOWS_2000**.
+

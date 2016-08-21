@@ -66,4 +66,10 @@ int main()
 	oassert (uint64_log2(8)==3);
 	oassert (uint64_log2(65536)==16);
 	oassert (uint64_log2(0xFFFFFFFFFFFFFFFF)==63);
+
+	// popcnt32()
+	oassert(popcnt32(0)==0);
+	oassert(popcnt32(1)==1);
+	oassert(popcnt32(0x8000)==1);
+	oassert(popcnt32(0xFFFFFFFF)==32);
 };
