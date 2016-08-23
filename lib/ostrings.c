@@ -16,12 +16,14 @@
  */
 
 #include <stdio.h>
+#include <string.h>
 #include <strings.h>
 #include <stdbool.h>
 #include <search.h>
 #include <stdlib.h>
 #include "fmt_utils.h"
 #include "datatypes.h"
+#include "oassert.h"
 #include "ostrings.h"
 #include "dmalloc.h"
 
@@ -152,3 +154,18 @@ byte* cvt_to_widestr_and_allocate (char *str, size_t *len)
 	*len=buf_size;
 	return ustr;
 };
+
+// TODO use memmove
+// begin/end starts from 0th character
+void string_remove_part (char *buf, int begin, int end)
+{
+	oassert(buf);
+	oassert(strlen(buf)>end);
+	oassert(strlen(buf)>begin);
+	oassert(begin<=end);
+
+	char *rest=DSTRDUP (buf+end+1,"rest");
+	strcpy (buf+begin, rest);
+	DFREE (rest);
+};
+

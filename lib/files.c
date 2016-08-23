@@ -27,6 +27,8 @@
 
 #include <sys/stat.h>
 
+#include "datatypes.h"
+#include "dmalloc.h"
 #include "files.h"
 
 #include "bitfields.h"
@@ -78,7 +80,7 @@ byte* load_file_or_die (const char* fname, size_t *fsize /* can be NULL */)
 
 	fs=ftell (f);
 	//printf ("*fsize=%d\n", *fsize);
-	rt=malloc (fs);
+	rt=DMALLOC (byte, fs, "rt");
 
 	if (fseek (f, 0, SEEK_SET)!=0)
 		die ("fseek()\n");
@@ -93,9 +95,9 @@ byte* load_file_or_die (const char* fname, size_t *fsize /* can be NULL */)
 };
 
 // ... or return NULL
-unsigned char* load_file (const char* fname, size_t *fsize /* can be NULL */)
+byte* load_file (const char* fname, size_t *fsize /* can be NULL */)
 {
-	unsigned char* rt;
+	byte* rt;
 	FILE* f;
 	size_t fs;
 
@@ -107,7 +109,7 @@ unsigned char* load_file (const char* fname, size_t *fsize /* can be NULL */)
 		return NULL;
 
 	fs=ftell (f);
-	rt=(unsigned char*)malloc (fs);
+	rt=DMALLOC (byte, fs, "rt");
 
 	if (fseek (f, 0, SEEK_SET)!=0)
 		return NULL;

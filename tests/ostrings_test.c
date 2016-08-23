@@ -19,6 +19,7 @@
 #include <stdbool.h>
 #include "oassert.h"
 #include "ostrings.h"
+#include "dmalloc.h"
 
 int main()
 {
@@ -46,4 +47,23 @@ int main()
 	oassert (str_common_prefix_len("asd", "as")==2);
 	oassert (str_common_prefix_len("asd", "asd")==3);
 	oassert (str_common_prefix_len("asd", "abb")==1);
+
+
+	char *buf=DSTRDUP("hello world","buf");
+	string_remove_part (buf, 0, 4); // "hello"
+	string_remove_part (buf, 0, 0); // " "
+	oassert (strcmp (buf, "world")==0);
+	DFREE(buf);
+
+	buf=DSTRDUP(" ","buf");
+	string_remove_part (buf, 0, 0); // " "
+	oassert (strcmp (buf, "")==0);
+	DFREE(buf);
+
+	buf=DSTRDUP("asdfg","buf");
+	string_remove_part (buf, 4, 4);
+	string_remove_part (buf, 0, 0);
+	oassert (strcmp (buf, "sdf")==0);
+	DFREE(buf);
 };
+

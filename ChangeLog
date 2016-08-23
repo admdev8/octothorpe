@@ -1,3 +1,7 @@
+2016-08-23  Dennis Yurichev <dennis@yurichev.com>
+
+	* New function: string_remove_part()
+
 2016-08-21  Dennis Yurichev <dennis@yurichev.com>
 
 	* New function: popcnt32()
