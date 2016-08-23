@@ -16,6 +16,7 @@
  */
 
 #include "datatypes.h"
+#include <stdio.h>
 #include <stdbool.h>
 
 bool file_exist (const char *filename);
@@ -30,4 +31,8 @@ void save_file_or_die (const char* fname, byte *buf, size_t fsize);
 
 typedef void (*read_text_file_by_line_callback_fn)(char *line, void *param);
 void read_text_file_by_line_or_die (char *fname, read_text_file_by_line_callback_fn cb, void *param);
+
+// "filename.ext" -> "filename", "ext"
+// no path!
+void split_fname (char *fname, char *basefname, size_t basefname_len, char *ext, size_t ext_len);
 

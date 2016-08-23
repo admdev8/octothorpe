@@ -1,6 +1,6 @@
 2016-08-23  Dennis Yurichev <dennis@yurichev.com>
 
-	* New function: string_remove_part()
+	* New functions: string_remove_part(), split_fname()
 
 2016-08-21  Dennis Yurichev <dennis@yurichev.com>
 

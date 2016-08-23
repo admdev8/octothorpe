@@ -1,11 +1,12 @@
 TESTS = run-strbuf_test.sh run-dlist_test.sh run-lisp_test.sh run-memutils_test.sh \
 	run-ostrings_test.sh run-string_list_test.sh run-regex_test.sh run-testrbtree.sh \
-	run-logging_test.sh run-stuff_test.sh run-dmalloc_test.sh
+	run-logging_test.sh run-stuff_test.sh run-dmalloc_test.sh \
+	files_test
 
 TESTS_ENVIRONMENT = BITS=$(BITS) OCTOTHORPE_DEBUG=$(OCTOTHORPE_DEBUG)
 
 check_PROGRAMS = strbuf_test dlist_test lisp_test memutils_test ostrings_test string_list_test \
-	regex_test testrbtree logging_test stuff_test dmalloc_test
+	regex_test testrbtree logging_test stuff_test dmalloc_test files_test
 
 strbuf_test_SOURCE = strbuf_test.c
 strbuf_test_LDADD = $(top_builddir)/lib/liboctothorpe.a
@@ -39,6 +40,9 @@ stuff_test_LDADD = $(top_builddir)/lib/liboctothorpe.a
 
 dmalloc_test_SOURCE = dmalloc_test.c
 dmalloc_test_LDADD = $(top_builddir)/lib/liboctothorpe.a
+
+files_test_SOURCE = files_test.c
+files_test_LDADD = $(top_builddir)/lib/liboctothorpe.a
 
 AM_CPPFLAGS = -I$(top_srcdir)/include
 

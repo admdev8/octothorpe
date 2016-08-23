@@ -33,6 +33,7 @@
 
 #include "bitfields.h"
 #include "stuff.h"
+#include "oassert.h"
 
 bool file_exist (const char *filename)
 {
@@ -147,5 +148,22 @@ void read_text_file_by_line_or_die (char *fname, read_text_file_by_line_callback
 		cb (fbuf, param);
 
 	fclose (f);
+};
+
+// "filename.ext" -> "filename", "ext"
+// no path!
+void split_fname (char *fname, char *basefname, size_t basefname_len, char *ext, size_t ext_len)
+{
+	char *after_dot=strrchr (fname, '.')+1;
+	oassert(after_dot!=NULL);
+
+	// copy ext
+	strncpy (ext, after_dot, ext_len);
+
+	// copy base
+	size_t out_basefname_len=after_dot - fname; // incl. zero
+	oassert(out_basefname_len < basefname_len);
+	memmove (basefname, fname, out_basefname_len-1);
+	basefname[out_basefname_len]=0;
 };
 

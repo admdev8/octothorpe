@@ -38,6 +38,7 @@ extern "C" {
 	bool string_is_ends_with (const char *s, const char *ending);
 	unsigned str_common_prefix_len (const char *s1, const char *s2);
 	byte* cvt_to_widestr_and_allocate (char *str, size_t *len);
+	void string_remove_part (char *buf, int begin, int end);
 
 #ifdef  __cplusplus
 }
