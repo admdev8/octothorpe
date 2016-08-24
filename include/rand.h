@@ -17,6 +17,8 @@
 
 #pragma once
 
+#include <stdbool.h>
+
 #ifdef  __cplusplus
 extern "C" {
 #endif
@@ -27,6 +29,7 @@ uint64_t genrand64();
 // [begin, end]
 int rand_reg (int begin, int end);
 double rand_double ();
+bool rand_bernoulli_distribution (float probability_of_1);
 
 #ifdef  __cplusplus
 }

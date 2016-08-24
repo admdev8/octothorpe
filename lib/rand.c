@@ -114,7 +114,7 @@ unsigned long genrand()
 
 uint64_t genrand64()
 {
-    return genrand()<<32 | genrand();
+	return genrand()<<32 | genrand();
 };
 
 // TODO rename: http://www.cplusplus.com/reference/random/uniform_int_distribution/
@@ -127,7 +127,11 @@ int rand_reg (int begin, int end)
 
 double rand_double ()
 {
-	return (double)genrand()/0xFFFFFFFF;
+	return ((double)genrand())/((double)0x100000000UL);
 };
 
-/* vim: set expandtab ts=4 sw=4 : */
+bool rand_bernoulli_distribution (float probability_of_1)
+{
+	return rand_double() < probability_of_1;
+};
+
