@@ -40,6 +40,10 @@ void intrin_NEG (IN tetrabyte op1, OUT tetrabyte* result, IN OUT tetrabyte* flag
 
 #endif
 
+byte rotr8(byte x, byte r);
+byte rotl8(byte x, byte r);
+wyde rotr16(wyde x, byte r);
+wyde rotl16(wyde x, byte r);
 tetrabyte rotr32(tetrabyte x, byte r);
 tetrabyte rotl32(tetrabyte x, byte r);
 octabyte rotr64(octabyte x, byte r);

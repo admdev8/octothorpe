@@ -1,3 +1,7 @@
+2016-08-24  Dennis Yurichev <dennis@yurichev.com>
+
+	* New functions: ipow(), rotr8(), rotl8(), rotr16(), rotl16().
+
 2016-08-23  Dennis Yurichev <dennis@yurichev.com>
 
 	* New functions: string_remove_part(), split_fname()

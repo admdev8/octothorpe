@@ -2,3 +2,6 @@ tests/*.log
 tests/*.trs
 tests/*.o
 lib/*.o
+*.in
+*.swp
+

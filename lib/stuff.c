@@ -448,7 +448,7 @@ uint64_t uint64_log2 (uint64_t i)
 };
 */
 // http://stackoverflow.com/questions/11376288/fast-computing-of-log2-for-64-bit-integers
-const int tab64[64]=
+static const int tab64[64]=
 {
 	63,  0, 58,  1, 59, 47, 53,  2,
 	60, 39, 48, 27, 54, 33, 42,  3,
@@ -478,5 +478,21 @@ int popcnt32 (uint32_t x)
 	for (int i = 0; i < 32; i++, x >>= 1)
 		count += (int)x & 1;
 	return count;
+}
+
+// http://stackoverflow.com/questions/101439/the-most-efficient-way-to-implement-an-integer-based-power-function-powint-int
+// TODO check overflow
+uint64_t ipow(uint64_t base, uint64_t exp)
+{
+    uint64_t result = 1;
+    while (exp)
+    {
+        if (exp & 1)
+            result *= base;
+        exp >>= 1;
+        base *= base;
+    }
+
+    return result;
 }
 

@@ -280,6 +280,32 @@ void intrin_NEG (IN tetrabyte op1, OUT tetrabyte* result, IN OUT tetrabyte* flag
 	*flags=(tmp & FLAG_PSAZOC);
 };
 
+#endif // O_BITS32
+
+byte rotr8(byte x, byte r)
+{
+	__asm("rorb %1,%0" : "+r" (x) : "c" (r));
+	return x;
+}
+
+byte rotl8(byte x, byte r)
+{
+	__asm("rolb %1,%0" : "+r" (x) : "c" (r));
+	return x;
+}
+
+wyde rotr16(wyde x, byte r)
+{
+	__asm("rorw %1,%0" : "+r" (x) : "c" (r));
+	return x;
+}
+
+wyde rotl16(wyde x, byte r)
+{
+	__asm("rolw %1,%0" : "+r" (x) : "c" (r));
+	return x;
+}
+
 tetrabyte rotr32(tetrabyte x, byte r)
 {
 	__asm("rorl %1,%0" : "+r" (x) : "c" (r));
@@ -292,9 +318,7 @@ tetrabyte rotl32(tetrabyte x, byte r)
 	return x;
 }
 
-#endif // O_BITS32
-
-#ifdef O_BITS64
+#if __WORDSIZE==64
 
 octabyte rotr64(octabyte x, byte r)
 {
@@ -308,5 +332,21 @@ octabyte rotl64(octabyte x, byte r)
 	return x;
 }
 
-#endif // O_BITS64
+#elif __WORDSIZE==32
+
+octabyte rotr64 ( octabyte x, byte r )
+{
+	return (x >> r) | (x << (64 - r));
+}
+
+octabyte rotl64 ( octabyte x, byte r )
+{
+	return (x << r) | (x >> (64 - r));
+}
+
+#else
+
+#error "__WORDSIZE is undefined"
+
+#endif
 

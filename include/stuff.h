@@ -109,6 +109,7 @@ extern "C" {
 
 	uint64_t uint64_log2 (uint64_t i);
 	int popcnt32 (uint32_t x);
+	uint64_t ipow(uint64_t base, uint64_t exp);
 
 #ifdef  __cplusplus
 }
