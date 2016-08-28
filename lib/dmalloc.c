@@ -378,6 +378,7 @@ void dmalloc_break_at_seq_n (unsigned seq_n)
     seq_n_to_break_on=seq_n;
 };
 
+// AKA dmemdup()?
 void* memdup_range (void *s, size_t size)
 {
     void *rt;
@@ -388,6 +389,7 @@ void* memdup_range (void *s, size_t size)
     return rt;
 };
 
+// AKA dstrdup()?
 char *strndup (const char *s, size_t size)
 {
     char *rt;

@@ -1,3 +1,13 @@
+2016-08-28 Dennis Yurichev <dennis@yurichev.com>
+
+	* New functions: get_file_size_or_die(), open_or_die(),
+	fprint_shrinked_string(), dmalloc_and_snprintf(),
+	is_string_consists_only_of_Latin_letters(),
+	is_string_consists_only_of_hex_digits(),
+	is_string_has_only_one_character_repeating(), CRC64(), popcnt64().
+
+	* New modules: entropy.c, base64.c
+
 2016-08-25 Dennis Yurichev <dennis@yurichev.com>
 
 	* New function: rand_bernoulli_distribution()

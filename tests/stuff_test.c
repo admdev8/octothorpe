@@ -72,4 +72,11 @@ int main()
 	oassert(popcnt32(1)==1);
 	oassert(popcnt32(0x8000)==1);
 	oassert(popcnt32(0xFFFFFFFF)==32);
+	// popcnt64()
+	oassert(popcnt64(0)==0);
+	oassert(popcnt64(1)==1);
+	oassert(popcnt64(0x8000)==1);
+	oassert(popcnt64(0xFFFFFFFF)==32);
+	oassert(popcnt64(0x8000000000000000UL)==1);
+	oassert(popcnt64(0xFFFFFFFFFFFFFFFFUL)==64);
 };

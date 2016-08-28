@@ -21,11 +21,13 @@
 #include <stdbool.h>
 #include <search.h>
 #include <stdlib.h>
+
 #include "fmt_utils.h"
 #include "datatypes.h"
 #include "oassert.h"
 #include "ostrings.h"
 #include "dmalloc.h"
+#include "strbuf.h"
 
 bool streq (char *s1, char *s2)
 {
@@ -167,5 +169,49 @@ void string_remove_part (char *buf, int begin, int end)
 	char *rest=DSTRDUP (buf+end+1,"rest");
 	strcpy (buf+begin, rest);
 	DFREE (rest);
+};
+
+// -> "aaaaaa ...(123 skipped)...bbbbbb"
+void fprint_shrinked_string (char *s, size_t limit, FILE *f)
+{
+	strbuf sb=STRBUF_INIT;
+	strbuf_addstr(&sb, s);
+	strbuf_fprint_short (&sb, limit, f);
+	strbuf_deinit(&sb);
+};
+
+// "while C99 allows str to be NULL in this case, and gives the return value (as always) as the number of characters that would have been written in case the output string has been large enough."
+// http://linux.die.net/man/3/snprintf
+char* dmalloc_and_snprintf (const char *fmt, ...)
+{
+	va_list va;
+	va_start (va, fmt);
+
+	size_t s=vsnprintf (NULL, 0, fmt, va);
+	char *buf=DMALLOC (byte, s+1, "buf");
+	vsnprintf (buf, s+1, fmt, va);
+	return buf;
+};
+
+bool is_string_consists_only_of_Latin_letters (char *s)
+{
+	return strspn (s, "QWERTYUIOPASDFGHJKLZXCVBNMqwertyuiopasdfghjklzxcvbnm")==strlen(s);
+};
+
+bool is_string_consists_only_of_hex_digits (char *s)
+{
+	return strspn (s, "0123456789ABCDEFabcdef")==strlen(s);
+};
+
+bool is_string_has_only_one_character_repeating (char *s)
+{
+	if (strlen(s)==1)
+		return true;
+	char *begin=s;
+	s++;
+	for (; *s; s++)
+		if (*s!=*begin)
+			return false;
+	return true;
 };
 

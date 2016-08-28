@@ -15,6 +15,8 @@
  *
  */
 
+#pragma once
+
 #include "datatypes.h"
 #include <stdio.h>
 #include <stdbool.h>
@@ -22,6 +24,7 @@
 bool file_exist (const char *filename);
 bool is_file(const char* path);
 bool is_dir(const char* path); 
+size_t get_file_size_or_die (const char* fname);
 byte* load_file_or_die (const char* fname, size_t *fsize);
 
 // ... or return NULL
@@ -35,4 +38,5 @@ void read_text_file_by_line_or_die (char *fname, read_text_file_by_line_callback
 // "filename.ext" -> "filename", "ext"
 // no path!
 void split_fname (char *fname, char *basefname, size_t basefname_len, char *ext, size_t ext_len);
+int open_or_die (char *fname, int mode);
 

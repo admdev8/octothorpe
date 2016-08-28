@@ -24,6 +24,7 @@
 
 #include <stdio.h> 
 #include <stdlib.h>
+#include <fcntl.h>
 
 #include <sys/stat.h>
 
@@ -66,6 +67,20 @@ bool is_dir(const char* path)
 #endif
 }
 
+size_t get_file_size_or_die (const char* fname)
+{
+	FILE* f=fopen (fname, "rb");
+	if (f==NULL)
+		die ("Cannot open file %s\n", fname); // TODO: add errno, etc
+
+	if (fseek (f, 0, SEEK_END)!=0)
+		die ("fseek() failed\n");
+
+	size_t fs=ftell (f);
+	fclose (f);
+	return fs;
+};
+
 byte* load_file_or_die (const char* fname, size_t *fsize /* can be NULL */)
 {
 	byte* rt;
@@ -76,15 +91,9 @@ byte* load_file_or_die (const char* fname, size_t *fsize /* can be NULL */)
 	if (f==NULL)
 		die ("Cannot open file %s\n", fname); // TODO: add errno, etc
 
-	if (fseek (f, 0, SEEK_END)!=0)
-		die ("fseek()\n");
-
-	fs=ftell (f);
+	fs=get_file_size_or_die(fname);
 	//printf ("*fsize=%d\n", *fsize);
 	rt=DMALLOC (byte, fs, "rt");
-
-	if (fseek (f, 0, SEEK_SET)!=0)
-		die ("fseek()\n");
 
 	if (fread (rt, fs, 1, f)!=1)
 		die ("Cannot read file %s\n", fname); // TODO: add errno, etc
@@ -106,14 +115,8 @@ byte* load_file (const char* fname, size_t *fsize /* can be NULL */)
 	if (f==NULL)
 		return NULL;
 
-	if (fseek (f, 0, SEEK_END)!=0)
-		return NULL;
-
-	fs=ftell (f);
+	fs=get_file_size_or_die(fname);
 	rt=DMALLOC (byte, fs, "rt");
-
-	if (fseek (f, 0, SEEK_SET)!=0)
-		return NULL;
 
 	if (fread (rt, fs, 1, f)!=1)
 		return NULL;
@@ -165,5 +168,13 @@ void split_fname (char *fname, char *basefname, size_t basefname_len, char *ext,
 	oassert(out_basefname_len < basefname_len);
 	memmove (basefname, fname, out_basefname_len-1);
 	basefname[out_basefname_len]=0;
+};
+
+int open_or_die (char *fname, int mode)
+{
+	int fd=open(fname, mode);
+	if (fd==-1)
+		die ("Can't open file %s for read\n", fname);
+	return fd;
 };
 

@@ -89,6 +89,7 @@ extern "C" {
 
 	const char *find_content_type_for_filename (const char *filename);
 	tetrabyte CRC32 (byte *block, size_t length, tetrabyte in_CRC);
+	octabyte CRC64(octabyte crc, byte *buf, size_t len);
 
 	// used in rbtree
 	int compare_size_t(void* leftp, void* rightp);
@@ -109,6 +110,7 @@ extern "C" {
 
 	uint64_t uint64_log2 (uint64_t i);
 	int popcnt32 (uint32_t x);
+	int popcnt64 (uint64_t x);
 	uint64_t ipow(uint64_t base, uint64_t exp);
 
 #ifdef  __cplusplus

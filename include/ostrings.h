@@ -40,6 +40,14 @@ extern "C" {
 	byte* cvt_to_widestr_and_allocate (char *str, size_t *len);
 	void string_remove_part (char *buf, int begin, int end);
 
+	// -> "aaaaaa ...(123 skipped)...bbbbbb"
+	void fprint_shrinked_string (char *s, size_t limit, FILE *f);
+	char* dmalloc_and_snprintf (const char *fmt, ...);
+
+	bool is_string_consists_only_of_Latin_letters (char *s);
+	bool is_string_consists_only_of_hex_digits (char *s);
+	bool is_string_has_only_one_character_repeating (char *s);
+
 #ifdef  __cplusplus
 }
 #endif

@@ -51,6 +51,7 @@ bool value_in7(unsigned v, unsigned a1, unsigned a2, unsigned a3, unsigned a4, u
 	return (v==a1) || (v==a2) || (v==a3) || (v==a4) || (v==a5) || (v==a6) || (v==a7);
 };
 
+// TODO rename: _digit?
 unsigned most_significant_hex_number(octabyte x)
 {
 	octabyte t=x;
@@ -81,6 +82,7 @@ _Noreturn void die (const char * fmt, ...)
 	exit(0);
 };
 
+// TODO to memutils.c
 void* memdup (void *p, size_t s)
 {
 	void *rt=malloc (s);
@@ -275,6 +277,21 @@ tetrabyte CRC32 (byte *block, size_t length, tetrabyte in_CRC)
 		crc = ((crc >> 8) & 0x00FFFFFF) ^ CRC32_table[(crc ^ *block++) & 0xFF];
 
 	return crc ^ 0xFFFFFFFF;
+}
+
+// I don't know if it works [correctly] or not
+octabyte CRC64(octabyte crc, byte *buf, size_t len)
+{
+        int k;
+
+        crc = ~crc;
+        while (len--)
+        {
+                crc ^= *buf++;
+                for (k = 0; k < 8; k++)
+                        crc = crc & 1UL ? (crc >> 1) ^ 0x42f0e1eba9ea3693UL : crc >> 1;
+        }
+        return crc;
 }
 
 int compare_size_t(void* leftp, void* rightp)
@@ -477,6 +494,15 @@ int popcnt32 (uint32_t x)
 	int count = 0;
 	for (int i = 0; i < 32; i++, x >>= 1)
 		count += (int)x & 1;
+	return count;
+}
+
+// TODO rework
+int popcnt64 (uint64_t x)
+{
+	int count = 0;
+	for (int i = 0; i < 64; i++, x >>= 1UL)
+		count += (uint64_t)x & 1UL;
 	return count;
 }
 
