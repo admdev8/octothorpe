@@ -20,6 +20,7 @@
 #include "oassert.h"
 #include "ostrings.h"
 #include "dmalloc.h"
+#include "fmt_utils.h"
 
 int main()
 {
@@ -73,6 +74,10 @@ int main()
 	
 	char* tmp=dmalloc_and_snprintf ("%d %d", 123, 456);
 	oassert(streq(tmp, "123 456"));
+	DFREE(tmp);
+	
+	tmp=dmalloc_and_snprintf ("%" PRIx64 " %d", 0x1234567890ABCDEF, 456);
+	oassert(streq(tmp, "1234567890abcdef 456"));
 	DFREE(tmp);
 };
 

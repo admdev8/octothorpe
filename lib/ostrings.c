@@ -185,11 +185,16 @@ void fprint_shrinked_string (char *s, size_t limit, FILE *f)
 char* dmalloc_and_snprintf (const char *fmt, ...)
 {
 	va_list va;
-	va_start (va, fmt);
 
+	va_start (va, fmt);
 	size_t s=vsnprintf (NULL, 0, fmt, va);
+	va_end (va);
+
 	char *buf=DMALLOC (byte, s+1, "buf");
+	va_start (va, fmt);
 	vsnprintf (buf, s+1, fmt, va);
+	va_end (va);
+
 	return buf;
 };
 
