@@ -1,3 +1,7 @@
+2016-09-28 Dennis Yurichev <dennis@yurichev.com>
+	
+	* New function: entropy_int().
+
 2016-08-28 Dennis Yurichev <dennis@yurichev.com>
 
 	* New functions: get_file_size_or_die(), open_or_die(),

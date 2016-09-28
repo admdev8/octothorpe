@@ -30,6 +30,16 @@ int main()
 	for (int i=0; i<256; i++)
 		buf[i]=i;
 	oassert(entropy (buf, sizeof(buf))==8);
+
+	// integer entropy
+	bzero(buf, sizeof(buf));
+	oassert(entropy_int (buf, sizeof(buf))==0);
+	bytefill(buf, sizeof(buf), 0x11);
+	oassert(entropy_int (buf, sizeof(buf))==0);
+	for (int i=0; i<256; i++)
+		buf[i]=i;
+	oassert(entropy_int (buf, sizeof(buf))>>16==8);
+	
 	return 0;
 };
 
