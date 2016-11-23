@@ -112,6 +112,8 @@ extern "C" {
 	int popcnt32 (uint32_t x);
 	int popcnt64 (uint64_t x);
 	uint64_t ipow(uint64_t base, uint64_t exp);
+	bool IsInteger (double d);
+	bool uint64_is_2n(uint64_t v);
 
 #ifdef  __cplusplus
 }

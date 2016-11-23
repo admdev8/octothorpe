@@ -19,6 +19,7 @@
 #include <stdio.h>
 #include <search.h>
 #include <stdlib.h>
+#include <math.h>
 #include <memory.h>
 #include <ctype.h>
 
@@ -521,4 +522,16 @@ uint64_t ipow(uint64_t base, uint64_t exp)
 
     return result;
 }
+
+bool IsInteger (double d)
+{
+	return floor(d)==d;
+};
+
+// is number in 2^n form?
+// ... i.e., it has only one bit set.
+bool uint64_is_2n(uint64_t v)
+{
+	return popcnt64(v)==1;
+};
 
