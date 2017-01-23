@@ -73,7 +73,11 @@ extern "C" {
 	bool value_not_in2(unsigned v, unsigned a1, unsigned a2);
 	bool value_in7(unsigned v, unsigned a1, unsigned a2, unsigned a3, unsigned a4, unsigned a5, unsigned a6, unsigned a7);
 	unsigned most_significant_hex_number(octabyte x);
+#ifdef __cplusplus
+	void die (const char * fmt, ...);
+#else
 	_Noreturn void die (const char * fmt, ...);
+#endif
 	void* memdup (void *p, size_t s);
 	void debugger_breakpoint();
 	FILE *fopen_or_die(const char* fname, const char* mode);

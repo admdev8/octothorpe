@@ -21,5 +21,14 @@
 
 #include <stdbool.h>
 
+#ifdef  __cplusplus
+extern "C" {
+#endif
+
 typedef void (*callback_fn)(const char *name, const char *pathname, size_t size, time_t t, bool is_dir, void *param);
 void enum_files_in_dir(const char* path, callback_fn cb, void *param);
+
+#ifdef  __cplusplus
+}
+#endif
+

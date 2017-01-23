@@ -22,6 +22,10 @@
 #include "strbuf.h"
 #include "logging.h"
 
+#ifdef  __cplusplus
+extern "C" {
+#endif
+
 #define FLAG_CF (1<<0)
 #define FLAG_RSRV1 (1<<1)
 #define FLAG_PF (1<<2)
@@ -246,5 +250,7 @@ bool sse2_supported();
 #define X86_RETN "\xC3"
 #define X86_RETN_LEN 1
 
+#ifdef  __cplusplus
+}
+#endif
 
-/* vim: set expandtab ts=4 sw=4 : */

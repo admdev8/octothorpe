@@ -22,6 +22,10 @@
 #include "stuff.h"
 #include "datatypes.h"
 
+#ifdef  __cplusplus
+extern "C" {
+#endif
+
 #ifdef O_BITS32
 
 void intrin_SHL (IN tetrabyte value, IN uint8_t shift_value, OUT tetrabyte* result, IN OUT tetrabyte* flags);
@@ -48,4 +52,8 @@ tetrabyte rotr32(tetrabyte x, byte r);
 tetrabyte rotl32(tetrabyte x, byte r);
 octabyte rotr64(octabyte x, byte r);
 octabyte rotl64(octabyte x, byte r);
+
+#ifdef  __cplusplus
+}
+#endif
 

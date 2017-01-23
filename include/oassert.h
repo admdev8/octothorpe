@@ -31,6 +31,14 @@
 
 #define fatal_error() _fatal_error(__FILE__, __LINE__, __func__)
 
+#ifdef  __cplusplus
+extern "C" {
+#endif
+
 _Noreturn void _oassert (const char *msg, const char *file, unsigned line, const char *func);
 _Noreturn void _fatal_error (const char *file, unsigned line, const char *func);
+
+#ifdef  __cplusplus
+}
+#endif
 

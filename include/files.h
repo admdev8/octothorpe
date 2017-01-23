@@ -21,6 +21,10 @@
 #include <stdio.h>
 #include <stdbool.h>
 
+#ifdef  __cplusplus
+extern "C" {
+#endif
+
 bool file_exist (const char *filename);
 bool is_file(const char* path);
 bool is_dir(const char* path); 
@@ -39,4 +43,8 @@ void read_text_file_by_line_or_die (char *fname, read_text_file_by_line_callback
 // no path!
 void split_fname (char *fname, char *basefname, size_t basefname_len, char *ext, size_t ext_len);
 int open_or_die (char *fname, int mode);
+
+#ifdef  __cplusplus
+}
+#endif
 

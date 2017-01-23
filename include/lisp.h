@@ -71,6 +71,10 @@ typedef struct _cons_cell
     obj *tail; // AKA cdr
 } cons_cell;
 
+#ifdef  __cplusplus
+extern "C" {
+#endif
+
 obj* LAST(obj *l);
 void obj_byte2 (byte i, obj* o);
 void obj_wyde2 (wyde i, obj* o);
@@ -155,4 +159,7 @@ obj* nth (obj* lst, unsigned n); // starting at 0
 obj* list_pick_random (obj* lst);
 void print_list_of_strings (obj* input);
 
-/* vim: set expandtab ts=4 sw=4 : */
+#ifdef  __cplusplus
+}
+#endif
+

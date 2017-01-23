@@ -24,6 +24,10 @@ typedef struct _dlist
     void* data;
 } dlist;
 
+#ifdef  __cplusplus
+extern "C" {
+#endif
+
 dlist *dlist_init();
 void dlist_insert_at_begin(dlist **l, void *data);
 void* dlist_get_first(dlist *l);
@@ -32,4 +36,7 @@ void dlist_unlink(dlist **lst, dlist *l);
 void dlist_dump(dlist *l);
 void dlist_check_consistency(dlist *l);
 
-/* vim: set expandtab ts=4 sw=4 : */
+#ifdef  __cplusplus
+}
+#endif
+

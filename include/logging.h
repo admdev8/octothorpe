@@ -65,4 +65,3 @@ void L_deinit (void);
 }
 #endif
 
-/* vim: set expandtab ts=4 sw=4 : */
