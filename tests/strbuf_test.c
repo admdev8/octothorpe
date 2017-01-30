@@ -26,7 +26,7 @@
 #define LONG_LONG_MAX 9223372036854775807LL
 #endif
 
-test_addc_and_addf()
+void test_addc_and_addf()
 {
 	strbuf s=STRBUF_INIT;
 	strbuf_addstr (&s, "hello");
@@ -34,6 +34,51 @@ test_addc_and_addf()
 	strbuf_addf (&s, "w%crld", 'o');
 	strbuf_puts (&s);
 	strbuf_deinit (&s);
+};
+
+void test_neat_list_of_bytes()
+{
+	strbuf s3=STRBUF_INIT;
+	byte test1[]={0,1,2,3, 0xa, 0x10, 0x33,0x34,0x35,0x36,0x37, 0x39, 0x99,0x9a};
+	neat_list_of_bytes (test1, 14, &s3);
+	//strbuf_puts (&s3);
+	oassert (strcmp(s3.buf, "0x0 ... 0x3, 0xa, 0x10, '3' ... '7', '9', 0x99, 0x9a")==0);
+	strbuf_deinit (&s3);
+	
+	strbuf s4=STRBUF_INIT;
+	byte test2[]={0xaa, 0,1,2,3, 0xa, 0x10, 0x33,0x34,0x35,0x36,0x37, 0x39, 0x99};
+	neat_list_of_bytes (test2, 14, &s4);
+	//strbuf_puts (&s4);
+	oassert (strcmp(s4,buf, "0xaa, 0x0 ... 0x3, 0xa, 0x10, '3' ... '7', '9', 0x99")==0);
+	strbuf_deinit (&s4);
+	
+	strbuf s5=STRBUF_INIT;
+	byte test3[]={0xaa, 0,1,2,3, 0xa, 0x10, 0x33,0x34,0x35,0x36,0x37};
+	neat_list_of_bytes (test2, 12, &s5);
+	//strbuf_puts (&s5);
+	oassert (strcmp(s5.buf, "0xaa, 0x0 ... 0x3, 0xa, 0x10, '3' ... '7'")==0);
+	strbuf_deinit (&s5);
+	
+	strbuf s6=STRBUF_INIT;
+	byte test4[]={0xaa};
+	neat_list_of_bytes (test4, 1, &s6);
+	//strbuf_puts (&s6);
+	oassert (strcmp(s6.buf, "0xaa")==0);
+	strbuf_deinit (&s6);
+	
+	strbuf s7=STRBUF_INIT;
+	byte test5[]={0xaa, 1,2, 0xdd};
+	neat_list_of_bytes (test5, 4, &s7);
+	//strbuf_puts (&s7);
+	oassert (strcmp(s7.buf, "0xaa, 1, 2, 0xdd")==0);
+	strbuf_deinit (&s7);
+	
+	strbuf s8=STRBUF_INIT;
+	byte test6[]={'0', '1', '2', '3', '4', '5'};
+	neat_list_of_bytes (test6, 6, &s8);
+	//strbuf_puts (&s8);
+	oassert (strcmp(s8.buf, "'0' ... '5'")==0);
+	strbuf_deinit (&s8);
 };
 
 char **my_environ;
@@ -168,6 +213,9 @@ int main(int argc, char* argv[], char* envp[])
 #endif
 
 	test_addc_and_addf();
+
+
+	test_neat_list_of_bytes();
 
 	dump_unfreed_blocks();
 	dmalloc_deinit();

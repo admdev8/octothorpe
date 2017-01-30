@@ -80,6 +80,7 @@ extern "C" {
 	void strbuf_trim_string_with_comment (strbuf *sb, unsigned size, const char *str);
 	void strbuf_fancy_size (strbuf* out, size_t size);
 	void strbuf_add_space_if_not_empty (strbuf* out);
+	void neat_list_of_bytes (byte *a, int len, strbuf* out);
 
 	// TODO: bool strbuf_eq
 

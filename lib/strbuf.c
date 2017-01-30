@@ -21,6 +21,7 @@
 #include <string.h>
 #include "oassert.h"
 #include <inttypes.h>
+#include <ctype.h>
 
 #include "fmt_utils.h"
 #include "oassert.h"
@@ -399,4 +400,63 @@ void strbuf_add_space_if_not_empty (strbuf* out)
 {
 	if (out->strlen)
 		strbuf_addc (out, ' ');
+};
+
+static void neat_list_of_uint8_t_helper (byte c, strbuf* out)
+{
+	if (isprint (c))
+		strbuf_addf (out, "'%c'", c);
+	else
+	{
+		if (c<=9)
+			strbuf_addf (out, "%d", c);
+		else
+			strbuf_addf (out, "0x%x", c);
+	};
+};
+
+void neat_list_of_bytes (byte *a, int len, strbuf* out)
+{
+	bool skipped=false;
+	int skipped_pos_start=0;
+
+	for (int i=0; i<len; i++)
+	{
+		if (i>0 && a[i-1]+1==a[i])
+		{
+			if (skipped==false)
+			{
+				skipped=true;
+				skipped_pos_start=i;
+			}
+			else
+			{
+				// do nothing
+			};
+		}
+		else
+		{
+			if (skipped)
+			{
+				strbuf_addstr (out, skipped_pos_start+1==i ? ", " : " ... ");
+				
+				neat_list_of_uint8_t_helper(a[i-1], out);
+				skipped=false;
+			};
+
+			if (i!=0)
+				strbuf_addstr (out, ", ");
+			neat_list_of_uint8_t_helper(a[i], out);
+		};
+	};
+
+	// output last element, if it's the end of the range:
+	if (skipped)
+	{
+		strbuf_addstr (out, skipped_pos_start==len-1 ? ", " : " ... ");
+
+		skipped=false;
+
+		neat_list_of_uint8_t_helper(a[len-1], out);
+	};
 };
