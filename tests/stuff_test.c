@@ -28,16 +28,16 @@ int main()
 	L_init ("tmp");
 
 	bytefill (buf, 1024, 0);
-	tetrabytefill(buf, 128, 0x0badf00d);
+	tetrafill(buf, 128, 0x0badf00d);
 	L_print_buf (buf, 256);
 	bytefill (buf, 1024, 0);
-	tetrabytefill(buf, 127, 0x0badf00d);
+	tetrafill(buf, 127, 0x0badf00d);
 	L_print_buf (buf, 256);
 	bytefill (buf, 1024, 0);
-	tetrabytefill(buf, 126, 0x0badf00d);
+	tetrafill(buf, 126, 0x0badf00d);
 	L_print_buf (buf, 256);
 	bytefill (buf, 1024, 0);
-	tetrabytefill(buf, 125, 0x0badf00d);
+	tetrafill(buf, 125, 0x0badf00d);
 	L_print_buf (buf, 256);
 
 	strbuf sb=STRBUF_INIT;

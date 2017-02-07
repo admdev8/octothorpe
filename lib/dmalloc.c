@@ -42,8 +42,8 @@
 //#define DFREE_CHK_ALL_GUARDS
 
 #ifdef ADD_GUARDS
-static tetrabyte guard1=0x44332211;
-static tetrabyte guard2=0x88776655;
+static tetra guard1=0x44332211;
+static tetra guard2=0x88776655;
 #endif
 
 static bool break_on_seq_n=false;
@@ -125,7 +125,7 @@ void* dmalloc (size_t size, const char * filename, unsigned line, const char * f
         die("%s() can't allocate size %d for %s (%s:%d)\n", __func__, size, structname, filename, line);
 
 #ifdef OCTOTHORPE_DEBUG
-    tetrabytefill (rt, size, 0x0BADF00D); // poison #1
+    tetrafill (rt, size, 0x0BADF00D); // poison #1
 #endif
 
 #ifdef ADD_GUARDS
@@ -248,9 +248,9 @@ static void chk_guard (void *ptr, struct dmalloc_info *i)
                 r2!=0 ? "guard2" : "");
         dump_blk_info (i);
         if (r1!=0) 
-            printf ("guard1=%08X, should be=%08X\n", *(tetrabyte*)((byte*)ptr-4), guard1);
+            printf ("guard1=%08X, should be=%08X\n", *(tetra*)((byte*)ptr-4), guard1);
         if (r2!=0) 
-            printf ("guard2=%08X, should be=%08X\n", *(tetrabyte*)((byte*)ptr+size), guard2);
+            printf ("guard2=%08X, should be=%08X\n", *(tetra*)((byte*)ptr+size), guard2);
         L_init("tmp");
         L ("block with both guards:\n");
         L_print_buf((byte*)ptr-4, size+8);
@@ -321,7 +321,7 @@ void dfree2 (void* ptr, const char *filename, unsigned line, const char *funcnam
 
 #ifdef ADD_GUARDS
 #ifdef OCTOTHORPE_DEBUG
-    tetrabytefill (ptr, blk_user_size, 0xB1CF1EED); // poison #2
+    tetrafill (ptr, blk_user_size, 0xB1CF1EED); // poison #2
 #endif
     free ((byte*)ptr-4);
 #else

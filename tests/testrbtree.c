@@ -26,10 +26,10 @@
 #include "rbtree.h"
 #include "fmt_utils.h"
 
-int compare_tetrabyte(void* leftp, void* rightp) 
+int compare_tetra(void* leftp, void* rightp) 
 {
-    tetrabyte left = (tetrabyte)leftp;
-    tetrabyte right = (tetrabyte)rightp;
+    tetra left = (tetra)leftp;
+    tetra right = (tetra)rightp;
     if (left < right) 
         return -1;
     else if (left > right)
@@ -42,7 +42,7 @@ int compare_tetrabyte(void* leftp, void* rightp)
 
 void visitor(void* k, void* v)
 {
-    printf ("key=%d value=%s\n", (tetrabyte)k, (char*)v);
+    printf ("key=%d value=%s\n", (tetra)k, (char*)v);
 };
 
 void test_return_all_keys(rbtree *t)
@@ -86,8 +86,8 @@ int my_strcmp(void *v1, void *v2)
 
 int main() 
 {
-    rbtree *t = rbtree_create(true, "test", compare_tetrabyte);
-    rbtree *new_t = rbtree_create(true, "new_test", compare_tetrabyte);
+    rbtree *t = rbtree_create(true, "test", compare_tetra);
+    rbtree *new_t = rbtree_create(true, "new_test", compare_tetra);
     rbtree *t2, *t3;
     size_t key_prev, key_next;
     char *value_prev, *value_next;
@@ -135,7 +135,7 @@ int main()
     // test 2
     printf ("test 2 (lower/upper bounds)\n");
 
-    t2=rbtree_create(true, "test", compare_tetrabyte);
+    t2=rbtree_create(true, "test", compare_tetra);
 
     //rbtree_insert (t2, (void*)0, "");
     rbtree_insert (t2, (void*)50, "value 50");
@@ -169,7 +169,7 @@ int main()
 
     printf ("test 3\n");
 
-    t3=rbtree_create(true, "test", compare_tetrabyte);
+    t3=rbtree_create(true, "test", compare_tetra);
     rbtree_insert (t3, (void*)50, "value 50");
     rbtree_insert (t3, (void*)99, "value 99");
     printf ("rbtree_empty (should be present something): %d\n", rbtree_empty(t3));

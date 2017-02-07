@@ -24,40 +24,40 @@
 
 typedef uint8_t byte;
 typedef uint16_t wyde;
-typedef uint32_t tetrabyte;
-typedef int32_t tetrabyte_s;
-typedef uint64_t octabyte;
-typedef int64_t octabyte_s;
+typedef uint32_t tetra;
+typedef int32_t tetra_s;
+typedef uint64_t octa;
+typedef int64_t octa_s;
 
 #define WYDE_LEN_IN_BYTES sizeof(wyde)
 
 #ifdef __GNUC__
-#define OCTABYTE_1 1LL
+#define OCTA_1 1LL
 #elif _MSC_VER
-#define OCTABYTE_1 1i64
+#define OCTA_1 1i64
 #else
 #error "compiler was not detected"
 #endif
 
 #if __WORDSIZE==64
-#define REG_1 OCTABYTE_1
-typedef octabyte REG;
+#define REG_1 OCTA_1
+typedef octa REG;
 #define REG_MSB 0x8000000000000000
-typedef octabyte_s SIGNED_REG;
+typedef octa_s SIGNED_REG;
 #define REG_MAX UINT64_MAX
 #define REG_SIZE 8
-typedef octabyte address;
-typedef octabyte_s address_offset;
+typedef octa address;
+typedef octa_s address_offset;
 #elif __WORDSIZE==32
 #define REG_1 1
-typedef tetrabyte REG;
+typedef tetra REG;
 #define REG_MSB 0x80000000
-typedef tetrabyte_s SIGNED_REG;
+typedef tetra_s SIGNED_REG;
 #define REG_MAX UINT32_MAX
 #define REG_SIZE 4
 #else
 #error "__WORDSIZE is undefined"
-typedef tetrabyte address;
-typedef tetrabyte_s address_offset;
+typedef tetra address;
+typedef tetra_s address_offset;
 #endif
 

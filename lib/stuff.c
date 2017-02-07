@@ -53,9 +53,9 @@ bool value_in7(unsigned v, unsigned a1, unsigned a2, unsigned a3, unsigned a4, u
 };
 
 // TODO rename: _digit?
-unsigned most_significant_hex_number(octabyte x)
+unsigned most_significant_hex_number(octa x)
 {
-	octabyte t=x;
+	octa t=x;
 	int i;
 
 	// _BitScanReverse64 can be used here, probably (?)
@@ -249,14 +249,14 @@ const char *find_content_type_for_filename (const char *filename)
 
 #define CRC32POLY 0xEDB88320ul
 
-static tetrabyte CRC32_table[256];
+static tetra CRC32_table[256];
 static bool CRC32_table_generated=false;
 
 static void CRC32_gentab()
 {
 	for (int i = 0; i < 256; i++)
 	{
-		tetrabyte crc = i;
+		tetra crc = i;
 		for (int j = 8; j > 0; j--)
 			if (crc & 1)
 				crc = (crc >> 1) ^ CRC32POLY;
@@ -267,12 +267,12 @@ static void CRC32_gentab()
 	CRC32_table_generated=true;
 }
 
-tetrabyte CRC32 (byte *block, size_t length, tetrabyte in_CRC)
+tetra CRC32 (byte *block, size_t length, tetra in_CRC)
 {
 	if (CRC32_table_generated==false)
 		CRC32_gentab();
 
-	tetrabyte crc = in_CRC ^ 0xFFFFFFFF;
+	tetra crc = in_CRC ^ 0xFFFFFFFF;
 
 	for (size_t i = 0; i < length; i++)
 		crc = ((crc >> 8) & 0x00FFFFFF) ^ CRC32_table[(crc ^ *block++) & 0xFF];
@@ -281,7 +281,7 @@ tetrabyte CRC32 (byte *block, size_t length, tetrabyte in_CRC)
 }
 
 // I don't know if it works [correctly] or not
-octabyte CRC64(octabyte crc, byte *buf, size_t len)
+octa CRC64(octa crc, byte *buf, size_t len)
 {
         int k;
 
@@ -323,9 +323,9 @@ int compare_int(void* leftp, void* rightp)
 	};
 };
 
-int compare_tetrabytes(const void* leftp, const void* rightp)
+int compare_tetras(const void* leftp, const void* rightp)
 {
-	tetrabyte left = (tetrabyte)leftp, right = (tetrabyte)rightp;
+	tetra left = (tetra)leftp, right = (tetra)rightp;
 	if (left < right)
 		return -1;
 	else if (left > right)
@@ -337,7 +337,7 @@ int compare_tetrabytes(const void* leftp, const void* rightp)
 	};
 };
 
-bool element_in_the_array_of_tetrabytes(tetrabyte i, tetrabyte *a, unsigned size)
+bool element_in_the_array_of_tetras(tetra i, tetra *a, unsigned size)
 {
 	// SIMD can be used here
 	for (unsigned j=0; j<size; j++)
@@ -361,9 +361,9 @@ void add_value_to_each_element_of_size_t_array (size_t *a, size_t s, size_t val)
 		a[i]+=val;
 };
 
-int qsort_compare_tetrabytes(const void* leftp, const void* rightp)
+int qsort_compare_tetras(const void* leftp, const void* rightp)
 {
-	tetrabyte left = *(tetrabyte*)leftp, right = *(tetrabyte*)rightp;
+	tetra left = *(tetra*)leftp, right = *(tetra*)rightp;
 	if (left < right)
 		return -1;
 	else if (left > right)
@@ -375,12 +375,12 @@ int qsort_compare_tetrabytes(const void* leftp, const void* rightp)
 	};
 };
 
-void tetrabyte_array_remove_all_values(tetrabyte** array, tetrabyte val, size_t *size, bool call_drealloc)
+void tetra_array_remove_all_values(tetra** array, tetra val, size_t *size, bool call_drealloc)
 {
 	// remove all val elements from array
 	size_t dst=0;
 	size_t new_size=*size;
-	tetrabyte *a=*array;
+	tetra *a=*array;
 	for (size_t i=0; i<*size; i++)
 	{
 		if (a[i]==val)
@@ -394,7 +394,7 @@ void tetrabyte_array_remove_all_values(tetrabyte** array, tetrabyte val, size_t 
 	};
 	*size=new_size;
 	if (call_drealloc)
-		*array=DREALLOC(*array, tetrabyte, new_size, "");
+		*array=DREALLOC(*array, tetra, new_size, "");
 };
 
 byte *hexstring_to_array_or_die (char *hexstring, size_t *out)

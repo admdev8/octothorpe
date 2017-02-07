@@ -60,11 +60,11 @@ extern "C" {
 	void strbuf_fprint_short (strbuf *sb, unsigned limit, FILE *f);
 	bool strbuf_replace_if_possible (strbuf *sb, const char *s1, const char *s2);
 
-	void make_uint32_compact (tetrabyte a, strbuf* out);
-	void make_uint64_compact (octabyte a, strbuf* out);
+	void make_uint32_compact (tetra a, strbuf* out);
+	void make_uint64_compact (octa a, strbuf* out);
 	void make_SIZE_T_compact (size_t a, strbuf* out);
 
-	void strbuf_asmhex(strbuf *out, octabyte v);
+	void strbuf_asmhex(strbuf *out, octa v);
 
 	void strbuf_addc_C_escaped (strbuf *s, char c, bool treat_any_as_binary);
 	void strbuf_cvt_to_C_string (const char *in, strbuf *out, bool treat_as_binary);

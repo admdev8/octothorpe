@@ -18,6 +18,7 @@
 #pragma once
 
 #include "datatypes.h"
+#include "stuff.h"
 #include <stdbool.h>
 
 #ifdef  __cplusplus
@@ -34,7 +35,7 @@ extern "C" {
 	const char *bool_to_string(bool b);
 	int find_string_in_array_of_strings(const char *s, const char **array, size_t array_size, 
 		bool case_insensitive, bool sorted);
-	const char *mon_name[12];
+	//const char *mon_name[12];
 	bool string_is_ends_with (const char *s, const char *ending);
 	unsigned str_common_prefix_len (const char *s1, const char *s2);
 	byte* cvt_to_widestr_and_allocate (char *str, size_t *len);
@@ -46,7 +47,7 @@ extern "C" {
 
 	bool is_string_consists_only_of_Latin_letters (char *s);
 	bool is_string_consists_only_of_hex_digits (char *s);
-	bool is_string_has_only_one_character_repeating (char *s);
+	bool is_string_has_only_one_character_repeating (char *s, OPTIONAL char *output); // output can be NULL
 
 #ifdef  __cplusplus
 }

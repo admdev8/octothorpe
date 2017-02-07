@@ -355,7 +355,7 @@ byte *elf_get_ptr_to_symbol_start_by_name(byte* buf, const char *name)
     return elf_get_ptr_to_symbol_start (buf, s);
 };
 
-tetrabyte elf_get_tetrabyte_from_symbol_by_name_or_die(byte* buf, const char *name)
+tetra elf_get_tetra_from_symbol_by_name_or_die(byte* buf, const char *name)
 {
     byte *s;
 
@@ -363,7 +363,7 @@ tetrabyte elf_get_tetrabyte_from_symbol_by_name_or_die(byte* buf, const char *na
     if (s==0)
         die ("Can't find symbol %s\n", name);
 
-    return *(tetrabyte*)s;
+    return *(tetra*)s;
 };
 
 // FIXME: slow
@@ -426,7 +426,7 @@ Elf32_Rel *elf_find_reloc_for_ofs_in_buf (byte* buf, byte *ofs_in_buf, Elf32_Sym
     return rt;
 };
 
-byte *elf_dereference_tetrabyte_in_buf (byte *buf, tetrabyte* point)
+byte *elf_dereference_tetra_in_buf (byte *buf, tetra* point)
 {
     Elf32_Rel *r;
     Elf32_Sym *sym;
@@ -497,7 +497,7 @@ void elf_dump_biggest_data_objects(byte *buf, int n)
     free(copy);
 };
 
-Elf32_Sym *elf_get_symbol_of_tetrabyte_in_buf (byte* buf, tetrabyte* point)
+Elf32_Sym *elf_get_symbol_of_tetra_in_buf (byte* buf, tetra* point)
 {
     Elf32_Sym *s, *rt;
     Elf32_Rel *rel=elf_find_reloc_for_ofs_in_buf (buf, (byte*)point, &s);
@@ -508,13 +508,13 @@ Elf32_Sym *elf_get_symbol_of_tetrabyte_in_buf (byte* buf, tetrabyte* point)
     if (*point==0)
         return s; // already found
 
-    // add tetrabyte contents and find symbol at this place...
+    // add tetra contents and find symbol at this place...
     rt=elf_find_symbol_by_sect_and_offset (buf, s->st_shndx, 
             elf_get_ptr_to_symbol_start (buf, s) + *point);
     return rt;
 };
 
-char *elf_get_symbol_name_of_tetrabyte_in_buf_or_NULL(byte *buf, tetrabyte* point)
+char *elf_get_symbol_name_of_tetra_in_buf_or_NULL(byte *buf, tetra* point)
 {
     Elf32_Sym *s;
    
@@ -522,7 +522,7 @@ char *elf_get_symbol_name_of_tetrabyte_in_buf_or_NULL(byte *buf, tetrabyte* poin
     if (elf_find_reloc_for_ofs_in_buf (buf, (byte*)point, NULL)==NULL && *point==0)
         return "NULL";
 
-    s=elf_get_symbol_of_tetrabyte_in_buf(buf, point);
+    s=elf_get_symbol_of_tetra_in_buf(buf, point);
     if (s)
         return elf_get_symbol_name(buf, s);
     else

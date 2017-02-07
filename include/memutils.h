@@ -28,7 +28,7 @@ extern "C" {
 
 	// TODO: wydefill()
 	void bytefill (void* ptr, size_t size, byte val);
-	void tetrabytefill (void* ptr, size_t size, tetrabyte val);
+	void tetrafill (void* ptr, size_t size, tetra val);
 
 #ifndef bzero
 	void bzero (void* ptr, size_t s);

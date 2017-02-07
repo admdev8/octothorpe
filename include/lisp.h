@@ -24,14 +24,14 @@
 // informally-specified, bug-ridden, slow implementation of half of Common Lisp." 
 // (Greenspun's tenth rule of programming)
 
-// there shouldn't be int, use tetrabyte
+// there shouldn't be int, use tetra
 enum obj_type
 {
     OBJ_NONE=0, // not handled normally yet
     OBJ_BYTE,
     OBJ_WYDE,
-    OBJ_TETRABYTE,
-    OBJ_OCTABYTE,
+    OBJ_TETRA,
+    OBJ_OCTA,
     OBJ_DOUBLE,
     OBJ_XMM, // 16 bytes
     OBJ_CSTRING,
@@ -55,8 +55,8 @@ typedef struct _obj
     {
         byte b; // OBJ_BYTE
         wyde w; // OBJ_WYDE
-        tetrabyte tb; // OBJ_TETRABYTE
-        octabyte ob; // OBJ_OCTABYTE
+        tetra tb; // OBJ_TETRA
+        octa ob; // OBJ_OCTA
         double d; // OBJ_DOUBLE
         byte *xmm; // OBJ_XMM
         char *s; // OBJ_CSTRING
@@ -78,22 +78,22 @@ extern "C" {
 obj* LAST(obj *l);
 void obj_byte2 (byte i, obj* o);
 void obj_wyde2 (wyde i, obj* o);
-void obj_tetrabyte2 (tetrabyte i, obj* o);
-void obj_octabyte2 (octabyte i, obj* o);
+void obj_tetra2 (tetra i, obj* o);
+void obj_octa2 (octa i, obj* o);
 void obj_REG2 (REG i, obj* o);
 void obj_double2 (double d, obj* o);
 void obj_xmm2 (byte *ptr, obj *o);
 obj* obj_byte (byte i);
 obj* obj_wyde (wyde i);
-obj* obj_tetrabyte (tetrabyte i);
-obj* obj_octabyte (octabyte i);
+obj* obj_tetra (tetra i);
+obj* obj_octa (octa i);
 obj* obj_xmm (byte *ptr);
 obj* obj_REG (REG i);
-octabyte zero_extend_to_octabyte(obj*);
+octa zero_extend_to_octa(obj*);
 REG zero_extend_to_REG(obj* o);
 obj* obj_double (double i);
 obj* obj_wyde_n_times (wyde i, int t);
-obj* obj_tetrabyte_n_times (tetrabyte i, int t);
+obj* obj_tetra_n_times (tetra i, int t);
 obj* obj_cstring (const char *s);
 obj* cons (obj* head, obj* tail);
 obj* setcdr (obj* cell, obj* new_tail);
@@ -116,8 +116,8 @@ obj* car(obj* o);
 obj* cdr(obj* o);
 bool obj_is_opaque(obj* o);
 void* obj_unpack_opaque(obj* o);
-tetrabyte obj_get_as_tetrabyte(obj* o);
-octabyte obj_get_as_octabyte(obj* o);
+tetra obj_get_as_tetra(obj* o);
+octa obj_get_as_octa(obj* o);
 byte obj_get_as_byte(obj* o);
 wyde obj_get_as_wyde(obj* o);
 REG obj_get_as_REG(obj* o);

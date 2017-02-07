@@ -189,7 +189,7 @@ void strbuf_addf (strbuf *sb, const char *fmt, ...)
 	va_end(va);
 };
 
-void make_uint32_compact (tetrabyte a, strbuf* out)
+void make_uint32_compact (tetra a, strbuf* out)
 {
 	if (a<10)
 		strbuf_addf(out, "%d", a);
@@ -197,7 +197,7 @@ void make_uint32_compact (tetrabyte a, strbuf* out)
 		strbuf_addf(out, "0x%x", a);
 };
 
-void make_uint64_compact (octabyte a, strbuf* out)
+void make_uint64_compact (octa a, strbuf* out)
 {
 	if (a<10)
 		strbuf_addf (out, "%" PRId64, a);
@@ -207,9 +207,9 @@ void make_uint64_compact (octabyte a, strbuf* out)
 
 void make_SIZE_T_compact (size_t a, strbuf* out)
 {
-	if (sizeof(size_t)==sizeof(octabyte))
+	if (sizeof(size_t)==sizeof(octa))
 		make_uint64_compact (a, out);
-	else if (sizeof(size_t)==sizeof(tetrabyte))
+	else if (sizeof(size_t)==sizeof(tetra))
 		make_uint32_compact (a, out);
 	else
 	{
@@ -217,7 +217,7 @@ void make_SIZE_T_compact (size_t a, strbuf* out)
 	};
 };
 
-void strbuf_asmhex(strbuf *out, octabyte v)
+void strbuf_asmhex(strbuf *out, octa v)
 {
 	if (v<10)
 		strbuf_addf(out, "%d", v);
@@ -402,6 +402,7 @@ void strbuf_add_space_if_not_empty (strbuf* out)
 		strbuf_addc (out, ' ');
 };
 
+// TODO: could be a callback fn
 static void neat_list_of_uint8_t_helper (byte c, strbuf* out)
 {
 	if (isprint (c))

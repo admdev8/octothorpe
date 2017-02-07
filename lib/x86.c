@@ -27,7 +27,7 @@
 #include <cpuid.h>
 #endif
 
-void flags_to_str (tetrabyte flags, strbuf *out)
+void flags_to_str (tetra flags, strbuf *out)
 {
     u_EFLAGS uf;
     uf.flags=flags;
@@ -57,7 +57,7 @@ void flags_to_str (tetrabyte flags, strbuf *out)
         strbuf_trim_last_char (out);
 };
 
-void dump_flags (fds *s, tetrabyte flags)
+void dump_flags (fds *s, tetra flags)
 {
     strbuf sb = STRBUF_INIT;
     flags_to_str(flags, &sb);
@@ -67,7 +67,7 @@ void dump_flags (fds *s, tetrabyte flags)
     strbuf_deinit (&sb);
 };
 
-void DR7_to_str (tetrabyte DR7, strbuf* out)
+void DR7_to_str (tetra DR7, strbuf* out)
 {
     strbuf_addf(out, "%s%s%s%s%s%s%s%s%s%s%sR/W0=%d%d LEN0=%d%d R/W1=%d%d LEN1=%d%d R/W2=%d%d LEN2=%d%d R/W3=%d%d LEN3=%d%d", 
             IS_SET (DR7, FLAG_DR7_L0) ? "L0 " : "   ",
@@ -92,7 +92,7 @@ void DR7_to_str (tetrabyte DR7, strbuf* out)
             IS_SET (DR7, 1<<30) ? 1 : 0, IS_SET (DR7, 1<<31) ? 1 : 0); // LEN3
 };
 
-void dump_DR7 (fds* s, tetrabyte DR7)
+void dump_DR7 (fds* s, tetra DR7)
 {
     strbuf sb=STRBUF_INIT;
     DR7_to_str(DR7, &sb);
@@ -100,7 +100,7 @@ void dump_DR7 (fds* s, tetrabyte DR7)
     strbuf_deinit(&sb);
 };
 
-void dump_DR6 (fds* s, tetrabyte DR6)
+void dump_DR6 (fds* s, tetra DR6)
 {
     if (IS_SET(DR6, FLAG_DR6_B0)) L_fds (s, "B0 ");
     if (IS_SET(DR6, FLAG_DR6_B1)) L_fds (s, "B1 ");
@@ -109,7 +109,7 @@ void dump_DR6 (fds* s, tetrabyte DR6)
     if (IS_SET(DR6, FLAG_DR6_BS)) L_fds (s, "BS ");
 };
 
-void MXCSR_to_str (tetrabyte a, strbuf *out)
+void MXCSR_to_str (tetra a, strbuf *out)
 {
     if (IS_SET (a, 1<<15)) strbuf_addstr(out, "FZ ");
 

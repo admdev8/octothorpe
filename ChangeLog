@@ -1,3 +1,8 @@
+2017-02-07 Dennis Yurichev <dennis@yurichev.com>
+
+	* tetrabyte renamed to tetra and octabyte renamed to octa,
+	after names of datatypes in Donald Knuth's MMIX simulator.
+
 2017-01-30 Dennis Yurichev <dennis@yurichev.com>
 	
 	* New function: neat_list_of_bytes().

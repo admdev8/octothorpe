@@ -72,7 +72,7 @@ extern "C" {
 	bool value_in2(unsigned v, unsigned a1, unsigned a2);
 	bool value_not_in2(unsigned v, unsigned a1, unsigned a2);
 	bool value_in7(unsigned v, unsigned a1, unsigned a2, unsigned a3, unsigned a4, unsigned a5, unsigned a6, unsigned a7);
-	unsigned most_significant_hex_number(octabyte x);
+	unsigned most_significant_hex_number(octa x);
 #ifdef __cplusplus
 	void die (const char * fmt, ...);
 #else
@@ -92,19 +92,19 @@ extern "C" {
 	unsigned align_to_boundary(unsigned address, unsigned boundary);
 
 	const char *find_content_type_for_filename (const char *filename);
-	tetrabyte CRC32 (byte *block, size_t length, tetrabyte in_CRC);
-	octabyte CRC64(octabyte crc, byte *buf, size_t len);
+	tetra CRC32 (byte *block, size_t length, tetra in_CRC);
+	octa CRC64(octa crc, byte *buf, size_t len);
 
 	// used in rbtree
 	int compare_size_t(void* leftp, void* rightp);
 	int compare_int(void* leftp, void* rightp);
-	int compare_tetrabytes(const void* leftp, const void* rightp);
+	int compare_tetras(const void* leftp, const void* rightp);
 
-	bool element_in_the_array_of_tetrabytes(tetrabyte i, tetrabyte *a, unsigned size);
+	bool element_in_the_array_of_tetras(tetra i, tetra *a, unsigned size);
 	bool element_in_the_array_of_size_t(size_t i, size_t *a, unsigned size);
 	void add_value_to_each_element_of_size_t_array (size_t *a, size_t s, size_t val);
-	int qsort_compare_tetrabytes(const void* leftp, const void* rightp);
-	void tetrabyte_array_remove_all_values(tetrabyte** array, tetrabyte val, size_t *size, bool call_drealloc);
+	int qsort_compare_tetras(const void* leftp, const void* rightp);
+	void tetra_array_remove_all_values(tetra** array, tetra val, size_t *size, bool call_drealloc);
 	byte *hexstring_to_array_or_die (char *hexstring, size_t *out);
 
 // check if in range [begin, end). TODO: better fn name
@@ -112,12 +112,12 @@ extern "C" {
 // check if in range [begin, begin+size). TODO: better fn name
 	bool REG_in_range2 (REG v, REG begin, size_t size);
 
-	uint64_t uint64_log2 (uint64_t i);
-	int popcnt32 (uint32_t x);
-	int popcnt64 (uint64_t x);
-	uint64_t ipow(uint64_t base, uint64_t exp);
+	octa uint64_log2 (octa i);
+	int popcnt32 (tetra x);
+	int popcnt64 (octa x);
+	octa ipow(octa base, octa exp);
 	bool IsInteger (double d);
-	bool uint64_is_2n(uint64_t v);
+	bool uint64_is_2n(octa v);
 
 #ifdef  __cplusplus
 }

@@ -126,13 +126,14 @@ int find_string_in_array_of_strings(const char *s, const char **array, size_t ar
 	else
 		return -1; // string not found
 };
-
-const char *mon_name[12] = 
+/*
+FIXME: conflicting with smth
+static const char *mon_name[12] = 
 {
 	"Jan", "Feb", "Mar", "Apr", "May", "Jun",
 	"Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
 };
-
+*/
 bool string_is_ends_with (const char *s, const char *ending)
 {
 	return strcmp (s+strlen(s)-strlen(ending), ending)==0 ? true : false;
@@ -208,7 +209,7 @@ bool is_string_consists_only_of_hex_digits (char *s)
 	return strspn (s, "0123456789ABCDEFabcdef")==strlen(s);
 };
 
-bool is_string_has_only_one_character_repeating (char *s)
+bool is_string_has_only_one_character_repeating (char *s, char *output)
 {
 	if (strlen(s)==1)
 		return true;
@@ -217,6 +218,9 @@ bool is_string_has_only_one_character_repeating (char *s)
 	for (; *s; s++)
 		if (*s!=*begin)
 			return false;
+
+	if (output)
+		*output=*begin;
 	return true;
 };
 

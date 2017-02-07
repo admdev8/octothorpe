@@ -27,16 +27,16 @@ void bytefill (void* ptr, size_t size, byte val)
 	memset(ptr, val, size);
 };
 
-void tetrabytefill (void* ptr, size_t size, tetrabyte val)
+void tetrafill (void* ptr, size_t size, tetra val)
 {
 	byte *cur_ptr=(byte*)ptr;
 	size_t rem=size;
 
 	while (rem>=4)
 	{
-		*(tetrabyte*)cur_ptr=val;
-		cur_ptr+=sizeof(tetrabyte);
-		rem-=sizeof(tetrabyte);
+		*(tetra*)cur_ptr=val;
+		cur_ptr+=sizeof(tetra);
+		rem-=sizeof(tetra);
 	};
 
 	if (rem>=1)

@@ -45,24 +45,24 @@ void obj_wyde2 (wyde i, obj* o)
     o->u.w=i;
 };
 
-void obj_tetrabyte2 (tetrabyte i, obj* o)
+void obj_tetra2 (tetra i, obj* o)
 {
-    o->t=OBJ_TETRABYTE;
+    o->t=OBJ_TETRA;
     o->u.tb=i;
 };
 
-void obj_octabyte2 (octabyte i, obj* o)
+void obj_octa2 (octa i, obj* o)
 {
-    o->t=OBJ_OCTABYTE;
+    o->t=OBJ_OCTA;
     o->u.ob=i;
 };
 
 void obj_REG2 (REG i, obj* o)
 {
 #ifdef O_BITS64
-    obj_octabyte2 (i, o);
+    obj_octa2 (i, o);
 #else
-    obj_tetrabyte2 (i, o);
+    obj_tetra2 (i, o);
 #endif
 };
 
@@ -94,19 +94,19 @@ obj* obj_wyde (wyde i)
     return rt;
 };
 
-obj* obj_tetrabyte (tetrabyte i)
+obj* obj_tetra (tetra i)
 {
     obj* rt;
     rt=DCALLOC (obj, 1, "obj");
-    obj_tetrabyte2(i, rt);
+    obj_tetra2(i, rt);
     return rt;
 };
 
-obj* obj_octabyte (octabyte i)
+obj* obj_octa (octa i)
 {
     obj* rt;
     rt=DCALLOC (obj, 1, "obj");
-    obj_octabyte2 (i, rt);
+    obj_octa2 (i, rt);
     return rt;
 };
 
@@ -141,11 +141,11 @@ obj* obj_wyde_n_times (wyde i, int t)
     return cons (obj_wyde(i), obj_wyde_n_times(i, t-1));
 };
 
-obj* obj_tetrabyte_n_times (tetrabyte i, int t)
+obj* obj_tetra_n_times (tetra i, int t)
 {
     if (t==0)
         return NULL;
-    return cons (obj_tetrabyte(i), obj_tetrabyte_n_times(i, t-1));
+    return cons (obj_tetra(i), obj_tetra_n_times(i, t-1));
 };
 
 obj* obj_cstring (const char *s)
@@ -292,10 +292,10 @@ void obj_dump(obj *o)
         case OBJ_WYDE:
             fprintf (FILE_OUT, "0x%x", o->u.w);
             break;
-        case OBJ_TETRABYTE:
+        case OBJ_TETRA:
             fprintf (FILE_OUT, "0x%x", o->u.tb);
             break;
-        case OBJ_OCTABYTE:
+        case OBJ_OCTA:
             fprintf (FILE_OUT, "0x%" PRIx64, o->u.ob);
             break;
         case OBJ_DOUBLE:
@@ -339,9 +339,9 @@ unsigned obj_width_in_bits(obj *o)
             return 8;
         case OBJ_WYDE:
             return 16;
-        case OBJ_TETRABYTE:
+        case OBJ_TETRA:
             return 32;
-        case OBJ_OCTABYTE:
+        case OBJ_OCTA:
             return 64;
         case OBJ_XMM:
             return 16*8;
@@ -365,10 +365,10 @@ void obj_copy2 (obj *dst, obj *src)
         case OBJ_WYDE:
             dst->u.w=src->u.w;
             break;
-        case OBJ_TETRABYTE:
+        case OBJ_TETRA:
             dst->u.tb=src->u.tb;
             break;
-        case OBJ_OCTABYTE:
+        case OBJ_OCTA:
             dst->u.ob=src->u.ob;
             break;
         case OBJ_DOUBLE:
@@ -417,11 +417,11 @@ bool EQL(obj *o1, obj* o2)
         case OBJ_WYDE:
             return obj_get_as_wyde(o1)==obj_get_as_wyde(o2);
 
-        case OBJ_TETRABYTE:
-            return obj_get_as_tetrabyte(o1)==obj_get_as_tetrabyte(o2);
+        case OBJ_TETRA:
+            return obj_get_as_tetra(o1)==obj_get_as_tetra(o2);
             
-        case OBJ_OCTABYTE:
-            return obj_get_as_octabyte(o1)==obj_get_as_octabyte(o2);
+        case OBJ_OCTA:
+            return obj_get_as_octa(o1)==obj_get_as_octa(o2);
 
         case OBJ_DOUBLE:
             return o1->u.d==o2->u.d;
@@ -509,8 +509,8 @@ void obj_free_structures(obj* o)
         case OBJ_NONE:
         case OBJ_BYTE:
         case OBJ_WYDE:
-        case OBJ_TETRABYTE:
-        case OBJ_OCTABYTE:
+        case OBJ_TETRA:
+        case OBJ_OCTA:
         case OBJ_DOUBLE:
             // do nothing
             break;
@@ -573,9 +573,9 @@ obj* add_to_list(obj* l, obj* o)
 	};
 };
 
-tetrabyte obj_get_as_tetrabyte(obj* o)
+tetra obj_get_as_tetra(obj* o)
 {
-    oassert (o->t==OBJ_TETRABYTE);
+    oassert (o->t==OBJ_TETRA);
     return o->u.tb;
 };
 
@@ -585,9 +585,9 @@ double obj_get_as_double(obj* o)
     return o->u.d;
 };
 
-octabyte obj_get_as_octabyte(obj* o)
+octa obj_get_as_octa(obj* o)
 {
-    oassert (o->t==OBJ_OCTABYTE);
+    oassert (o->t==OBJ_OCTA);
     return o->u.ob;
 };
 
@@ -605,13 +605,13 @@ wyde obj_get_as_wyde(obj* o)
 REG obj_get_as_REG(obj* o)
 {
 #ifdef O_BITS64
-    return obj_get_as_octabyte(o);
+    return obj_get_as_octa(o);
 #else
-    return obj_get_as_tetrabyte(o);
+    return obj_get_as_tetra(o);
 #endif
 };
 
-octabyte zero_extend_to_octabyte(obj* o)
+octa zero_extend_to_octa(obj* o)
 {
     switch (o->t)
     {
@@ -619,12 +619,12 @@ octabyte zero_extend_to_octabyte(obj* o)
             return o->u.b;
         case OBJ_WYDE:
             return o->u.w;
-        case OBJ_TETRABYTE:
+        case OBJ_TETRA:
             return o->u.tb;
-        case OBJ_OCTABYTE:
+        case OBJ_OCTA:
             return o->u.ob;
         default:
-            oassert(!"other types are not convertible to octabyte");
+            oassert(!"other types are not convertible to octa");
             fatal_error();
     };
 };
@@ -637,13 +637,13 @@ REG zero_extend_to_REG(obj* o)
             return o->u.b;
         case OBJ_WYDE:
             return o->u.w;
-        case OBJ_TETRABYTE:
+        case OBJ_TETRA:
             return o->u.tb;
-        case OBJ_OCTABYTE:
+        case OBJ_OCTA:
 #ifdef O_BITS64
             return o->u.ob;
 #else
-            oassert(!"cannot convert octabyte to REG");
+            oassert(!"cannot convert octa to REG");
 #endif            
             fatal_error();
         default:
@@ -660,9 +660,9 @@ bool obj_is_zero(obj* o)
             return o->u.b==0;
         case OBJ_WYDE:
             return o->u.w==0;
-        case OBJ_TETRABYTE:
+        case OBJ_TETRA:
             return o->u.tb==0;
-        case OBJ_OCTABYTE:
+        case OBJ_OCTA:
             return o->u.ob==0;
         default:
             oassert(!"other types are not supported (so far)");
@@ -722,11 +722,11 @@ void obj_REG2_and_set_type(enum obj_type t, REG v, double f, obj* out)
         case OBJ_WYDE:      
             obj_wyde2(v&0xFFFF, out);
             break;
-        case OBJ_TETRABYTE: 
-            obj_tetrabyte2(v&0xFFFFFFFF, out);
+        case OBJ_TETRA: 
+            obj_tetra2(v&0xFFFFFFFF, out);
             break;
-        case OBJ_OCTABYTE:  
-            obj_octabyte2(v, out);
+        case OBJ_OCTA:
+            obj_octa2(v, out);
             break;
         case OBJ_DOUBLE:
             obj_double2(f, out);
@@ -741,10 +741,10 @@ int get_2nd_most_significant_bit(obj *i)
 {
     switch (i->t)
     {
-        case OBJ_OCTABYTE:
-            return (obj_get_as_octabyte(i) & 0x4000000000000000) ? 1 : 0;
-        case OBJ_TETRABYTE:
-            return (obj_get_as_tetrabyte(i) & 0x40000000) ? 1 : 0;
+        case OBJ_OCTA:
+            return (obj_get_as_octa(i) & 0x4000000000000000) ? 1 : 0;
+        case OBJ_TETRA:
+            return (obj_get_as_tetra(i) & 0x40000000) ? 1 : 0;
         case OBJ_WYDE:
             return (obj_get_as_wyde(i) & 0x4000) ? 1 : 0;
         case OBJ_BYTE:
@@ -759,10 +759,10 @@ int get_lowest_byte(obj *i)
 {
     switch (i->t)
     {
-        case OBJ_OCTABYTE:
-            return obj_get_as_octabyte(i) & 0xFF;
-        case OBJ_TETRABYTE:
-            return obj_get_as_tetrabyte(i) & 0xFF;
+        case OBJ_OCTA:
+            return obj_get_as_octa(i) & 0xFF;
+        case OBJ_TETRA:
+            return obj_get_as_tetra(i) & 0xFF;
         case OBJ_WYDE:
             return obj_get_as_wyde(i) & 0xFF;
         case OBJ_BYTE:
@@ -782,10 +782,10 @@ void obj_increment(obj *i)
 {
     switch (i->t)
     {
-        case OBJ_OCTABYTE:
+        case OBJ_OCTA:
             i->u.ob++;
             break;
-        case OBJ_TETRABYTE:
+        case OBJ_TETRA:
             i->u.tb++;
             break;
         case OBJ_WYDE:
@@ -804,10 +804,10 @@ void obj_decrement(obj *i)
 {
     switch (i->t)
     {
-        case OBJ_OCTABYTE:
+        case OBJ_OCTA:
             i->u.ob--;
             break;
-        case OBJ_TETRABYTE:
+        case OBJ_TETRA:
             i->u.tb--;
             break;
         case OBJ_WYDE:
@@ -828,11 +828,11 @@ void obj_subtract(obj *op1, obj *op2, obj *result)
 
     switch (op1->t)
     {
-        case OBJ_OCTABYTE:
-            obj_octabyte2 (op1->u.ob - op2->u.ob, result);
+        case OBJ_OCTA:
+            obj_octa2 (op1->u.ob - op2->u.ob, result);
             break;
-        case OBJ_TETRABYTE:
-            obj_tetrabyte2 (op1->u.tb - op2->u.tb, result);
+        case OBJ_TETRA:
+            obj_tetra2 (op1->u.tb - op2->u.tb, result);
             break;
         case OBJ_WYDE:
             obj_wyde2 (op1->u.w - op2->u.w, result);
@@ -852,11 +852,11 @@ void obj_add(obj *op1, obj *op2, obj *result)
 
     switch (op1->t)
     {
-        case OBJ_OCTABYTE:
-            obj_octabyte2 (op1->u.ob + op2->u.ob, result);
+        case OBJ_OCTA:
+            obj_octa2 (op1->u.ob + op2->u.ob, result);
             break;
-        case OBJ_TETRABYTE:
-            obj_tetrabyte2 (op1->u.tb + op2->u.tb, result);
+        case OBJ_TETRA:
+            obj_tetra2 (op1->u.tb + op2->u.tb, result);
             break;
         case OBJ_WYDE:
             obj_wyde2 (op1->u.w + op2->u.w, result);
@@ -876,11 +876,11 @@ void obj_XOR(obj *op1, obj *op2, obj *result)
 
     switch (op1->t)
     {
-        case OBJ_OCTABYTE:
-            obj_octabyte2 (op1->u.ob ^ op2->u.ob, result);
+        case OBJ_OCTA:
+            obj_octa2 (op1->u.ob ^ op2->u.ob, result);
             break;
-        case OBJ_TETRABYTE:
-            obj_tetrabyte2 (op1->u.tb ^ op2->u.tb, result);
+        case OBJ_TETRA:
+            obj_tetra2 (op1->u.tb ^ op2->u.tb, result);
             break;
         case OBJ_WYDE:
             obj_wyde2 (op1->u.w ^ op2->u.w, result);
@@ -898,11 +898,11 @@ void obj_NOT(obj *op1, obj *result)
 {
     switch (op1->t)
     {
-        case OBJ_OCTABYTE:
-            obj_octabyte2 (~op1->u.ob, result);
+        case OBJ_OCTA:
+            obj_octa2 (~op1->u.ob, result);
             break;
-        case OBJ_TETRABYTE:
-            obj_tetrabyte2 (~op1->u.tb, result);
+        case OBJ_TETRA:
+            obj_tetra2 (~op1->u.tb, result);
             break;
         case OBJ_WYDE:
             obj_wyde2 (~op1->u.w, result);
@@ -920,11 +920,11 @@ void obj_NEG(obj *op1, obj *result)
 {
     switch (op1->t)
     {
-        case OBJ_OCTABYTE:
-            obj_octabyte2 (-op1->u.ob, result);
+        case OBJ_OCTA:
+            obj_octa2 (-op1->u.ob, result);
             break;
-        case OBJ_TETRABYTE:
-            obj_tetrabyte2 (-op1->u.tb, result);
+        case OBJ_TETRA:
+            obj_tetra2 (-op1->u.tb, result);
             break;
         case OBJ_WYDE:
             obj_wyde2 (-op1->u.w, result);
@@ -944,11 +944,11 @@ void obj_AND(obj *op1, obj *op2, obj *result)
 
     switch (op1->t)
     {
-        case OBJ_OCTABYTE:
-            obj_octabyte2 (op1->u.ob & op2->u.ob, result);
+        case OBJ_OCTA:
+            obj_octa2 (op1->u.ob & op2->u.ob, result);
             break;
-        case OBJ_TETRABYTE:
-            obj_tetrabyte2 (op1->u.tb & op2->u.tb, result);
+        case OBJ_TETRA:
+            obj_tetra2 (op1->u.tb & op2->u.tb, result);
             break;
         case OBJ_WYDE:
             obj_wyde2 (op1->u.w & op2->u.w, result);
@@ -968,11 +968,11 @@ void obj_OR(obj *op1, obj *op2, obj *result)
 
     switch (op1->t)
     {
-        case OBJ_OCTABYTE:
-            obj_octabyte2 (op1->u.ob | op2->u.ob, result);
+        case OBJ_OCTA:
+            obj_octa2 (op1->u.ob | op2->u.ob, result);
             break;
-        case OBJ_TETRABYTE:
-            obj_tetrabyte2 (op1->u.tb | op2->u.tb, result);
+        case OBJ_TETRA:
+            obj_tetra2 (op1->u.tb | op2->u.tb, result);
             break;
         case OBJ_WYDE:
             obj_wyde2 (op1->u.w | op2->u.w, result);
@@ -992,10 +992,10 @@ int obj_compare(obj *op1, obj *op2)
 
     switch (op1->t)
     {
-        case OBJ_OCTABYTE:
+        case OBJ_OCTA:
             {
-                octabyte o1=obj_get_as_octabyte (op1);
-                octabyte o2=obj_get_as_octabyte (op2);
+                octa o1=obj_get_as_octa (op1);
+                octa o2=obj_get_as_octa (op2);
                 if (o1<o2)
                     return -1;
                 if (o1>o2)
@@ -1003,10 +1003,10 @@ int obj_compare(obj *op1, obj *op2)
                 return 0;
             };
 
-        case OBJ_TETRABYTE:
+        case OBJ_TETRA:
             {
-                tetrabyte o1=obj_get_as_tetrabyte (op1);
-                tetrabyte o2=obj_get_as_tetrabyte (op2);
+                tetra o1=obj_get_as_tetra (op1);
+                tetra o2=obj_get_as_tetra (op2);
                 if (o1<o2)
                     return -1;
                 if (o1>o2)
@@ -1046,10 +1046,10 @@ int get_most_significant_bit(obj *i)
 {
     switch (i->t)
     {
-        case OBJ_OCTABYTE:
-            return (obj_get_as_octabyte(i) & 0x8000000000000000) ? 1 : 0;
-        case OBJ_TETRABYTE:
-            return (obj_get_as_tetrabyte(i) & 0x80000000) ? 1 : 0;
+        case OBJ_OCTA:
+            return (obj_get_as_octa(i) & 0x8000000000000000) ? 1 : 0;
+        case OBJ_TETRA:
+            return (obj_get_as_tetra(i) & 0x80000000) ? 1 : 0;
         case OBJ_WYDE:
             return (obj_get_as_wyde(i) & 0x8000) ? 1 : 0;
         case OBJ_BYTE:
@@ -1064,11 +1064,11 @@ void obj_AND_with(obj* op1, byte op2)
 {
     switch (op1->t)
     {
-        case OBJ_OCTABYTE:
-            op1->u.ob &= (octabyte)op2;
+        case OBJ_OCTA:
+            op1->u.ob &= (octa)op2;
             break;
-        case OBJ_TETRABYTE:
-            op1->u.tb &= (tetrabyte)op2;
+        case OBJ_TETRA:
+            op1->u.tb &= (tetra)op2;
             break;
         case OBJ_WYDE:
             op1->u.w &= (wyde)op2;
@@ -1086,11 +1086,11 @@ void obj2_sign_extended_shift_right (obj *op1, byte op2, obj *out)
 {
     switch (op1->t)
     {
-        case OBJ_OCTABYTE:
-            obj_octabyte2 ((uint64_t)(((int64_t)obj_get_as_octabyte (op1)) >> op2), out);
+        case OBJ_OCTA:
+            obj_octa2 ((uint64_t)(((int64_t)obj_get_as_octa (op1)) >> op2), out);
             break;
-        case OBJ_TETRABYTE:
-            obj_tetrabyte2 ((uint32_t)(((int32_t)obj_get_as_tetrabyte (op1)) >> op2), out);
+        case OBJ_TETRA:
+            obj_tetra2 ((uint32_t)(((int32_t)obj_get_as_tetra (op1)) >> op2), out);
             break;
         case OBJ_WYDE:
             obj_wyde2 ((uint16_t)(((int16_t)obj_get_as_wyde (op1)) >> op2), out);
@@ -1114,11 +1114,11 @@ void obj_zero_extend (obj *in, enum obj_type out_type, obj* out)
         case OBJ_WYDE:
             obj_wyde2 (tmp, out);
             break;
-        case OBJ_TETRABYTE:
-            obj_tetrabyte2 (tmp, out);
+        case OBJ_TETRA:
+            obj_tetra2 (tmp, out);
             break;
-        case OBJ_OCTABYTE:
-            obj_octabyte2 (tmp, out);
+        case OBJ_OCTA:
+            obj_octa2 (tmp, out);
             break;
         default:
             oassert (!"other types are not yet supported");
@@ -1134,11 +1134,11 @@ void obj_sign_extend (obj *in, enum obj_type out_type, obj* out)
             obj_wyde2((uint16_t)(int16_t)(int8_t)obj_get_as_byte(in), out);
             break;
 
-        case OBJ_TETRABYTE:
+        case OBJ_TETRA:
             if (in->t==OBJ_BYTE)
-                obj_tetrabyte2((uint32_t)(int32_t)(int8_t)obj_get_as_byte(in), out);
+                obj_tetra2((uint32_t)(int32_t)(int8_t)obj_get_as_byte(in), out);
             else if (in->t==OBJ_WYDE)
-                obj_tetrabyte2((uint32_t)(int32_t)(int16_t)obj_get_as_wyde(in), out);
+                obj_tetra2((uint32_t)(int32_t)(int16_t)obj_get_as_wyde(in), out);
             else
             {
                 oassert(0);
@@ -1146,13 +1146,13 @@ void obj_sign_extend (obj *in, enum obj_type out_type, obj* out)
             };
             break;
 
-        case OBJ_OCTABYTE:
+        case OBJ_OCTA:
             if (in->t==OBJ_BYTE)
-                obj_octabyte2((uint64_t)(int64_t)(int8_t)obj_get_as_byte(in), out);
+                obj_octa2((uint64_t)(int64_t)(int8_t)obj_get_as_byte(in), out);
             else if (in->t==OBJ_WYDE)
-                obj_octabyte2((uint64_t)(int64_t)(int16_t)obj_get_as_wyde(in), out);
-            else if (in->t==OBJ_TETRABYTE)
-                obj_octabyte2((uint64_t)(int64_t)(int32_t)obj_get_as_tetrabyte(in), out);
+                obj_octa2((uint64_t)(int64_t)(int16_t)obj_get_as_wyde(in), out);
+            else if (in->t==OBJ_TETRA)
+                obj_octa2((uint64_t)(int64_t)(int32_t)obj_get_as_tetra(in), out);
             else
             {
                 oassert(0);

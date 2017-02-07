@@ -20,9 +20,9 @@
 
 #ifdef O_BITS32
 
-void intrin_SHL (IN tetrabyte value, IN uint8_t shift_value, OUT tetrabyte* result, IN OUT tetrabyte* flags)
+void intrin_SHL (IN tetra value, IN uint8_t shift_value, OUT tetra* result, IN OUT tetra* flags)
 {
-	tetrabyte tmp;
+	tetra tmp;
 	
 	__asm__("pushfl;"
 		"popl %%ebx;"
@@ -40,9 +40,9 @@ void intrin_SHL (IN tetrabyte value, IN uint8_t shift_value, OUT tetrabyte* resu
 	*flags=(tmp & FLAG_PSAZOC);
 };
 
-void intrin_SHR (IN tetrabyte value, IN uint8_t shift_value, OUT tetrabyte* result, IN OUT tetrabyte* flags)
+void intrin_SHR (IN tetra value, IN uint8_t shift_value, OUT tetra* result, IN OUT tetra* flags)
 {
-	tetrabyte tmp;
+	tetra tmp;
 	
 	__asm__("pushfl;"
 		"popl %%ebx;"
@@ -60,9 +60,9 @@ void intrin_SHR (IN tetrabyte value, IN uint8_t shift_value, OUT tetrabyte* resu
 	*flags=(tmp & FLAG_PSAZOC);
 };
 
-void intrin_SAR (IN tetrabyte value, IN uint8_t shift_value, OUT tetrabyte* result, IN OUT tetrabyte* flags)
+void intrin_SAR (IN tetra value, IN uint8_t shift_value, OUT tetra* result, IN OUT tetra* flags)
 {
-	tetrabyte tmp;
+	tetra tmp;
 	
 	__asm__("pushfl;"
 		"popl %%ebx;"
@@ -80,9 +80,9 @@ void intrin_SAR (IN tetrabyte value, IN uint8_t shift_value, OUT tetrabyte* resu
 	*flags=(tmp & FLAG_PSAZOC);
 };
 
-void intrin_ADD (IN tetrabyte op1, IN tetrabyte op2, OUT tetrabyte* result, IN OUT tetrabyte* flags)
+void intrin_ADD (IN tetra op1, IN tetra op2, OUT tetra* result, IN OUT tetra* flags)
 {
-	tetrabyte tmp;
+	tetra tmp;
 	
 	__asm__("pushfl;"
 		"popl %%ebx;"
@@ -100,9 +100,9 @@ void intrin_ADD (IN tetrabyte op1, IN tetrabyte op2, OUT tetrabyte* result, IN O
 	*flags=(tmp & FLAG_PSAZOC);
 };
 
-void intrin_ADC (IN tetrabyte op1, IN tetrabyte op2, OUT tetrabyte* result, IN OUT tetrabyte* flags)
+void intrin_ADC (IN tetra op1, IN tetra op2, OUT tetra* result, IN OUT tetra* flags)
 {
-	tetrabyte tmp;
+	tetra tmp;
 	
 	__asm__("pushfl;"
 		"popl %%ebx;"
@@ -120,9 +120,9 @@ void intrin_ADC (IN tetrabyte op1, IN tetrabyte op2, OUT tetrabyte* result, IN O
 	*flags=(tmp & FLAG_PSAZOC);
 };
 
-void intrin_SUB (IN tetrabyte op1, IN tetrabyte op2, OUT tetrabyte* result, IN OUT tetrabyte* flags)
+void intrin_SUB (IN tetra op1, IN tetra op2, OUT tetra* result, IN OUT tetra* flags)
 {
-	tetrabyte tmp;
+	tetra tmp;
 	
 	__asm__("pushfl;"
 		"popl %%ebx;"
@@ -140,9 +140,9 @@ void intrin_SUB (IN tetrabyte op1, IN tetrabyte op2, OUT tetrabyte* result, IN O
 	*flags=(tmp & FLAG_PSAZOC);
 };
 
-void intrin_SBB (IN tetrabyte op1, IN tetrabyte op2, OUT tetrabyte* result, IN OUT tetrabyte* flags)
+void intrin_SBB (IN tetra op1, IN tetra op2, OUT tetra* result, IN OUT tetra* flags)
 {
-	tetrabyte tmp;
+	tetra tmp;
 	
 	__asm__("pushfl;"
 		"popl %%ebx;"
@@ -160,9 +160,9 @@ void intrin_SBB (IN tetrabyte op1, IN tetrabyte op2, OUT tetrabyte* result, IN O
 	*flags=(tmp & FLAG_PSAZOC);
 };
 
-void intrin_XOR (IN tetrabyte op1, IN tetrabyte op2, OUT tetrabyte* result, IN OUT tetrabyte* flags)
+void intrin_XOR (IN tetra op1, IN tetra op2, OUT tetra* result, IN OUT tetra* flags)
 {
-	tetrabyte tmp;
+	tetra tmp;
 	
 	__asm__("pushfl;"
 		"popl %%ebx;"
@@ -180,9 +180,9 @@ void intrin_XOR (IN tetrabyte op1, IN tetrabyte op2, OUT tetrabyte* result, IN O
 	*flags=(tmp & FLAG_PSAZOC);
 };
 
-void intrin_XOR_addr (IN tetrabyte *address_of_op1, IN tetrabyte op2, OUT tetrabyte* result, IN OUT tetrabyte* flags)
+void intrin_XOR_addr (IN tetra *address_of_op1, IN tetra op2, OUT tetra* result, IN OUT tetra* flags)
 {
-	tetrabyte tmp;
+	tetra tmp;
 	
 	__asm__("pushfl;"
 		"popl %%esi;"
@@ -200,9 +200,9 @@ void intrin_XOR_addr (IN tetrabyte *address_of_op1, IN tetrabyte op2, OUT tetrab
 	*flags=(tmp & FLAG_PSAZOC);
 };
 
-void intrin_OR (IN tetrabyte op1, IN tetrabyte op2, OUT tetrabyte* result, IN OUT tetrabyte* flags)
+void intrin_OR (IN tetra op1, IN tetra op2, OUT tetra* result, IN OUT tetra* flags)
 {
-	tetrabyte tmp;
+	tetra tmp;
 	
 	__asm__("pushfl;"
 		"popl %%ebx;"
@@ -220,9 +220,9 @@ void intrin_OR (IN tetrabyte op1, IN tetrabyte op2, OUT tetrabyte* result, IN OU
 	*flags=(tmp & FLAG_PSAZOC);
 };
 
-void intrin_AND (IN tetrabyte op1, IN tetrabyte op2, OUT tetrabyte* result, IN OUT tetrabyte* flags)
+void intrin_AND (IN tetra op1, IN tetra op2, OUT tetra* result, IN OUT tetra* flags)
 {
-	tetrabyte tmp;
+	tetra tmp;
 	
 	__asm__("pushfl;"
 		"popl %%ebx;"
@@ -240,9 +240,9 @@ void intrin_AND (IN tetrabyte op1, IN tetrabyte op2, OUT tetrabyte* result, IN O
 	*flags=(tmp & FLAG_PSAZOC);
 };
 
-void intrin_NOT (IN tetrabyte op1, OUT tetrabyte* result, IN OUT tetrabyte* flags)
+void intrin_NOT (IN tetra op1, OUT tetra* result, IN OUT tetra* flags)
 {
-	tetrabyte tmp;
+	tetra tmp;
 	
 	__asm__("pushfl;"
 		"popl %%ebx;"
@@ -260,9 +260,9 @@ void intrin_NOT (IN tetrabyte op1, OUT tetrabyte* result, IN OUT tetrabyte* flag
 	*flags=(tmp & FLAG_PSAZOC);
 };
 
-void intrin_NEG (IN tetrabyte op1, OUT tetrabyte* result, IN OUT tetrabyte* flags)
+void intrin_NEG (IN tetra op1, OUT tetra* result, IN OUT tetra* flags)
 {
-	tetrabyte tmp;
+	tetra tmp;
 	
 	__asm__("pushfl;"
 		"popl %%ebx;"
@@ -306,13 +306,13 @@ wyde rotl16(wyde x, byte r)
 	return x;
 }
 
-tetrabyte rotr32(tetrabyte x, byte r)
+tetra rotr32(tetra x, byte r)
 {
 	__asm("rorl %1,%0" : "+r" (x) : "c" (r));
 	return x;
 }
 
-tetrabyte rotl32(tetrabyte x, byte r)
+tetra rotl32(tetra x, byte r)
 {
 	__asm("roll %1,%0" : "+r" (x) : "c" (r));
 	return x;
@@ -320,13 +320,13 @@ tetrabyte rotl32(tetrabyte x, byte r)
 
 #if __WORDSIZE==64
 
-octabyte rotr64(octabyte x, byte r)
+octa rotr64(octa x, byte r)
 {
 	__asm("rorq %1,%0" : "+r" (x) : "c" (r));
 	return x;
 }
 
-octabyte rotl64(octabyte x, byte r)
+octa rotl64(octa x, byte r)
 {
 	__asm("rolq %1,%0" : "+r" (x) : "c" (r));
 	return x;
@@ -334,12 +334,12 @@ octabyte rotl64(octabyte x, byte r)
 
 #elif __WORDSIZE==32
 
-octabyte rotr64 ( octabyte x, byte r )
+octa rotr64 ( octa x, byte r )
 {
 	return (x >> r) | (x << (64 - r));
 }
 
-octabyte rotl64 ( octabyte x, byte r )
+octa rotl64 ( octa x, byte r )
 {
 	return (x << r) | (x >> (64 - r));
 }
