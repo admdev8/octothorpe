@@ -135,3 +135,10 @@ bool rand_bernoulli_distribution (float probability_of_1)
 	return rand_double() < probability_of_1;
 };
 
+// TODO can be optimized
+void rand_buf(byte* out, size_t size)
+{
+	for (int i=0; i<size; i++)
+		out[i]=genrand()&0xFF;
+};
+

@@ -18,6 +18,9 @@
 #pragma once
 
 #include <stdbool.h>
+#include <stdlib.h>
+
+#include "datatypes.h"
 
 #ifdef  __cplusplus
 extern "C" {
@@ -30,6 +33,7 @@ uint64_t genrand64();
 int rand_reg (int begin, int end);
 double rand_double ();
 bool rand_bernoulli_distribution (float probability_of_1);
+void rand_buf(byte* out, size_t size);
 
 #ifdef  __cplusplus
 }
