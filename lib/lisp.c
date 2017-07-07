@@ -1219,7 +1219,6 @@ obj* split_list_into_sublists(obj* input, bool (*pred) (obj*))
 	return rt;
 };
 
-// "да уж, щемящая ясность мироздания" (c) Molfara
 // destructive
 // may return NULL if the resulting list is empty
 obj* delete_if(obj* lst, bool (*predicate) (obj*))
