@@ -118,6 +118,7 @@ extern "C" {
 	octa ipow(octa base, octa exp);
 	bool IsInteger (double d);
 	bool uint64_is_2n(octa v);
+	bool uint32_is_2n(tetra v);
 
 #ifdef  __cplusplus
 }

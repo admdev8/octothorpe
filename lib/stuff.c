@@ -530,8 +530,13 @@ bool IsInteger (double d)
 
 // is number in 2^n form?
 // ... i.e., it has only one bit set.
-bool uint64_is_2n(uint64_t v)
+bool uint64_is_2n(octa v)
 {
 	return popcnt64(v)==1;
+};
+
+bool uint32_is_2n(tetra v)
+{
+	return popcnt32(v)==1;
 };
 

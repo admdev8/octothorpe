@@ -1,3 +1,7 @@
+2017-07-15 Dennis Yurichev <dennis@yurichev.com>
+	
+	* New function: uint32_is_2n().
+
 2017-02-22 Dennis Yurichev <dennis@yurichev.com>
 
 	* New function: rand_buf().
