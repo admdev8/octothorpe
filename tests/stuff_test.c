@@ -79,4 +79,7 @@ int main()
 	oassert(popcnt64(0xFFFFFFFF)==32);
 	oassert(popcnt64(0x8000000000000000UL)==1);
 	oassert(popcnt64(0xFFFFFFFFFFFFFFFFUL)==64);
+
+	oassert(is_prime(131071)==1); // https://oeis.org/A000043
+	oassert(is_prime(131071+1)==0);
 };

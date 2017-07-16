@@ -119,6 +119,7 @@ extern "C" {
 	bool IsInteger (double d);
 	bool uint64_is_2n(octa v);
 	bool uint32_is_2n(tetra v);
+	int is_prime(unsigned int n);
 
 #ifdef  __cplusplus
 }
