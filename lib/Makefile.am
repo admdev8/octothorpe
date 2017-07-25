@@ -2,7 +2,7 @@ lib_LIBRARIES = liboctothorpe.a
 
 liboctothorpe_a_SOURCES = FPU_stuff_GCC.c dlist.c dmalloc.c elf.c enum_files.c files.c fsave.c \
 	lisp.c logging.c memutils.c oassert.c ostrings.c rand.c rbtree.c regex.c regex_helpers.c \
-	set.c strbuf.c string_list.c stuff.c x86.c x86_intrin.c entropy.c entropy_int.c base64.c
+	set.c strbuf.c string_list.c stuff.c x86.c x86_intrin.c entropy.c entropy_int.c base64.c octomath.c
 
 AM_CPPFLAGS = -I$(top_srcdir)/include
 

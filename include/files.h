@@ -8,7 +8,7 @@
  *                                          | |         
  *                                          |_|
  *
- * Written by Dennis Yurichev <dennis(a)yurichev.com>, 2013
+ * Written by Dennis Yurichev <dennis(a)yurichev.com>, 2013-2017
  *
  * This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivs 3.0 Unported License. 
  * To view a copy of this license, visit http://creativecommons.org/licenses/by-nc-nd/3.0/.
@@ -43,6 +43,7 @@ void read_text_file_by_line_or_die (char *fname, read_text_file_by_line_callback
 // no path!
 void split_fname (char *fname, char *basefname, size_t basefname_len, char *ext, size_t ext_len);
 int open_or_die (char *fname, int mode);
+FILE *fopen_or_die(const char* fname, const char* mode);
 
 #ifdef  __cplusplus
 }

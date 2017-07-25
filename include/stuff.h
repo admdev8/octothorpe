@@ -8,7 +8,7 @@
  *                                          | |         
  *                                          |_|
  *
- * Written by Dennis Yurichev <dennis(a)yurichev.com>, 2013
+ * Written by Dennis Yurichev <dennis(a)yurichev.com>, 2013-2017
  *
  * This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivs 3.0 Unported License. 
  * To view a copy of this license, visit http://creativecommons.org/licenses/by-nc-nd/3.0/.
@@ -80,7 +80,6 @@ extern "C" {
 #endif
 	void* memdup (void *p, size_t s);
 	void debugger_breakpoint();
-	FILE *fopen_or_die(const char* fname, const char* mode);
 	void make_REG_compact_hex (REG a, strbuf* out);
 	void make_compact_list_of_REGs (REG *regs, unsigned regs_total, strbuf *out, unsigned limit);
 
@@ -112,14 +111,9 @@ extern "C" {
 // check if in range [begin, begin+size). TODO: better fn name
 	bool REG_in_range2 (REG v, REG begin, size_t size);
 
-	octa uint64_log2 (octa i);
 	int popcnt32 (tetra x);
 	int popcnt64 (octa x);
-	octa ipow(octa base, octa exp);
-	bool IsInteger (double d);
-	bool uint64_is_2n(octa v);
-	bool uint32_is_2n(tetra v);
-	int is_prime(unsigned int n);
+
 
 #ifdef  __cplusplus
 }

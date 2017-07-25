@@ -8,7 +8,7 @@
  *                                          | |         
  *                                          |_|
  *
- * Written by Dennis Yurichev <dennis(a)yurichev.com>, 2013
+ * Written by Dennis Yurichev <dennis(a)yurichev.com>, 2013-2017
  *
  * This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivs 3.0 Unported License. 
  * To view a copy of this license, visit http://creativecommons.org/licenses/by-nc-nd/3.0/.
@@ -59,14 +59,6 @@ int main()
 	oassert (CRC32((byte*)"123456789", 9, 0)==0xcbf43926);
 	oassert (CRC32((byte*)"123456789", 9, 0x11223344)==0xd360c638);
 
-	// uint64_log2() tests:
-	oassert (uint64_log2(1)==0);
-	oassert (uint64_log2(2)==1);
-	oassert (uint64_log2(4)==2);
-	oassert (uint64_log2(8)==3);
-	oassert (uint64_log2(65536)==16);
-	oassert (uint64_log2(0xFFFFFFFFFFFFFFFF)==63);
-
 	// popcnt32()
 	oassert(popcnt32(0)==0);
 	oassert(popcnt32(1)==1);
@@ -79,7 +71,4 @@ int main()
 	oassert(popcnt64(0xFFFFFFFF)==32);
 	oassert(popcnt64(0x8000000000000000UL)==1);
 	oassert(popcnt64(0xFFFFFFFFFFFFFFFFUL)==64);
-
-	oassert(is_prime(131071)==1); // https://oeis.org/A000043
-	oassert(is_prime(131071+1)==0);
 };

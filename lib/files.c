@@ -8,7 +8,7 @@
  *                                          | |         
  *                                          |_|
  *
- * Written by Dennis Yurichev <dennis(a)yurichev.com>, 2013
+ * Written by Dennis Yurichev <dennis(a)yurichev.com>, 2013-2017
  *
  * This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivs 3.0 Unported License. 
  * To view a copy of this license, visit http://creativecommons.org/licenses/by-nc-nd/3.0/.
@@ -176,5 +176,13 @@ int open_or_die (char *fname, int mode)
 	if (fd==-1)
 		die ("Can't open file %s for read\n", fname);
 	return fd;
+};
+
+FILE *fopen_or_die(const char* fname, const char* mode)
+{
+	FILE *rt=fopen (fname, mode);
+	if (rt==NULL)
+		die ("%s(): Can't open %s file in mode '%s'\n", __func__, fname, mode);
+	return rt;
 };
 

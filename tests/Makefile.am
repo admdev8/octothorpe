@@ -1,13 +1,13 @@
 TESTS = run-strbuf_test.sh run-dlist_test.sh run-lisp_test.sh run-memutils_test.sh \
 	run-ostrings_test.sh run-string_list_test.sh run-regex_test.sh run-testrbtree.sh \
 	run-logging_test.sh run-stuff_test.sh run-dmalloc_test.sh \
-	files_test x86_intrin_test entropy_test base64_test
+	files_test x86_intrin_test entropy_test base64_test octomath_test
 
 TESTS_ENVIRONMENT = BITS=$(BITS) OCTOTHORPE_DEBUG=$(OCTOTHORPE_DEBUG)
 
 check_PROGRAMS = strbuf_test dlist_test lisp_test memutils_test ostrings_test string_list_test \
 	regex_test testrbtree logging_test stuff_test dmalloc_test files_test x86_intrin_test entropy_test \
-	base64_test
+	base64_test octomath_test
 
 LDADD = $(top_builddir)/lib/liboctothorpe.a -lm
 
@@ -26,6 +26,7 @@ files_test_SOURCE = files_test.c
 x86_intrin_test_SOURCE = x86_intrin_test.c
 entropy_test_SOURCE = entropy_test.c
 base64_test_SOURCE = base64_test.c
+octomath_test_SOURCE = octomath_test.c
 
 AM_CPPFLAGS = -I$(top_srcdir)/include
 

@@ -8,7 +8,7 @@
  *                                          | |         
  *                                          |_|
  *
- * Written by Dennis Yurichev <dennis(a)yurichev.com>, 2013
+ * Written by Dennis Yurichev <dennis(a)yurichev.com>, 2013-2017
  *
  * This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivs 3.0 Unported License. 
  * To view a copy of this license, visit http://creativecommons.org/licenses/by-nc-nd/3.0/.
@@ -19,7 +19,6 @@
 #include <stdio.h>
 #include <search.h>
 #include <stdlib.h>
-#include <math.h>
 #include <memory.h>
 #include <ctype.h>
 
@@ -99,14 +98,6 @@ void debugger_breakpoint()
 #else
 	__asm__("int $3");
 #endif
-};
-
-FILE *fopen_or_die(const char* fname, const char* mode)
-{
-	FILE *rt=fopen (fname, mode);
-	if (rt==NULL)
-		die ("%s(): Can't open %s file in mode '%s'\n", __func__, fname, mode);
-	return rt;
 };
 
 void make_REG_compact_hex (REG a, strbuf* out)
@@ -456,39 +447,6 @@ bool REG_in_range2 (REG v, REG begin, size_t size)
 	return REG_in_range (v, begin, begin+size);
 };
 
-// TODO support intrinsic, if possible
-/*
-uint64_t uint64_log2 (uint64_t i)
-{
-	oassert (i!=0);
-	
-	return __lzcnt64(i);
-};
-*/
-// http://stackoverflow.com/questions/11376288/fast-computing-of-log2-for-64-bit-integers
-static const int tab64[64]=
-{
-	63,  0, 58,  1, 59, 47, 53,  2,
-	60, 39, 48, 27, 54, 33, 42,  3,
-	61, 51, 37, 40, 49, 18, 28, 20,
-	55, 30, 34, 11, 43, 14, 22,  4,
-	62, 57, 46, 52, 38, 26, 32, 41,
-	50, 36, 17, 19, 29, 10, 13, 21,
-	56, 45, 25, 31, 35, 16,  9, 12,
-	44, 24, 15,  8, 23,  7,  6,  5
-};
-
-uint64_t uint64_log2 (uint64_t value)
-{
-	value |= value >> 1;
-	value |= value >> 2;
-	value |= value >> 4;
-	value |= value >> 8;
-	value |= value >> 16;
-	value |= value >> 32;
-	return tab64[((uint64_t)((value - (value >> 1))*0x07EDD5E59A4E28C2)) >> 58];
-}
-
 // TODO rework
 int popcnt32 (uint32_t x)
 {
@@ -507,48 +465,5 @@ int popcnt64 (uint64_t x)
 	return count;
 }
 
-// http://stackoverflow.com/questions/101439/the-most-efficient-way-to-implement-an-integer-based-power-function-powint-int
-// TODO check overflow
-uint64_t ipow(uint64_t base, uint64_t exp)
-{
-    uint64_t result = 1;
-    while (exp)
-    {
-        if (exp & 1)
-            result *= base;
-        exp >>= 1;
-        base *= base;
-    }
 
-    return result;
-}
-
-bool IsInteger (double d)
-{
-	return floor(d)==d;
-};
-
-// is number in 2^n form?
-// ... i.e., it has only one bit set.
-bool uint64_is_2n(octa v)
-{
-	return popcnt64(v)==1;
-};
-
-bool uint32_is_2n(tetra v)
-{
-	return popcnt32(v)==1;
-};
-
-// https://rosettacode.org/wiki/Primality_by_trial_division#C
-int is_prime(unsigned int n)
-{
-        unsigned int p;
-        if (!(n & 1) || n < 2 ) return n == 2;
-
-        /* comparing p*p <= n can overflow */
-        for (p = 3; p <= n/p; p += 2)
-                if (!(n % p)) return 0;
-        return 1;
-}
 
