@@ -32,6 +32,8 @@
 //#define LOGGING
 //#define BREAK_ON_UNKNOWN_BLOCK_BEING_FREED
 
+#include <config.h> // from autoconf, for OCTOTHORPE_DEBUG
+
 #ifdef OCTOTHORPE_DEBUG
 #define ADD_GUARDS
 #define DREE_CHK_ONLY_GUARD_BEING_FREED

@@ -21,8 +21,8 @@
 
 int main()
 {
-	oassert(rotr32(1)==0x80000000);
-	oassert(rotl32(0x80000000)==1);
+	oassert(rotr32(1,1)==0x80000000);
+	oassert(rotl32(0x80000000,1)==1);
 	return 0;
 };
 

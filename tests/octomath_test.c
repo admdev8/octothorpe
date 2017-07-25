@@ -15,12 +15,13 @@
  *
  */
 
+#include <stdio.h>
+
 #include "octomath.h"
 #include "oassert.h"
 
 int main()
 {
-	// uint64_log2() tests:
 	oassert (uint64_log2(1)==0);
 	oassert (uint64_log2(2)==1);
 	oassert (uint64_log2(4)==2);
@@ -30,4 +31,32 @@ int main()
 
 	oassert(is_prime(131071)==1); // https://oeis.org/A000043
 	oassert(is_prime(131071+1)==0);
+
+	// modinv32/64
+	bool b;
+	tetra tmp1, tmp2;
+	b=modinv32(9, &tmp1, &tmp2);
+	oassert (b==true);
+	oassert (tmp1==954437177);
+	oassert (tmp2==2);
+	b=modinv32(tmp1, &tmp1, &tmp2);
+	oassert (b==true);
+	oassert (tmp1==9);
+	oassert (tmp2==2);
+	b=modinv32(10, &tmp1, &tmp2);
+	oassert (b==false); // no solutions
+
+	octa t1, t2;
+	b=modinv64(123, &t1, &t2);	
+	oassert (b==true);
+	oassert (t1==3449391168254631603);
+	oassert (t2==23);
+	b=modinv64(t1, &t1, &t2);	
+	oassert (b==true);
+	oassert (t1==123);
+	oassert (t2==23);
+	b=modinv64(999999, &t1, &t2);	
+	oassert (b==true);
+	oassert (t1==1672254362768354751);
+	oassert (t2==90653);
 };

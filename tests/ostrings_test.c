@@ -69,8 +69,8 @@ int main()
 
 	oassert(is_string_consists_only_of_Latin_letters("abcdef")==true);
 	oassert(is_string_consists_only_of_Latin_letters("abcd1ef")==false);
-	oassert(is_string_has_only_one_character_repeating("111111111")==true);
-	oassert(is_string_has_only_one_character_repeating("1111111112")==false);
+	oassert(is_string_has_only_one_character_repeating("111111111", NULL)==true);
+	oassert(is_string_has_only_one_character_repeating("1111111112", NULL)==false);
 	
 	char* tmp=dmalloc_and_snprintf ("%d %d", 123, 456);
 	oassert(streq(tmp, "123 456"));

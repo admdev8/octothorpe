@@ -15,6 +15,8 @@
  *
  */
 
+#include <string.h>
+
 #include "oassert.h"
 
 #include "files.h"
