@@ -167,7 +167,7 @@ void split_fname (char *fname, char *basefname, size_t basefname_len, char *ext,
 	size_t out_basefname_len=after_dot - fname; // incl. zero
 	oassert(out_basefname_len < basefname_len);
 	memmove (basefname, fname, out_basefname_len-1);
-	basefname[out_basefname_len]=0;
+	basefname[out_basefname_len-1]=0;
 };
 
 int open_or_die (char *fname, int mode)
