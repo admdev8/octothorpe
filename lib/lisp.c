@@ -449,6 +449,9 @@ unsigned LENGTH (obj *l)
 {
     unsigned rt=0;
     
+    if (l==NULL)
+        return 0;
+
     oassert (LISTP(l));
 
     for (obj* i=l; i; i=cdr(i))

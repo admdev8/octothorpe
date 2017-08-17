@@ -233,6 +233,8 @@ bool sse2_supported();
 #define X86_NEG_EAX "\xF7\xD8"
 #define X64_XOR_RAX_RAX_RETN "\x48\x31\xC0\xC3"
 #define X64_XOR_RAX_RAX_RETN_LEN 4
+#define X64_XOR_RAX_RAX_INC_RAX_RAX_RETN "\x48\x31\xC0\x48\xFF\xC0\xC3"
+#define X64_XOR_RAX_RAX_INC_RAX_RAX_RETN_LEN 7
 #define X64_JMP_REL_IMM32 "\x48\xFF\x25"
 #define X64_JMP_REL_IMM32_LEN 7
 #define X64_JMP_REL_IMM32_OFS_TO_IMM32 3
