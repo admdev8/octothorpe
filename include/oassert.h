@@ -17,7 +17,7 @@
 
 #pragma once
 
-#include <config.h> // from autoconf, for OASSERT_DEBUG
+//#include <config.h> // from autoconf, for OASSERT_DEBUG
 
 // Rationale: my own oassert with <s>with blackjack and hookers</s> _Noreturn C11 keyword and __FUNCTION__.
 
