@@ -18,6 +18,7 @@
 #pragma once
 
 #include <stdbool.h>
+#include "strbuf.h"
 #include "datatypes.h"
 
 // "Any sufficiently complicated C or Fortran program contains an ad hoc, 

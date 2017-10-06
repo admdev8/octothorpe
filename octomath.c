@@ -24,13 +24,13 @@
 
 // TODO support intrinsic, if possible
 /*
-uint64_t uint64_log2 (uint64_t i)
-{
-	oassert (i!=0);
-	
-	return __lzcnt64(i);
-};
-*/
+   uint64_t uint64_log2 (uint64_t i)
+   {
+   oassert (i!=0);
+
+   return __lzcnt64(i);
+   };
+ */
 // http://stackoverflow.com/questions/11376288/fast-computing-of-log2-for-64-bit-integers
 static const int tab64[64]=
 {
@@ -44,7 +44,7 @@ static const int tab64[64]=
 	44, 24, 15,  8, 23,  7,  6,  5
 };
 
-uint64_t uint64_log2 (uint64_t value)
+octa octa_log2 (octa value)
 {
 	value |= value >> 1;
 	value |= value >> 2;
@@ -52,24 +52,24 @@ uint64_t uint64_log2 (uint64_t value)
 	value |= value >> 8;
 	value |= value >> 16;
 	value |= value >> 32;
-	return tab64[((uint64_t)((value - (value >> 1))*0x07EDD5E59A4E28C2)) >> 58];
+	return tab64[((octa)((value - (value >> 1))*0x07EDD5E59A4E28C2)) >> 58];
 }
 
 
 // http://stackoverflow.com/questions/101439/the-most-efficient-way-to-implement-an-integer-based-power-function-powint-int
 // TODO check overflow
-uint64_t ipow(uint64_t base, uint64_t exp)
+octa ipow(octa base, octa exp)
 {
-    uint64_t result = 1;
-    while (exp)
-    {
-        if (exp & 1)
-            result *= base;
-        exp >>= 1;
-        base *= base;
-    }
+	octa result = 1;
+	while (exp)
+	{
+		if (exp & 1)
+			result *= base;
+		exp >>= 1;
+		base *= base;
+	}
 
-    return result;
+	return result;
 }
 
 bool IsInteger (double d)
@@ -92,13 +92,13 @@ bool uint32_is_2n(tetra v)
 // https://rosettacode.org/wiki/Primality_by_trial_division#C
 int is_prime(unsigned int n)
 {
-        unsigned int p;
-        if (!(n & 1) || n < 2 ) return n == 2;
+	unsigned int p;
+	if (!(n & 1) || n < 2 ) return n == 2;
 
-        /* comparing p*p <= n can overflow */
-        for (p = 3; p <= n/p; p += 2)
-                if (!(n % p)) return 0;
-        return 1;
+	/* comparing p*p <= n can overflow */
+	for (p = 3; p <= n/p; p += 2)
+		if (!(n % p)) return 0;
+	return 1;
 }
 
 // copypasted from Hacker's Delight, Chapter 8, p.155

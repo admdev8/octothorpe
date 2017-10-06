@@ -46,12 +46,12 @@ void base64_tests()
 
 void octomath_tests()
 {
-	oassert (uint64_log2(1)==0);
-	oassert (uint64_log2(2)==1);
-	oassert (uint64_log2(4)==2);
-	oassert (uint64_log2(8)==3);
-	oassert (uint64_log2(65536)==16);
-	oassert (uint64_log2(0xFFFFFFFFFFFFFFFF)==63);
+	oassert (octa_log2(1)==0);
+	oassert (octa_log2(2)==1);
+	oassert (octa_log2(4)==2);
+	oassert (octa_log2(8)==3);
+	oassert (octa_log2(65536)==16);
+	oassert (octa_log2(0xFFFFFFFFFFFFFFFF)==63);
 
 	oassert(is_prime(131071)==1); // https://oeis.org/A000043
 	oassert(is_prime(131071+1)==0);

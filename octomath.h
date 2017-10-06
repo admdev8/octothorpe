@@ -25,7 +25,7 @@
 extern "C" {
 #endif
 
-	octa uint64_log2 (octa i);
+	octa octa_log2 (octa i);
 	octa ipow(octa base, octa exp);
 	bool IsInteger (double d);
 	bool uint64_is_2n(octa v);
