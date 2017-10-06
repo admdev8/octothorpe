@@ -26,9 +26,12 @@
 #endif
 
 #include "oassert.h"
+#include "ostrings.h"
 #include "dmalloc.h"
 #include "lisp.h"
 #include "rand.h"
+#include "files.h"
+#include "strbuf.h"
 
 #define FILE_OUT stdout
 //#define FILE_OUT stderr
@@ -59,10 +62,12 @@ void obj_octa2 (octa i, obj* o)
 
 void obj_REG2 (REG i, obj* o)
 {
-#ifdef O_BITS64
+#if __WORDSIZE==64
     obj_octa2 (i, o);
-#else
+#elif __WORDSIZE==32
     obj_tetra2 (i, o);
+#else
+#error "__WORDSIZE is not defined"
 #endif
 };
 
@@ -219,7 +224,7 @@ void* obj_unpack_opaque(obj* o)
     return o->u.o->ptr;
 };
 
-obj* create_obj_opaque(void* ptr, void (*dumper_fn) (void *), void (*free_fn) (void*))
+obj* create_obj_opaque(void* ptr, void (*dumper_fn) (strbuf*, void *), void (*free_fn) (void*))
 {
     obj_opaque *op=DCALLOC(obj_opaque, 1, "obj_opaque");
     obj *o=DCALLOC(obj, 1, "obj");
@@ -251,6 +256,7 @@ bool LISTP(obj *o)
         return false;
 };
 
+#if 0
 void obj_dump_as_list(obj *o)
 {
     oassert (LISTP(o));
@@ -268,59 +274,81 @@ void obj_dump_as_list(obj *o)
     };
     printf (")");
 };
+#endif
 
 void obj_dump(obj *o)
 {
+    strbuf tmp=STRBUF_INIT;
+
+    obj_to_strbuf(&tmp, o);
+
+    fprintf (FILE_OUT, "%s", tmp.buf);
+
+    strbuf_deinit(&tmp);
+};
+
+void obj_to_strbuf(strbuf* sb, obj *o)
+{
     if(o==NULL)
     {
-        fprintf (FILE_OUT, "NULL");
+        strbuf_addstr(sb, "NULL");
         return;
     };
 
     if (LISTP(o))
     {
         //fprintf (FILE_OUT, "(dumping as list)");
-        obj_dump_as_list(o);
-        return;
+        //obj_dump_as_list(o);
+        strbuf_addstr(sb, "(");
+        for (obj* c=o; c; c=cdr(c))
+        {
+            obj_to_strbuf(sb, c->u.c->head);
+            if (c->u.c->tail==NULL)
+                break;
+            else
+                strbuf_addstr(sb, " ");
+        };
+        strbuf_addstr(sb, ")");
+            return;
     };
 
     switch (o->t)
     {
         case OBJ_BYTE:
-            fprintf (FILE_OUT, "0x%x", o->u.b);
+            strbuf_addf (sb, "0x%x", o->u.b);
             break;
         case OBJ_WYDE:
-            fprintf (FILE_OUT, "0x%x", o->u.w);
+            strbuf_addf (sb, "0x%x", o->u.w);
             break;
         case OBJ_TETRA:
-            fprintf (FILE_OUT, "0x%x", o->u.tb);
+            strbuf_addf (sb, "0x%x", o->u.tb);
             break;
         case OBJ_OCTA:
-            fprintf (FILE_OUT, "0x%" PRIx64, o->u.ob);
+            strbuf_addf (sb, "0x%" PRIx64, o->u.ob);
             break;
         case OBJ_DOUBLE:
-            fprintf (FILE_OUT, "%f", o->u.d);
+            strbuf_addf (sb, "%f", o->u.d);
             break;
         case OBJ_XMM:
-            printf ("0x");
+            strbuf_addf (sb, "0x");
             for (int i=0; i<16; i++)
-                fprintf (FILE_OUT, "%02X", o->u.xmm[i]);
+                strbuf_addf (sb, "%02X", o->u.xmm[i]);
             break;
         case OBJ_CSTRING:
-            fprintf (FILE_OUT, "\"%s\"", o->u.s);
+            strbuf_addf (sb, "\"%s\"", o->u.s);
             break;
         case OBJ_CONS:
-            fprintf (FILE_OUT, "(");
-            obj_dump(car(o));
-            fprintf(FILE_OUT, " ");
-            obj_dump(cdr(o));
-            fprintf (FILE_OUT, ")");
+            strbuf_addstr (sb, "(");
+            obj_to_strbuf(sb, car(o));
+            strbuf_addstr (sb, " ");
+            obj_to_strbuf(sb, cdr(o));
+            strbuf_addstr (sb, ")");
             break;
         case OBJ_OPAQUE:
             if (o->u.o->dumper_fn)
-                (*o->u.o->dumper_fn)(o->u.o->ptr);
+                (*o->u.o->dumper_fn)(sb, o->u.o->ptr);
             else
-                fprintf (FILE_OUT, "opaque_0x%p", o->u.o->ptr);
+                strbuf_addf (sb, "opaque_0x%p", o->u.o->ptr);
             break;
         default:
             oassert(0);
@@ -607,11 +635,14 @@ wyde obj_get_as_wyde(obj* o)
 };
 REG obj_get_as_REG(obj* o)
 {
-#ifdef O_BITS64
+#if __WORDSIZE==64
     return obj_get_as_octa(o);
-#else
+#elif __WORDSIZE==32
     return obj_get_as_tetra(o);
+#else
+#error "__WORDSIZE is not defined"
 #endif
+
 };
 
 octa zero_extend_to_octa(obj* o)
@@ -643,7 +674,7 @@ REG zero_extend_to_REG(obj* o)
         case OBJ_TETRA:
             return o->u.tb;
         case OBJ_OCTA:
-#ifdef O_BITS64
+#if __WORDSIZE==64
             return o->u.ob;
 #else
             oassert(!"cannot convert octa to REG");

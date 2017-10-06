@@ -204,12 +204,15 @@ int main(int argc, char* argv[], char* envp[])
 	oassert (strcmp(s.buf, "1.2KB")==0);
 	strbuf_deinit (&s);
 
-#ifdef O_BITS64
+#if __WORDSIZE==64
 	strbuf_init (&s, 0);
 	strbuf_addf (&s, "%s!0x" PRI_ADR_HEX, "hello", 0x123412341234);
 	if (strcmp(s.buf, "hello!0x123412341234")!=0)
 		die ("s.buf=%s, but we need something else\n", s.buf);
 	strbuf_deinit (&s);
+#elif __WORDSIZE==32
+#else
+#error "__WORDSIZE is undefined"
 #endif
 
 	test_addc_and_addf();

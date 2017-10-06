@@ -27,16 +27,13 @@
 #include "stuff.h"
 #include "memutils.h"
 #include "stuff.h"
-#include "config.h"
 
 //#define LOGGING
 //#define BREAK_ON_UNKNOWN_BLOCK_BEING_FREED
 
-#include <config.h> // from autoconf, for OCTOTHORPE_DEBUG
-
-#ifdef OCTOTHORPE_DEBUG
+#ifdef _DEBUG
 #define ADD_GUARDS
-#define DREE_CHK_ONLY_GUARD_BEING_FREED
+#define DFREE_CHK_ONLY_GUARD_BEING_FREED
 #endif
 
 
@@ -64,7 +61,7 @@ struct dmalloc_info
 };
 
 // in ADD_GUARDS case, ptr and size stored here is from user's perspective...
-#ifdef OCTOTHORPE_DEBUG
+#ifdef _DEBUG
 static rbtree* tbl;
 
 static bool tbl_created=false;
@@ -96,7 +93,7 @@ static void dump_blk_info (struct dmalloc_info *i)
 };
 
 
-#endif // OCTOTHORPE_DEBUG
+#endif // _DEBUG
 
 #ifdef ADD_GUARDS
 static void add_guards (void *user_ptr, size_t user_size)
@@ -126,7 +123,7 @@ void* dmalloc (size_t size, const char * filename, unsigned line, const char * f
     if (rt==NULL)
         die("%s() can't allocate size %d for %s (%s:%d)\n", __func__, size, structname, filename, line);
 
-#ifdef OCTOTHORPE_DEBUG
+#ifdef _DEBUG
     tetrafill (rt, size, 0x0BADF00D); // poison #1
 #endif
 
@@ -134,7 +131,7 @@ void* dmalloc (size_t size, const char * filename, unsigned line, const char * f
     add_guards (rt, size);
 #endif     
 
-#ifdef OCTOTHORPE_DEBUG
+#ifdef _DEBUG
     store_info (rt, size, filename, line, function, structname);
 #endif
 
@@ -147,7 +144,7 @@ void* dmalloc (size_t size, const char * filename, unsigned line, const char * f
 void* drealloc (void* ptr, size_t size, const char * filename, unsigned line, const char * function, const char * structname)
 {
     void* newptr;
-#ifdef OCTOTHORPE_DEBUG
+#ifdef _DEBUG
     struct dmalloc_info *tmp;
 #endif
 
@@ -177,7 +174,7 @@ void* drealloc (void* ptr, size_t size, const char * filename, unsigned line, co
     add_guards(newptr, size);
 #endif 
 
-#ifdef OCTOTHORPE_DEBUG
+#ifdef _DEBUG
     if (newptr!=ptr)
     {
         store_info (newptr, size, filename, line, function, structname);
@@ -278,7 +275,7 @@ void dfree (void* ptr)
 
 void dfree2 (void* ptr, const char *filename, unsigned line, const char *funcname)
 {
-#ifdef OCTOTHORPE_DEBUG
+#ifdef _DEBUG
     struct dmalloc_info *tmp;
     size_t blk_user_size=0;
 #endif
@@ -294,13 +291,13 @@ void dfree2 (void* ptr, const char *filename, unsigned line, const char *funcnam
     chk_all_guards();
 #endif
 
-#ifdef DREE_CHK_ONLY_GUARD_BEING_FREED
+#ifdef DFREE_CHK_ONLY_GUARD_BEING_FREED
     tmp=rbtree_lookup(tbl, ptr);
     if (tmp)
         chk_guard (ptr, tmp);
 #endif
 
-#ifdef OCTOTHORPE_DEBUG
+#ifdef _DEBUG
     //printf ("dfree (0x%p)\n", ptr);
     tmp=rbtree_lookup(tbl, ptr);
 
@@ -322,7 +319,7 @@ void dfree2 (void* ptr, const char *filename, unsigned line, const char *funcnam
 #endif
 
 #ifdef ADD_GUARDS
-#ifdef OCTOTHORPE_DEBUG
+#ifdef _DEBUG
     tetrafill (ptr, blk_user_size, 0xB1CF1EED); // poison #2
 #endif
     free ((byte*)ptr-4);
@@ -332,7 +329,7 @@ void dfree2 (void* ptr, const char *filename, unsigned line, const char *funcnam
 };
 
 
-#ifdef OCTOTHORPE_DEBUG
+#ifdef _DEBUG
 static void dump_unfreed_block(void *k, struct dmalloc_info *i)
 {    
     fds _fds={ NULL, NULL};
@@ -357,14 +354,15 @@ void* dmemdup (void *p, size_t s, const char * filename, unsigned line, const ch
 
 void dump_unfreed_blocks()
 {
-#ifdef OCTOTHORPE_DEBUG
+#ifdef _DEBUG
+    //printf ("%s() begin\n", __FUNCTION__);
     rbtree_foreach(tbl, (void(*)(void*,void*))dump_unfreed_block, NULL, NULL);
 #endif    
 };
 
 void dmalloc_deinit()
 {
-#ifdef OCTOTHORPE_DEBUG
+#ifdef _DEBUG
     if (tbl_created)
     {
         rbtree_foreach (tbl, NULL, NULL, free);

@@ -41,6 +41,7 @@ typedef struct _fds
 
 extern bool L_timestamp;
 extern fds cur_fds;
+extern int L_ofs_width;
 
 //string gen_timestamp();
 void L_init (const char* fname);

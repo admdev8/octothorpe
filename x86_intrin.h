@@ -26,7 +26,7 @@
 extern "C" {
 #endif
 
-#ifdef O_BITS32
+#if __WORDSIZE==32
 
 void intrin_SHL (IN tetra value, IN uint8_t shift_value, OUT tetra* result, IN OUT tetra* flags);
 void intrin_SHR (IN tetra value, IN uint8_t shift_value, OUT tetra* result, IN OUT tetra* flags);
@@ -42,7 +42,7 @@ void intrin_AND (IN tetra op1, IN tetra op2, OUT tetra* result, IN OUT tetra* fl
 void intrin_NOT (IN tetra op1, OUT tetra* result, IN OUT tetra* flags);
 void intrin_NEG (IN tetra op1, OUT tetra* result, IN OUT tetra* flags);
 
-#endif
+#elif __WORDSIZE==64
 
 byte rotr8(byte x, byte r);
 byte rotl8(byte x, byte r);
@@ -52,6 +52,10 @@ tetra rotr32(tetra x, byte r);
 tetra rotl32(tetra x, byte r);
 octa rotr64(octa x, byte r);
 octa rotl64(octa x, byte r);
+
+#else
+#error "__WORDSIZE is not defined"
+#endif
 
 #ifdef  __cplusplus
 }

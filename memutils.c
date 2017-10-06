@@ -17,6 +17,8 @@
 
 #include <stdbool.h>
 #include <memory.h>
+#include <ctype.h>
+
 #include "datatypes.h"
 #include "stuff.h"
 #include "oassert.h"

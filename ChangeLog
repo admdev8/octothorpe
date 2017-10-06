@@ -1,38 +1,43 @@
-2017-07-25 Dennis Yurichev <dennis@yurichev.com>
+2017-10-06 Dennis Yurichev <dennis(a)yurichev.com>
+
+	* New function: obj_to_strbuf()
+	* No more autotools!
+
+2017-07-25 Dennis Yurichev <dennis(a)yurichev.com>
 
 	* New functions: mulmns(), modinv32(), modinv64().
 	* New files: octomath.(h|c)
 
-2017-07-16 Dennis Yurichev <dennis@yurichev.com>
+2017-07-16 Dennis Yurichev <dennis(a)yurichev.com>
 	
 	* New function: is_prime().
 
-2017-07-15 Dennis Yurichev <dennis@yurichev.com>
+2017-07-15 Dennis Yurichev <dennis(a)yurichev.com>
 	
 	* New function: uint32_is_2n().
 
-2017-02-22 Dennis Yurichev <dennis@yurichev.com>
+2017-02-22 Dennis Yurichev <dennis(a)yurichev.com>
 
 	* New function: rand_buf().
 
-2017-02-07 Dennis Yurichev <dennis@yurichev.com>
+2017-02-07 Dennis Yurichev <dennis(a)yurichev.com>
 
 	* tetrabyte renamed to tetra and octabyte renamed to octa,
 	after names of datatypes in Donald Knuth's MMIX simulator.
 
-2017-01-30 Dennis Yurichev <dennis@yurichev.com>
+2017-01-30 Dennis Yurichev <dennis(a)yurichev.com>
 	
 	* New function: neat_list_of_bytes().
 
-2016-11-23 Dennis Yurichev <dennis@yurichev.com>
+2016-11-23 Dennis Yurichev <dennis(a)yurichev.com>
 	
 	* New functions: IsInteger(), uint64_is_2n().
 
-2016-09-28 Dennis Yurichev <dennis@yurichev.com>
+2016-09-28 Dennis Yurichev <dennis(a)yurichev.com>
 	
 	* New function: entropy_int().
 
-2016-08-28 Dennis Yurichev <dennis@yurichev.com>
+2016-08-28 Dennis Yurichev <dennis(a)yurichev.com>
 
 	* New functions: get_file_size_or_die(), open_or_die(),
 	fprint_shrinked_string(), dmalloc_and_snprintf(),
@@ -42,57 +47,57 @@
 
 	* New modules: entropy.c, base64.c
 
-2016-08-25 Dennis Yurichev <dennis@yurichev.com>
+2016-08-25 Dennis Yurichev <dennis(a)yurichev.com>
 
 	* New function: rand_bernoulli_distribution()
 
-2016-08-24  Dennis Yurichev <dennis@yurichev.com>
+2016-08-24  Dennis Yurichev <dennis(a)yurichev.com>
 
 	* New functions: ipow(), rotr8(), rotl8(), rotr16(), rotl16().
 
-2016-08-23  Dennis Yurichev <dennis@yurichev.com>
+2016-08-23  Dennis Yurichev <dennis(a)yurichev.com>
 
 	* New functions: string_remove_part(), split_fname()
 
-2016-08-21  Dennis Yurichev <dennis@yurichev.com>
+2016-08-21  Dennis Yurichev <dennis(a)yurichev.com>
 
 	* New function: popcnt32()
 
-2016-04-17  Dennis Yurichev <dennis@yurichev.com>
+2016-04-17  Dennis Yurichev <dennis(a)yurichev.com>
 	
 	* New functions: regmatch_len(), regmatch_dup(), regexec_to_array_of_string(), dstrndup(), read_text_file_by_line_or_die(),
 	streq(), strieq(), print_array_of_strings(), dfree_array_of_blocks(), uint64_log2()
 
-2015-12-08  Dennis Yurichev <dennis@yurichev.com>
+2015-12-08  Dennis Yurichev <dennis(a)yurichev.com>
 	
 	* New functions: text_file_to_list(), split_list_into_sublists(), delete_if(), nth(), list_pick_random(), print_list_of_strings()
 
-2015-10-04  Dennis Yurichev <dennis@yurichev.com>
+2015-10-04  Dennis Yurichev <dennis(a)yurichev.com>
 
 	* New function: genrand64()
 
-2015-09-06  Dennis Yurichev <dennis@yurichev.com>
+2015-09-06  Dennis Yurichev <dennis(a)yurichev.com>
 
 	* New function: is_buf_printable()
 
-2015-04-09  Dennis Yurichev <dennis@yurichev.com>
+2015-04-09  Dennis Yurichev <dennis(a)yurichev.com>
 
 	* New functions: kmp_search(), XOR_block()
 
-2015-04-06  Dennis Yurichev <dennis@yurichev.com>
+2015-04-06  Dennis Yurichev <dennis(a)yurichev.com>
 
 	* New functions: range_update(), REG_in_range(), REG_in_range2().
 	New structure: my_range.
 
-2015-04-05  Dennis Yurichev <dennis@yurichev.com>
+2015-04-05  Dennis Yurichev <dennis(a)yurichev.com>
 
 	* New LISP-like functions: add_to_list(), obj_dup()
 	Others: value_not_in2()
 
-2015-02-20  Dennis Yurichev <dennis@yurichev.com>
+2015-02-20  Dennis Yurichev <dennis(a)yurichev.com>
 
 	* Switching to GNU autotools
 
-2013-09-26  Dennis Yurichev <dennis@yurichev.com>
+2013-09-26  Dennis Yurichev <dennis(a)yurichev.com>
 
 	* This is a first public version, uploaded to github.com.

@@ -1,4 +1,4 @@
-﻿/*
+/*
  *             _        _   _                           
  *            | |      | | | |                          
  *   ___   ___| |_ ___ | |_| |__   ___  _ __ _ __   ___ 
@@ -15,27 +15,30 @@
  *
  */
 
-#include <stdio.h>
-#include <time.h>
-#include <strings.h>
-#include <unistd.h>
-#include <errno.h>
+#pragma once
 
-#include "stuff.h"
-#include "fmt_utils.h"
-#include "enum_files.h"
+// Rationale: my own oassert with <s>with blackjack and hookers</s> _Noreturn C11 keyword and __FUNCTION__.
 
-void cb (const char *name, const char *pathname, size_t size, time_t t, bool is_dir, void *param)
-{
-	struct tm *_tm=localtime(&t);
-	printf ("%s() name=%s pathname=%s size=" PRI_SIZE_T " is_dir=%d time=%s", 
-		__FUNCTION__, name, pathname, size, is_dir, asctime(_tm));
-};
+#ifdef _DEBUG
+#define oassert(_Expression) \
+ (void) \
+ ((!!(_Expression)) || \
+  (_oassert(#_Expression,__FILE__,__LINE__,__FUNCTION__),0))
 
-int main()
-{
-	char tmp[256];
-	if (getcwd (tmp, sizeof(tmp))==NULL)
-		die ("getcwd failed: %s\n", strerror(errno));
-	enum_files_in_dir (tmp, cb, NULL);
-};
+#else
+#define oassert(_Expression) ((void)0)
+#endif
+
+#define fatal_error() _fatal_error(__FILE__, __LINE__, __func__)
+
+#ifdef  __cplusplus
+extern "C" {
+#endif
+
+_Noreturn void _oassert (const char *msg, const char *file, unsigned line, const char *func);
+_Noreturn void _fatal_error (const char *file, unsigned line, const char *func);
+
+#ifdef  __cplusplus
+}
+#endif
+

@@ -23,6 +23,7 @@ byte buf[0x10]={ 'a', 'b', 'c', 'd', 1, 2, 3, 4, 5, 6, 7, 8, 0, 0, 0, 0 };
 int main()
 {
 	L_init("logging_test.log");
+	L_ofs_width=32;
 	L_once("#1 should be printed once\n");
 	L_once("#2 should be printed once\n");
 	L_once("#3 should be printed once\n");

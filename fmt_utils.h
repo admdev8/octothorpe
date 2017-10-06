@@ -23,15 +23,22 @@
 #include <inttypes.h>
 #endif
 
+#define PRI_OCTA_HEX "%" PRIx64
+#define PRI_OCTA_HEX_PAD "%016" PRIx64
+#define PRI_OCTA_DEC "%" PRId64
+#define PRI_TETRA_HEX "%x"
+#define PRI_TETRA_HEX_PAD "%08x"
+#define PRI_TETRA_DEC "%d"
+
 // limits.h in GNU has __WORDSIZE
 #if __WORDSIZE==64
-#define PRI_SIZE_T_HEX "%" PRIx64
-#define PRI_SIZE_T_HEX_PAD "%016" PRIx64
-#define PRI_SIZE_T_DEC "%" PRId64
+#define PRI_SIZE_T_HEX      PRI_OCTA_HEX
+#define PRI_SIZE_T_HEX_PAD  PRI_OCTA_HEX_PAD
+#define PRI_SIZE_T_DEC      PRI_OCTA_DEC
 #elif __WORDSIZE==32
-#define PRI_SIZE_T_HEX "%x"
-#define PRI_SIZE_T_HEX_PAD "%08x"
-#define PRI_SIZE_T_DEC "%d"
+#define PRI_SIZE_T_HEX      PRI_TETRA_HEX
+#define PRI_SIZE_T_HEX_PAD  PRI_TETRA_HEX_PAD
+#define PRI_SIZE_T_DEC      PRI_TETRA_DEC
 #else
 #error "__WORDSIZE is undefined"
 #endif

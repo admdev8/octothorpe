@@ -26,6 +26,7 @@ int main()
 {
 	byte *buf=DMALLOC (byte, 1024, "buf");
 	L_init ("tmp");
+	L_ofs_width=32;
 
 	bytefill (buf, 1024, 0);
 	tetrafill(buf, 128, 0x0badf00d);

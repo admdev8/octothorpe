@@ -18,7 +18,7 @@
 #include "x86_intrin.h"
 #include "x86.h"
 
-#ifdef O_BITS32
+#if __WORDSIZE==32
 
 void intrin_SHL (IN tetra value, IN uint8_t shift_value, OUT tetra* result, IN OUT tetra* flags)
 {
@@ -280,7 +280,7 @@ void intrin_NEG (IN tetra op1, OUT tetra* result, IN OUT tetra* flags)
 	*flags=(tmp & FLAG_PSAZOC);
 };
 
-#endif // O_BITS32
+#endif
 
 byte rotr8(byte x, byte r)
 {

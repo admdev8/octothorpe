@@ -17,7 +17,7 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <config.h>
+//#include <config.h>
 #ifndef _LIBC
 #ifndef _MSC_VER
 //# include <config.h>

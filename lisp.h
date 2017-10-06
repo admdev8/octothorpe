@@ -44,7 +44,7 @@ struct _cons_cell;
 typedef struct _obj_opaque
 {
     void* ptr;
-    void (*dumper_fn) (void*); // may be NULL
+    void (*dumper_fn) (strbuf*, void*); // may be NULL
     void (*free_fn) (void*); // may be NULL
 } obj_opaque;
 
@@ -97,10 +97,11 @@ obj* obj_tetra_n_times (tetra i, int t);
 obj* obj_cstring (const char *s);
 obj* cons (obj* head, obj* tail);
 obj* setcdr (obj* cell, obj* new_tail);
-obj* create_obj_opaque(void* ptr, void (*dumper_fn) (void*), void (*free_fn) (void*));
+obj* create_obj_opaque(void* ptr, void (*dumper_fn) (strbuf*, void *), void (*free_fn) (void*));
 bool LISTP(obj *o);
-void obj_dump_as_list(obj *o);
+//void obj_dump_as_list(obj *o);
 void obj_dump(obj *o);
+void obj_to_strbuf(strbuf* sb, obj *o);
 obj* obj_dup (obj *src);
 bool EQL(obj *o1, obj* o2);
 unsigned LENGTH (obj *l);

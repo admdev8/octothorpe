@@ -37,6 +37,7 @@
 fds cur_fds={ NULL, NULL };
 
 bool L_timestamp=false;
+int L_ofs_width=__WORDSIZE;
 
 // set actually is here
 rbtree *once_was_printed=NULL;
@@ -190,7 +191,12 @@ void L_print_buf_ofs_fds (fds *s, byte *buf, size_t size, size_t ofs)
         else
             wpn=size-pos;
 
-        L_fds (s, PRI_SIZE_T_HEX_PAD ": ", starting_offset + pos + ofs);
+        if (L_ofs_width==64)
+            L_fds (s, PRI_OCTA_HEX_PAD ": ", starting_offset + pos + ofs);
+        else if (L_ofs_width==32)
+            L_fds (s, PRI_TETRA_HEX_PAD ": ", starting_offset + pos + ofs);
+        else
+            oassert(!"incorrect L_ofs_width");
         
         for (i=0; i<wpn; i++)
             L_fds (s, "%02X%c", buf[pos+i], (i==7) ? '-' : ' ');
@@ -241,7 +247,12 @@ void L_print_bufs_diff (byte *buf1, byte *buf2, size_t size)
 
         if (memcmp (buf1+pos, buf2+pos, wpn)!=0) // any changes in the whole line?
         {
-            L (PRI_SIZE_T_HEX_PAD ": ", starting_offset + pos);
+            if (L_ofs_width==64)
+                L (PRI_OCTA_HEX_PAD ": ", starting_offset + pos);
+            else if (L_ofs_width==32)
+                L (PRI_TETRA_HEX_PAD ": ", starting_offset + pos);
+            else
+                oassert(!"incorrect L_ofs_width");
             
             for (i=0; i<wpn; i++)
             {

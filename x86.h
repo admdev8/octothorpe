@@ -131,20 +131,22 @@ void XMM_to_strbuf (byte* p, strbuf *sb);
 bool sse_supported();
 bool sse2_supported();
 
-#ifdef O_BITS64
+#if __WORDSIZE==64
 #define AX_REGISTER_NAME "RAX"
 #define BX_REGISTER_NAME "RBX"
 #define CX_REGISTER_NAME "RCX"
 #define DX_REGISTER_NAME "RDX"
 #define SI_REGISTER_NAME "RSI"
 #define BP_REGISTER_NAME "RBP"
-#else
+#elif __WORDSIZE==32
 #define AX_REGISTER_NAME "EAX"
 #define BX_REGISTER_NAME "EBX"
 #define CX_REGISTER_NAME "ECX"
 #define DX_REGISTER_NAME "EDX"
 #define SI_REGISTER_NAME "ESI"
 #define BP_REGISTER_NAME "EBP"
+#else
+#error "__WORDSIZE is not defined"
 #endif
 
 // used for testing in tracer/cc and bolt/x86 emulator
@@ -152,7 +154,7 @@ bool sse2_supported();
 #define X86_INC_EAX_LEN 1
 #define X64_INC_RAX "\x48\xFF\xC0"
 #define X64_INC_RAX_LEN 3
-#ifdef O_BITS64
+#if __WORDSIZE==64
 #define X86_OR_X64_INC_AX       X64_INC_RAX
 #define X86_OR_X64_INC_AX_LEN   X64_INC_RAX_LEN
 #else
@@ -164,7 +166,7 @@ bool sse2_supported();
 #define X86_MOV_EAX_ESI_LEN 2
 #define X64_MOV_RAX_RSI "\x48\x89\xF0"
 #define X64_MOV_RAX_RSI_LEN 3
-#ifdef O_BITS64
+#if __WORDSIZE==64
 #define X86_OR_X64_MOV_AX_SI        X64_MOV_RAX_RSI
 #define X86_OR_X64_MOV_AX_SI_LEN    X64_MOV_RAX_RSI_LEN
 #else
@@ -180,7 +182,7 @@ bool sse2_supported();
 #define X86_CMP_ECX_1_LEN 3
 #define X64_CMP_RCX_1 "\x48\x83\xF9\x01"
 #define X64_CMP_RCX_1_LEN 4
-#ifdef O_BITS64
+#if __WORDSIZE==64
 #define X86_OR_X64_FSTP_SI      X64_FSTP_RSI
 #define X86_OR_X64_FSTP_SI_LEN  X64_FSTP_RSI_LEN
 #define X86_OR_X64_CMP_xCX_1    X64_CMP_RCX_1
@@ -202,7 +204,7 @@ bool sse2_supported();
 #define X86_CMP_EAX_EBX_LEN 2
 #define X64_CMP_RAX_RBX "\x48\x39\xD8"
 #define X64_CMP_RAX_RBX_LEN 3
-#ifdef O_BITS64
+#if __WORDSIZE==64
 #define X86_OR_X64_CMP_xAX_xBX      X64_CMP_RAX_RBX 
 #define X86_OR_X64_CMP_xAX_xBX_LEN  X64_CMP_RAX_RBX_LEN
 #else

@@ -1,4 +1,4 @@
-/*
+﻿/*
  *             _        _   _                           
  *            | |      | | | |                          
  *   ___   ___| |_ ___ | |_| |__   ___  _ __ _ __   ___ 
@@ -15,31 +15,29 @@
  *
  */
 
-#include "oassert.h"
-#include "datatypes.h"
-#include "entropy.h"
-#include "memutils.h"
+// this test is not included in tests.sh
+
+#include <stdio.h>
+#include <time.h>
+#include <strings.h>
+#include <unistd.h>
+#include <errno.h>
+
+#include "stuff.h"
+#include "fmt_utils.h"
+#include "enum_files.h"
+
+void cb (const char *name, const char *pathname, size_t size, time_t t, bool is_dir, void *param)
+{
+	struct tm *_tm=localtime(&t);
+	printf ("%s() name=%s pathname=%s size=" PRI_SIZE_T " is_dir=%d time=%s", 
+		__FUNCTION__, name, pathname, size, is_dir, asctime(_tm));
+};
 
 int main()
 {
-	byte buf[256];
-	bzero(buf, sizeof(buf));
-	oassert(entropy (buf, sizeof(buf))==0);
-	bytefill(buf, sizeof(buf), 0x11);
-	oassert(entropy (buf, sizeof(buf))==0);
-	for (int i=0; i<256; i++)
-		buf[i]=i;
-	oassert(entropy (buf, sizeof(buf))==8);
-
-	// integer entropy
-	bzero(buf, sizeof(buf));
-	oassert(entropy_int (buf, sizeof(buf))==0);
-	bytefill(buf, sizeof(buf), 0x11);
-	oassert(entropy_int (buf, sizeof(buf))==0);
-	for (int i=0; i<256; i++)
-		buf[i]=i;
-	oassert(entropy_int (buf, sizeof(buf))>>16==8);
-	
-	return 0;
+	char tmp[256];
+	if (getcwd (tmp, sizeof(tmp))==NULL)
+		die ("getcwd failed: %s\n", strerror(errno));
+	enum_files_in_dir (tmp, cb, NULL);
 };
-
