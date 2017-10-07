@@ -1,3 +1,7 @@
+2017-10-07 Dennis Yurichev <dennis(a)yurichev.com>
+
+	* New functions: swap_endianness16(), swap_endianness32()
+
 2017-10-06 Dennis Yurichev <dennis(a)yurichev.com>
 
 	* New function: obj_to_strbuf()

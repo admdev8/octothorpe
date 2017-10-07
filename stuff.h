@@ -114,6 +114,8 @@ extern "C" {
 	int popcnt32 (tetra x);
 	int popcnt64 (octa x);
 
+	wyde swap_endianness16 (wyde a);
+	tetra swap_endianness32 (tetra a);
 
 #ifdef  __cplusplus
 }

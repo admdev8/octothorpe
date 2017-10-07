@@ -465,5 +465,16 @@ int popcnt64 (uint64_t x)
 	return count;
 }
 
+wyde swap_endianness16 (wyde a)
+{
+	return ((a&0xFF)<<8) | (a>>8);
+};
 
+tetra swap_endianness32 (tetra a)
+{
+	return ((a>>24)&0xff) |
+		((a<<8)&0xff0000) |
+		((a>>8)&0xff00) |
+		((a<<24)&0xff000000);
+};
 
