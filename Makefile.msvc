@@ -1,0 +1,120 @@
+OPTIONS=/D__WORDSIZE=64
+
+OBJS=base64.obj dlist.obj dmalloc.obj elf.obj entropy.obj entropy_int.obj enum_files.obj files.obj FPU_stuff_MSVC.obj fsave.obj lisp.obj logging.obj \
+	memutils.obj oassert.obj octomath.obj ostrings.obj rand.obj rbtree.obj regex.obj set.obj strbuf.obj stuff.obj x86.obj x86_intrin.obj string_list.obj
+
+all: octothorpe.lib tests
+
+base64.obj: base64.c base64.h
+	cl base64.c /c $(OPTIONS)
+
+dlist.obj: dlist.c dlist.h
+	cl dlist.c /c $(OPTIONS)
+
+dmalloc.obj: dmalloc.c dmalloc.h
+	cl dmalloc.c /c $(OPTIONS)
+
+elf.obj: elf.c elf.h elf_structures.h
+	cl elf.c /c $(OPTIONS)
+
+entropy.obj: entropy.c entropy.h
+	cl entropy.c /c $(OPTIONS)
+
+entropy_int.obj: entropy_int.c
+	cl entropy_int.c /c $(OPTIONS)
+
+enum_files.obj: enum_files.c
+	cl enum_files.c /c $(OPTIONS)
+
+files.obj: files.c files.h
+	cl files.c /c $(OPTIONS)
+	
+FPU_stuff_MSVC.obj: FPU_stuff_MSVC.asm
+	ml64 /c /D_WIN64=1 FPU_stuff_MSVC.asm
+
+fsave.obj: fsave.c fsave.h
+	cl fsave.c /c $(OPTIONS)
+
+lisp.obj: lisp.c lisp.h
+	cl lisp.c /c $(OPTIONS)
+
+logging.obj: logging.c logging.h
+	cl logging.c /c $(OPTIONS)
+
+memutils.obj: memutils.c memutils.h
+	cl memutils.c /c $(OPTIONS)
+
+oassert.obj: oassert.c oassert.h
+	cl oassert.c /c $(OPTIONS)
+
+octomath.obj: octomath.c octomath.h
+	cl octomath.c /c $(OPTIONS)
+
+ostrings.obj: ostrings.c ostrings.h
+	cl ostrings.c /c $(OPTIONS)
+
+rand.obj: rand.c rand.h
+	cl rand.c /c $(OPTIONS)
+
+rbtree.obj: rbtree.c rbtree.h
+	cl rbtree.c /c $(OPTIONS)
+
+regex.obj: regcomp.c regex.h regex.c regex_helpers.c regex_helpers.h regex_internal.c regex_internal.h regexec.c
+	cl regex.c /c $(OPTIONS)
+
+set.obj: set.c set.h
+	cl set.c /c $(OPTIONS)
+
+strbuf.obj: strbuf.c strbuf.h
+	cl strbuf.c /c $(OPTIONS)
+
+string_list.obj: string_list.c string_list.h
+	cl string_list.c /c $(OPTIONS)
+
+stuff.obj: stuff.c stuff.h
+	cl stuff.c /c $(OPTIONS)
+
+x86.obj: x86.c x86.h
+	cl x86.c /c $(OPTIONS)
+
+x86_intrin.obj: x86_intrin.c x86_intrin.h
+	cl x86_intrin.c /c $(OPTIONS)
+
+octothorpe.lib: $(OBJS)
+	lib.exe $(OBJS) /OUT:octothorpe.lib
+
+enum_files_test.exe: enum_files_test.c
+	cl enum_files_test.c $(OPTIONS) octothorpe.lib
+
+logging_test.exe: logging_test.c
+	cl logging_test.c $(OPTIONS) octothorpe.lib
+
+memutils_test.exe: memutils_test.c
+	cl memutils_test.c $(OPTIONS) octothorpe.lib
+
+ostrings_test.exe: ostrings_test.c
+	cl ostrings_test.c $(OPTIONS) octothorpe.lib
+
+rbtree_test.exe: rbtree_test.c
+	cl rbtree_test.c $(OPTIONS) octothorpe.lib
+
+regex_test.exe: regex_test.c
+	cl regex_test.c $(OPTIONS) octothorpe.lib
+
+strbuf_test.exe: strbuf_test.c
+	cl strbuf_test.c $(OPTIONS) octothorpe.lib
+
+string_list_test.exe: string_list_test.c
+	cl string_list_test.c $(OPTIONS) octothorpe.lib
+
+stuff_test.exe: stuff_test.c
+	cl stuff_test.c $(OPTIONS) octothorpe.lib
+
+test1.exe: test1.c
+	cl test1.c $(OPTIONS) octothorpe.lib
+
+tests: enum_files_test.exe logging_test.exe memutils_test.exe ostrings_test.exe rbtree_test.exe regex_test.exe strbuf_test.exe string_list_test.exe \
+	stuff_test.exe test1.exe
+
+clean:
+	del *.obj

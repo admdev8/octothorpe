@@ -17,6 +17,8 @@
 
 #pragma once
 
+#include "stuff.h"
+
 // Rationale: my own oassert with <s>with blackjack and hookers</s> _Noreturn C11 keyword and __FUNCTION__.
 
 #ifdef _DEBUG
@@ -35,8 +37,8 @@
 extern "C" {
 #endif
 
-_Noreturn void _oassert (const char *msg, const char *file, unsigned line, const char *func);
-_Noreturn void _fatal_error (const char *file, unsigned line, const char *func);
+MY_NORETURN void _oassert (const char *msg, const char *file, unsigned line, const char *func);
+MY_NORETURN void _fatal_error (const char *file, unsigned line, const char *func);
 
 #ifdef  __cplusplus
 }

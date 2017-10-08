@@ -17,7 +17,9 @@
 
 #include <stdio.h>
 #include <string.h>
+#ifdef __GNUC__
 #include <strings.h>
+#endif
 #include <stdbool.h>
 #include <search.h>
 #include <stdlib.h>
@@ -117,7 +119,7 @@ int find_string_in_array_of_strings(const char *s, const char **array, size_t ar
 	void *found;
 	
 	if (sorted)
-		found=bsearch (s, array, &array_size, sizeof(char*), case_insensitive ? my_strcasecmp : my_strcmp);
+		found=bsearch (s, array, array_size, sizeof(char*), case_insensitive ? my_strcasecmp : my_strcmp);
 	else
 		found=lfind (s, array, &array_size, sizeof(char*), case_insensitive ? my_strcasecmp : my_strcmp);
 

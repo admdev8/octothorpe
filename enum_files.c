@@ -19,7 +19,9 @@
 #include <stdio.h>
 #include <time.h>
 #include <assert.h>
+#ifdef __GNUC__
 #include <strings.h>
+#endif
 
 #ifdef _WIN32
 #include <io.h>
@@ -35,6 +37,7 @@
 #include "bitfields.h"
 #include "strbuf.h"
 #include "enum_files.h"
+#include "ostrings.h"
 
 void enum_files_in_dir(const char* path, callback_fn cb, void *param)
 {

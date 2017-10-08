@@ -2,4 +2,6 @@
 *.a
 *.swp
 tags
+*.exe
+*.obj
 

@@ -61,3 +61,12 @@ typedef tetra address;
 typedef tetra_s address_offset;
 #endif
 
+#ifndef ssize_t
+#if __WORDSIZE==64
+typedef int64_t ssize_t;
+#elif __WORDSIZE==32
+typedef int32_t ssize_t;
+#else
+#error "__WORDSIZE is undefined"
+#endif
+#endif

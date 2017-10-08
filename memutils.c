@@ -85,11 +85,11 @@ byte *omemmem (byte *haystack, size_t haystack_size, byte *needle, size_t needle
 
 // Knuth–Morris–Pratt algorithm
 // copypasted from http://cprogramming.com/snippets/source-code/knuthmorrispratt-kmp-string-search-algorithm
-const byte *kmp_search(const byte *haystack, size_t haystack_size, const byte *needle, size_t needle_size)
+byte *kmp_search(byte *haystack, size_t haystack_size, byte *needle, size_t needle_size)
 {
 	int *T;
 	int i, j;
-	const byte *result = NULL;
+	byte *result = NULL;
  
 	if (needle_size==0)
 		return haystack;

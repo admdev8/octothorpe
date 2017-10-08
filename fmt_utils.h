@@ -23,6 +23,13 @@
 #include <inttypes.h>
 #endif
 
+#ifndef PRIx64
+#ifdef _MSC_VER
+#define PRIx64       "I64x"
+#define PRId64       "I64d"
+#endif
+#endif
+
 #define PRI_OCTA_HEX "%" PRIx64
 #define PRI_OCTA_HEX_PAD "%016" PRIx64
 #define PRI_OCTA_DEC "%" PRId64

@@ -33,8 +33,10 @@
 #include <intrin.h>
 #endif
 
+#ifdef __GNUC__
 // for lzcnt:
 #include <x86intrin.h>
+#endif
 
 bool value_in2(unsigned v, unsigned a1, unsigned a2)
 {
@@ -73,7 +75,7 @@ unsigned most_significant_hex_number(octa x)
 	return 0;
 };
 
-_Noreturn void die (const char * fmt, ...)
+MY_NORETURN void die (const char * fmt, ...)
 {
 	va_list va;
 	va_start (va, fmt);
@@ -302,7 +304,7 @@ int compare_size_t(void* leftp, void* rightp)
 
 int compare_int(void* leftp, void* rightp)
 {
-	int left = (int)leftp, right = (int)rightp;
+	int left = *(int*)leftp, right = *(int*)rightp;
 	if (left < right)
 		return -1;
 	else if (left > right)
@@ -316,7 +318,7 @@ int compare_int(void* leftp, void* rightp)
 
 int compare_tetras(const void* leftp, const void* rightp)
 {
-	tetra left = (tetra)leftp, right = (tetra)rightp;
+	tetra left = *(tetra*)leftp, right = *(tetra*)rightp;
 	if (left < right)
 		return -1;
 	else if (left > right)

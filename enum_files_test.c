@@ -19,8 +19,10 @@
 
 #include <stdio.h>
 #include <time.h>
+#ifdef __GNUC__
 #include <strings.h>
 #include <unistd.h>
+#endif
 #include <errno.h>
 
 #include "stuff.h"

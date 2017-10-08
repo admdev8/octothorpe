@@ -36,7 +36,7 @@ extern "C" {
 	
 	bool is_blk_zero (void *ptr, size_t s);
 	byte *omemmem (byte *haystack, size_t haystack_size, byte *needle, size_t needle_size);
-	const byte *kmp_search(const byte *haystack, size_t haystack_size, const byte *needle, size_t needle_size);
+	byte *kmp_search(byte *haystack, size_t haystack_size, byte *needle, size_t needle_size);
 	size_t* find_all_needles (byte *haystack, size_t haystack_size, byte* needle, size_t needle_size, 
 		OUT size_t* rt_size);
 	size_t omemmem_count (byte *haystack, size_t haystack_size, byte *needle, size_t needle_size);

@@ -19,18 +19,22 @@
 #include <stdlib.h>
 #include "oassert.h"
 
-_Noreturn void _oassert (const char *msg, const char *file, unsigned line, const char *func)
+MY_NORETURN void _oassert (const char *msg, const char *file, unsigned line, const char *func)
 {
 	fprintf (stderr, "Assertion failed: %s\n", msg);
 	fprintf (stderr, "File/line: %s:%d, function: %s\n", file, line, func);
+#ifdef __GNUC__
 	__builtin_trap();
+#endif
 	exit(0);
 };
 
-_Noreturn void _fatal_error (const char *file, unsigned line, const char *func)
+MY_NORETURN void _fatal_error (const char *file, unsigned line, const char *func)
 {
 	fprintf (stderr, "Fatal error at file/line: %s:%d, function: %s\n", file, line, func);
+#ifdef __GNUC__
 	__builtin_trap();
+#endif
 	exit(0);
 };
 

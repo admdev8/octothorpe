@@ -21,6 +21,11 @@
 #include "stuff.h"
 #include <stdbool.h>
 
+#ifdef _MSC_VER 
+#define strncasecmp _strnicmp
+#define strcasecmp _stricmp
+#endif
+
 #ifdef  __cplusplus
 extern "C" {
 #endif

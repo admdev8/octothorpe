@@ -18,6 +18,10 @@
 #include "x86_intrin.h"
 #include "x86.h"
 
+#ifdef _MSC_VER
+#include <intrin.h>
+#endif
+
 #if __WORDSIZE==32
 
 void intrin_SHL (IN tetra value, IN uint8_t shift_value, OUT tetra* result, IN OUT tetra* flags)
@@ -284,52 +288,92 @@ void intrin_NEG (IN tetra op1, OUT tetra* result, IN OUT tetra* flags)
 
 byte rotr8(byte x, byte r)
 {
+#ifdef __GNUC__
 	__asm("rorb %1,%0" : "+r" (x) : "c" (r));
 	return x;
+#endif
+#ifdef _MSC_VER
+	return _rotr8(x,r);
+#endif
 }
 
 byte rotl8(byte x, byte r)
 {
+#ifdef __GNUC__
 	__asm("rolb %1,%0" : "+r" (x) : "c" (r));
 	return x;
+#endif
+#ifdef _MSC_VER
+	return _rotl8(x,r);
+#endif
 }
 
 wyde rotr16(wyde x, byte r)
 {
+#ifdef __GNUC__
 	__asm("rorw %1,%0" : "+r" (x) : "c" (r));
 	return x;
+#endif
+#ifdef _MSC_VER
+	return _rotr16(x,r);
+#endif
 }
 
 wyde rotl16(wyde x, byte r)
 {
+#ifdef __GNUC__
 	__asm("rolw %1,%0" : "+r" (x) : "c" (r));
 	return x;
+#endif
+#ifdef _MSC_VER
+	return _rotl16(x,r);
+#endif
 }
 
 tetra rotr32(tetra x, byte r)
 {
+#ifdef __GNUC__
 	__asm("rorl %1,%0" : "+r" (x) : "c" (r));
 	return x;
+#endif
+#ifdef _MSC_VER
+	return _rotl(x,r);
+#endif
 }
 
 tetra rotl32(tetra x, byte r)
 {
+#ifdef __GNUC__
 	__asm("roll %1,%0" : "+r" (x) : "c" (r));
 	return x;
+#endif
+#ifdef _MSC_VER
+	return _rotr(x,r);
+#endif
 }
 
 #if __WORDSIZE==64
 
 octa rotr64(octa x, byte r)
 {
+#ifdef __GNUC__
 	__asm("rorq %1,%0" : "+r" (x) : "c" (r));
 	return x;
+#endif
+#ifdef _MSC_VER
+	return _rotr64(x,r);
+#endif
 }
 
 octa rotl64(octa x, byte r)
 {
+#ifdef __GNUC__
 	__asm("rolq %1,%0" : "+r" (x) : "c" (r));
 	return x;
+#endif
+#ifdef _MSC_VER
+	return _rotl64(x,r);
+#endif
 }
 
 #elif __WORDSIZE==32

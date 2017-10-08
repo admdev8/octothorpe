@@ -114,7 +114,7 @@ unsigned long genrand()
 
 uint64_t genrand64()
 {
-	return genrand()<<32 | genrand();
+	return (uint64_t)genrand()<<32 | genrand();
 };
 
 // TODO rename: http://www.cplusplus.com/reference/random/uniform_int_distribution/

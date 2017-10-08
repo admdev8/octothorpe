@@ -1,8 +1,0 @@
-My own C library.
-
-Nothing special, just functions I needed...
-
-Requires C11 compiler, e.g. GCC >= 4.7.
-
--- dennis(a)yurichev.com
-

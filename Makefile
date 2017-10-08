@@ -3,7 +3,7 @@ OBJECTS=base64.o dlist.o dmalloc.o elf.o entropy.o entropy_int.o enum_files.o fi
 	oassert.o octomath.o ostrings.o rand.o rbtree.o regex.o set.o strbuf.o string_list.o stuff.o x86.o \
 	x86_intrin.o
 
-all: octothorpe.a
+all: octothorpe.a tests
 
 octothorpe.a: $(OBJECTS)
 	ar r octothorpe.a $(OBJECTS)

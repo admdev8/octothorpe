@@ -19,14 +19,23 @@
 
 #include <stdlib.h>
 #include <stdio.h>
-#include "datatypes.h"
+#include <stdint.h>
 #include <string.h>
 
+#include "datatypes.h"
 #include "strbuf.h"
 #include "regex.h"
 
 #ifdef  __cplusplus
 extern "C" {
+#endif
+
+#ifdef __GNUC__
+#define MY_NORETURN _Noreturn
+#elif _MSC_VER
+#define MY_NORETURN __declspec(noreturn)
+#else
+#define MY_NORETURN
 #endif
 
 #ifndef IN
@@ -73,11 +82,7 @@ extern "C" {
 	bool value_not_in2(unsigned v, unsigned a1, unsigned a2);
 	bool value_in7(unsigned v, unsigned a1, unsigned a2, unsigned a3, unsigned a4, unsigned a5, unsigned a6, unsigned a7);
 	unsigned most_significant_hex_number(octa x);
-#ifdef __cplusplus
-	void die (const char * fmt, ...);
-#else
-	_Noreturn void die (const char * fmt, ...);
-#endif
+	MY_NORETURN void die (const char * fmt, ...);
 	void* memdup (void *p, size_t s);
 	void debugger_breakpoint();
 	void make_REG_compact_hex (REG a, strbuf* out);

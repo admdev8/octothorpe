@@ -32,6 +32,7 @@
 #include "rand.h"
 #include "files.h"
 #include "strbuf.h"
+#include "fmt_utils.h"
 
 #define FILE_OUT stdout
 //#define FILE_OUT stderr
