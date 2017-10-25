@@ -220,6 +220,50 @@ void L_print_buf_ofs_fds (fds *s, byte *buf, size_t size, size_t ofs)
     };
 };
 
+// in C/C++ format
+void L_print_buf_ofs_fds_C (fds *s, byte *buf, size_t size, size_t ofs)
+{
+    size_t pos=0;
+    unsigned starting_offset=0;
+    unsigned i;
+
+    while (size-pos)
+    {
+        size_t wpn;
+        if ((size-pos)>16)
+            wpn=16;
+        else
+            wpn=size-pos;
+
+        if (L_ofs_width==64)
+            L_fds (s, "/*" PRI_OCTA_HEX_PAD "*/ ", starting_offset + pos + ofs);
+        else if (L_ofs_width==32)
+            L_fds (s, "/*" PRI_TETRA_HEX_PAD "*/ ", starting_offset + pos + ofs);
+        else
+            oassert(!"incorrect L_ofs_width");
+        
+        for (i=0; i<wpn; i++)
+            L_fds (s, "0x%02X%c ", buf[pos+i], (pos+i+1)==size ? ' ' : ',');
+
+        if (wpn<16)
+            for (i=0; i<16-wpn; i++)
+                L_fds (s, "   ");
+
+        L_fds (s, "/*");
+
+        for (i=0; i<wpn; i++)
+            L_fds (s, "%c", isprint (buf[pos+i]) ? buf[pos+i] : '.');
+
+        if (wpn<16)
+            for (i=0; i<16-wpn; i++)
+                L_fds (s, " ");
+
+        L_fds (s, "*/\n");
+
+        pos+=wpn;
+    };
+};
+
 void L_print_buf_ofs (byte *buf, size_t size, size_t ofs)
 {
     L_print_buf_ofs_fds (&cur_fds, buf, size, ofs);
@@ -228,6 +272,12 @@ void L_print_buf_ofs (byte *buf, size_t size, size_t ofs)
 void L_print_buf (byte *buf, size_t size)
 {
     L_print_buf_ofs (buf, size, 0);
+};
+
+// in C/C++ format
+void L_print_buf_ofs_C (byte *buf, size_t size, size_t ofs)
+{
+    L_print_buf_ofs_fds_C (&cur_fds, buf, size, ofs);
 };
 
 void L_print_bufs_diff (byte *buf1, byte *buf2, size_t size)

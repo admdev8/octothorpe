@@ -1,3 +1,8 @@
+2017-10-26 Dennis Yurichev <dennis(a)yurichev.com>
+
+	* New functions: L_print_buf_ofs_fds_C(), L_print_buf_ofs_C().
+	Dump_util.
+
 2017-10-09 Dennis Yurichev <dennis(a)yurichev.com>
 
 	* New functions: my_strnicmp(), my_truncate_or_die()

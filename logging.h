@@ -59,6 +59,11 @@ void L_once (const char * fmt, ...);
 void L_print_buf_ofs_fds (fds *s, byte *buf, size_t size, size_t ofs);
 void L_print_buf_ofs (byte *buf, size_t size, size_t ofs);
 void L_print_buf (byte *buf, size_t size);
+
+// in C/C++ format:
+void L_print_buf_ofs_fds_C (fds *s, byte *buf, size_t size, size_t ofs);
+void L_print_buf_ofs_C (byte *buf, size_t size, size_t ofs);
+
 void L_print_bufs_diff (byte *buf1, byte *buf2, size_t size);
 void L_deinit (void);
 

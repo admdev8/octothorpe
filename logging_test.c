@@ -18,7 +18,9 @@
 #include "logging.h"
 #include "dmalloc.h"
 
-byte buf[0x10]={ 'a', 'b', 'c', 'd', 1, 2, 3, 4, 5, 6, 7, 8, 0, 0, 0, 0 };
+byte buf[0x20]={ 
+	'a', 'b', 'c', 'd', 1, 2, 3, 4, 5, 6, 7, 8, 0, 0, 0, 0, 
+	'a', 'b', 'c', 'd', 1, 2, 3, 4, 5, 6, 7, 8, 0, 0, 0, 0 	};
 
 int main()
 {
@@ -33,7 +35,8 @@ int main()
 	L_once("#2 should be printed once\n");
 	L_once("#2 should be printed once\n");
 	L_once("#3 should be printed once\n");
-	L_print_buf (buf, 0x10);
+	L_print_buf (buf, 0x20);
+	L_print_buf_ofs_C (buf, 0x20, 0);
 	L_deinit();
 
 	dump_unfreed_blocks();
