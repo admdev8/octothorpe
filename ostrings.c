@@ -226,3 +226,14 @@ bool is_string_has_only_one_character_repeating (char *s, char *output)
 	return true;
 };
 
+int my_strnicmp(const char* s1, const char* s2, size_t len)
+{
+	for (int i=0; i<len; i++)
+	{
+		if (s1[i]!=s2[i])
+			return s1[i]-s2[i];
+		if (s1[i]==0)
+			return 0;
+	};
+	return 0;
+};

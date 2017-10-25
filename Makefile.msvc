@@ -1,9 +1,12 @@
-OPTIONS=/D__WORDSIZE=64
+OPTIONS=/D__WORDSIZE=64 /Zi /D_DEBUG /DRE_USE_MALLOC
+
+OUT_LIB=octothorpe64.lib
 
 OBJS=base64.obj dlist.obj dmalloc.obj elf.obj entropy.obj entropy_int.obj enum_files.obj files.obj FPU_stuff_MSVC.obj fsave.obj lisp.obj logging.obj \
-	memutils.obj oassert.obj octomath.obj ostrings.obj rand.obj rbtree.obj regex.obj set.obj strbuf.obj stuff.obj x86.obj x86_intrin.obj string_list.obj
+	memutils.obj oassert.obj octomath.obj ostrings.obj rand.obj rbtree.obj regex.obj set.obj strbuf.obj stuff.obj x86.obj x86_intrin.obj string_list.obj \
+	regex_helpers.obj
 
-all: octothorpe.lib tests
+all: $(OUT_LIB) tests
 
 base64.obj: base64.c base64.h
 	cl base64.c /c $(OPTIONS)
@@ -62,6 +65,9 @@ rbtree.obj: rbtree.c rbtree.h
 regex.obj: regcomp.c regex.h regex.c regex_helpers.c regex_helpers.h regex_internal.c regex_internal.h regexec.c
 	cl regex.c /c $(OPTIONS)
 
+regex_helpers.obj: regex_helpers.c regex_helpers.h
+	cl regex_helpers.c /c $(OPTIONS)
+
 set.obj: set.c set.h
 	cl set.c /c $(OPTIONS)
 
@@ -80,41 +86,42 @@ x86.obj: x86.c x86.h
 x86_intrin.obj: x86_intrin.c x86_intrin.h
 	cl x86_intrin.c /c $(OPTIONS)
 
-octothorpe.lib: $(OBJS)
-	lib.exe $(OBJS) /OUT:octothorpe.lib
+$(OUT_LIB): $(OBJS)
+	lib.exe $(OBJS) /OUT:$(OUT_LIB)
 
 enum_files_test.exe: enum_files_test.c
-	cl enum_files_test.c $(OPTIONS) octothorpe.lib
+	cl enum_files_test.c $(OPTIONS) $(OUT_LIB)
 
 logging_test.exe: logging_test.c
-	cl logging_test.c $(OPTIONS) octothorpe.lib
+	cl logging_test.c $(OPTIONS) $(OUT_LIB)
 
 memutils_test.exe: memutils_test.c
-	cl memutils_test.c $(OPTIONS) octothorpe.lib
+	cl memutils_test.c $(OPTIONS) $(OUT_LIB)
 
 ostrings_test.exe: ostrings_test.c
-	cl ostrings_test.c $(OPTIONS) octothorpe.lib
+	cl ostrings_test.c $(OPTIONS) $(OUT_LIB)
 
 rbtree_test.exe: rbtree_test.c
-	cl rbtree_test.c $(OPTIONS) octothorpe.lib
+	cl rbtree_test.c $(OPTIONS) $(OUT_LIB)
 
 regex_test.exe: regex_test.c
-	cl regex_test.c $(OPTIONS) octothorpe.lib
+	cl regex_test.c $(OPTIONS) $(OUT_LIB)
 
 strbuf_test.exe: strbuf_test.c
-	cl strbuf_test.c $(OPTIONS) octothorpe.lib
+	cl strbuf_test.c $(OPTIONS) $(OUT_LIB)
 
 string_list_test.exe: string_list_test.c
-	cl string_list_test.c $(OPTIONS) octothorpe.lib
+	cl string_list_test.c $(OPTIONS) $(OUT_LIB)
 
 stuff_test.exe: stuff_test.c
-	cl stuff_test.c $(OPTIONS) octothorpe.lib
+	cl stuff_test.c $(OPTIONS) $(OUT_LIB)
 
 test1.exe: test1.c
-	cl test1.c $(OPTIONS) octothorpe.lib
+	cl test1.c $(OPTIONS) $(OUT_LIB)
 
 tests: enum_files_test.exe logging_test.exe memutils_test.exe ostrings_test.exe rbtree_test.exe regex_test.exe strbuf_test.exe string_list_test.exe \
 	stuff_test.exe test1.exe
 
 clean:
 	del *.obj
+	del $(OUT_LIB)

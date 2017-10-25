@@ -44,6 +44,7 @@ void read_text_file_by_line_or_die (char *fname, read_text_file_by_line_callback
 void split_fname (char *fname, char *basefname, size_t basefname_len, char *ext, size_t ext_len);
 int open_or_die (char *fname, int mode);
 FILE *fopen_or_die(const char* fname, const char* mode);
+void my_truncate_or_die(char *fname, size_t newsize);
 
 #ifdef  __cplusplus
 }

@@ -1,3 +1,11 @@
+2017-10-09 Dennis Yurichev <dennis(a)yurichev.com>
+
+	* New functions: my_strnicmp(), my_truncate_or_die()
+
+2017-10-08 Dennis Yurichev <dennis(a)yurichev.com>
+
+	* MSVC 2015 support
+
 2017-10-07 Dennis Yurichev <dennis(a)yurichev.com>
 
 	* New functions: swap_endianness16(), swap_endianness32()

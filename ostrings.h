@@ -53,6 +53,7 @@ extern "C" {
 	bool is_string_consists_only_of_Latin_letters (char *s);
 	bool is_string_consists_only_of_hex_digits (char *s);
 	bool is_string_has_only_one_character_repeating (char *s, OPTIONAL char *output); // output can be NULL
+	int my_strnicmp(const char* s1, const char* s2, size_t len);
 
 #ifdef  __cplusplus
 }

@@ -36,6 +36,10 @@
 #include "stuff.h"
 #include "oassert.h"
 
+#ifdef __GNUC__
+#include <unistd.h>
+#endif
+
 bool file_exist (const char *filename)
 {
 	FILE *tmp=fopen(filename, "r");
@@ -184,5 +188,20 @@ FILE *fopen_or_die(const char* fname, const char* mode)
 	if (rt==NULL)
 		die ("%s(): Can't open %s file in mode '%s'\n", __func__, fname, mode);
 	return rt;
+};
+
+void my_truncate_or_die(char *fname, size_t newsize)
+{
+#ifdef __GNUC__
+	truncate(fname, newsize);
+	// TODO chk return
+#endif	
+
+#ifdef _MSC_VER
+	int fd=open_or_die(fname, _O_RDWR);
+	if (_chsize(fd, newsize)!=0)
+		die ("Can't change size of %s\n", fname);
+	_close(fd);
+#endif
 };
 

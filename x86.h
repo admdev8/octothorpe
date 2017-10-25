@@ -214,10 +214,19 @@ bool sse2_supported();
 
 #define X86_SHR_OP_ESI_CP_CL "\xD3\x2E"
 #define X86_SHR_OP_ESI_CP_CL_LEN 2
+#define X64_SHR_OP_RSI_CP_CL "\x48\xD3\x2E"
+#define X64_SHR_OP_RSI_CP_CL_LEN 3
+
 #define X86_SHL_OP_ESI_CP_CL "\xD3\x26"
 #define X86_SHL_OP_ESI_CP_CL_LEN 2
+#define X64_SHL_OP_RSI_CP_CL "\x48\xD3\x26"
+#define X64_SHL_OP_RSI_CP_CL_LEN 3
+
 #define X86_SAR_OP_ESI_CP_CL "\xD3\x3E"
 #define X86_SAR_OP_ESI_CP_CL_LEN 2
+#define X64_SAR_OP_RSI_CP_CL "\x48\xD3\x3E"
+#define X64_SAR_OP_RSI_CP_CL_LEN 3
+
 #define X86_ADD_EAX_EBX "\x01\xD8"
 #define X86_ADC_EAX_EBX "\x11\xD8"
 #define X86_SUB_EAX_EBX "\x29\xD8"
@@ -225,14 +234,27 @@ bool sse2_supported();
 #define X86_XOR_EAX_EBX "\x31\xD8"
 #define X86_OR_EAX_EBX "\x09\xD8"
 #define X86_AND_EAX_EBX "\x21\xD8"
+
+#define X86_ADD_RAX_RBX "\x48\x01\xD8"
+#define X86_ADC_RAX_RBX "\x48\x11\xD8"
+#define X86_SUB_RAX_RBX "\x48\x29\xD8"
+#define X86_SBB_RAX_RBX "\x48\x19\xD8"
+#define X86_XOR_RAX_RBX "\x48\x31\xD8"
+#define X86_OR_RAX_RBX "\x48\x09\xD8"
+#define X86_AND_RAX_RBX "\x48\x21\xD8"
+
 #define X86_MOVZX_EAX_AL "\x0F\xB6\xC0"
 #define X86_MOVZX_EAX_AX "\x0F\xB7\xC0"
 #define X86_MOVSX_EAX_AL "\x0F\xBE\xC0"
 #define X86_MOVSX_EAX_AX "\x0F\xBF\xC0"
 #define X86_MOVZX_AX_AL "\x66\x0F\xB6\xC0"
 #define X86_MOVSX_AX_AL "\x66\x0F\xBE\xC0"
+
 #define X86_NOT_EAX "\xF7\xD0"
 #define X86_NEG_EAX "\xF7\xD8"
+#define X86_NOT_RAX "\x48\xF7\xD0"
+#define X86_NEG_RAX "\x48\xF7\xD8"
+
 #define X64_XOR_RAX_RAX_RETN "\x48\x31\xC0\xC3"
 #define X64_XOR_RAX_RAX_RETN_LEN 4
 #define X64_XOR_RAX_RAX_INC_RAX_RAX_RETN "\x48\x31\xC0\x48\xFF\xC0\xC3"

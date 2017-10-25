@@ -26,6 +26,9 @@ MY_NORETURN void _oassert (const char *msg, const char *file, unsigned line, con
 #ifdef __GNUC__
 	__builtin_trap();
 #endif
+#ifdef _MSC_VER
+	__debugbreak();
+#endif
 	exit(0);
 };
 
@@ -34,6 +37,9 @@ MY_NORETURN void _fatal_error (const char *file, unsigned line, const char *func
 	fprintf (stderr, "Fatal error at file/line: %s:%d, function: %s\n", file, line, func);
 #ifdef __GNUC__
 	__builtin_trap();
+#endif
+#ifdef _MSC_VER
+	__debugbreak();
 #endif
 	exit(0);
 };

@@ -1,7 +1,7 @@
 OPTIONS=-D_DEBUG=1 -DRE_USE_MALLOC=1
 OBJECTS=base64.o dlist.o dmalloc.o elf.o entropy.o entropy_int.o enum_files.o files.o fsave.o lisp.o logging.o memutils.o \
 	oassert.o octomath.o ostrings.o rand.o rbtree.o regex.o set.o strbuf.o string_list.o stuff.o x86.o \
-	x86_intrin.o
+	x86_intrin.o regex_helpers.o
 
 all: octothorpe.a tests
 

@@ -115,7 +115,7 @@ void* dmalloc (size_t size, const char * filename, unsigned line, const char * f
         debugger_breakpoint();
 
 #ifdef ADD_GUARDS
-    rt=malloc (size+8)+4;
+    rt=(void*)(((REG)malloc (size+8))+4);
 #else    
     rt=malloc (size);
 #endif    
@@ -170,7 +170,7 @@ void* drealloc (void* ptr, size_t size, const char * filename, unsigned line, co
         die("%s() can't allocate size %d for %s (%s:%d)\n", __FUNCTION__, size, structname, filename, line);
 
 #ifdef ADD_GUARDS    
-    newptr=newptr+4;
+    newptr=(void*)((REG)newptr+4);
     add_guards(newptr, size);
 #endif 
 

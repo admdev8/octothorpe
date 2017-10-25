@@ -27,7 +27,7 @@
 void intrin_SHL (IN tetra value, IN uint8_t shift_value, OUT tetra* result, IN OUT tetra* flags)
 {
 	tetra tmp;
-	
+
 	__asm__("pushfl;"
 		"popl %%ebx;"
 		"andl $0xfffff72a, %%ebx;" // ~FLAG_PSAZOC
@@ -393,4 +393,3 @@ octa rotl64 ( octa x, byte r )
 #error "__WORDSIZE is undefined"
 
 #endif
-

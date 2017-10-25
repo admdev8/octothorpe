@@ -59,12 +59,16 @@ char *regmatch_dup(regmatch_t *m, char *str)
 	return DSTRNDUP (str + m->rm_so, regmatch_len(m), "str");
 };
 
+// untested
 char **regexec_to_array_of_string (regex_t *r, char *s, size_t nmatch)
 {
-	regmatch_t m[nmatch];
+	regmatch_t *m=DMALLOC(regmatch_t, nmatch, "regmatch_t");
 
 	if (regexec(r, s, nmatch, m, 0))
+	{
+		DFREE(m);
 		return NULL;
+	};
 
 	char **rt=DMALLOC(char*, nmatch+1, "char*");
 
@@ -73,6 +77,7 @@ char **regexec_to_array_of_string (regex_t *r, char *s, size_t nmatch)
 
 	rt[nmatch]=NULL; // terminator
 
+	DFREE(m);
 	return rt;
 };
 
