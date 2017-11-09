@@ -1,3 +1,7 @@
+2017-11-09 Dennis Yurichev <dennis(a)yurichev.com>
+
+	* New util: replace_util.
+
 2017-10-26 Dennis Yurichev <dennis(a)yurichev.com>
 
 	* New functions: L_print_buf_ofs_fds_C(), L_print_buf_ofs_C().

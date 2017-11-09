@@ -3,7 +3,7 @@ OBJECTS=base64.o dlist.o dmalloc.o elf.o entropy.o entropy_int.o enum_files.o fi
 	oassert.o octomath.o ostrings.o rand.o rbtree.o regex.o set.o strbuf.o string_list.o stuff.o x86.o \
 	x86_intrin.o regex_helpers.o
 
-all: octothorpe.a tests dump_util
+all: octothorpe.a tests dump_util replace_util
 
 octothorpe.a: $(OBJECTS)
 	ar r octothorpe.a $(OBJECTS)
@@ -113,6 +113,9 @@ tests: test1.c octothorpe.a logging_test memutils_test regex_test ostrings_test 
 
 dump_util: dump_util.c
 	gcc $(OPTIONS) dump_util.c -o dump_util octothorpe.a
+
+replace_util: dump_util.c
+	gcc $(OPTIONS) -g -pg replace_util.c -o replace_util octothorpe.a
 
 clean:
 	rm -f *.o
