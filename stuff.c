@@ -304,7 +304,7 @@ int compare_size_t(void* leftp, void* rightp)
 
 int compare_int(void* leftp, void* rightp)
 {
-	int left = *(int*)leftp, right = *(int*)rightp;
+	int left = (int)leftp, right = (int)rightp;
 	if (left < right)
 		return -1;
 	else if (left > right)
@@ -318,7 +318,7 @@ int compare_int(void* leftp, void* rightp)
 
 int compare_tetras(const void* leftp, const void* rightp)
 {
-	tetra left = *(tetra*)leftp, right = *(tetra*)rightp;
+	tetra left = (tetra)leftp, right = (tetra)rightp;
 	if (left < right)
 		return -1;
 	else if (left > right)
@@ -346,6 +346,16 @@ bool element_in_the_array_of_size_t(size_t i, size_t *a, unsigned size)
 		if (a[j]==i)
 			return true;
 	return false;
+};
+
+// or -1
+int find_element_in_the_array_of_size_t(size_t i, size_t *a, unsigned size)
+{
+	// SIMD can be used here
+	for (unsigned j=0; j<size; j++)
+		if (a[j]==i)
+			return j;
+	return -1;
 };
 
 void add_value_to_each_element_of_size_t_array (size_t *a, size_t s, size_t val)
@@ -480,3 +490,10 @@ tetra swap_endianness32 (tetra a)
 		((a<<24)&0xff000000);
 };
 
+bool AND_array_of_bools(bool* array, size_t size)
+{
+	for (int i=0; i<size; i++)
+		if (array[i]==false)
+			return false;
+	return true;
+};

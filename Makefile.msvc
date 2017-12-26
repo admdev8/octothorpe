@@ -1,6 +1,6 @@
-OPTIONS=/D__WORDSIZE=64 /Zi /D_DEBUG /DRE_USE_MALLOC
+OPTIONS=/D__WORDSIZE=32 /Zi /D_DEBUG /DRE_USE_MALLOC
 
-OUT_LIB=octothorpe64.lib
+OUT_LIB=octothorpe.lib
 
 OBJS=base64.obj dlist.obj dmalloc.obj elf.obj entropy.obj entropy_int.obj enum_files.obj files.obj FPU_stuff_MSVC.obj fsave.obj lisp.obj logging.obj \
 	memutils.obj oassert.obj octomath.obj ostrings.obj rand.obj rbtree.obj regex.obj set.obj strbuf.obj stuff.obj x86.obj x86_intrin.obj string_list.obj \
@@ -33,7 +33,7 @@ files.obj: files.c files.h
 	cl files.c /c $(OPTIONS)
 	
 FPU_stuff_MSVC.obj: FPU_stuff_MSVC.asm
-	ml64 /c /D_WIN64=1 FPU_stuff_MSVC.asm
+	ml /c FPU_stuff_MSVC.asm
 
 fsave.obj: fsave.c fsave.h
 	cl fsave.c /c $(OPTIONS)
@@ -58,13 +58,13 @@ ostrings.obj: ostrings.c ostrings.h
 
 rand.obj: rand.c rand.h
 	cl rand.c /c $(OPTIONS)
-
+	
 rbtree.obj: rbtree.c rbtree.h
 	cl rbtree.c /c $(OPTIONS)
 
 regex.obj: regcomp.c regex.h regex.c regex_helpers.c regex_helpers.h regex_internal.c regex_internal.h regexec.c
 	cl regex.c /c $(OPTIONS)
-
+	
 regex_helpers.obj: regex_helpers.c regex_helpers.h
 	cl regex_helpers.c /c $(OPTIONS)
 
@@ -124,4 +124,5 @@ tests: enum_files_test.exe logging_test.exe memutils_test.exe ostrings_test.exe 
 
 clean:
 	del *.obj
+	del *.exe
 	del $(OUT_LIB)

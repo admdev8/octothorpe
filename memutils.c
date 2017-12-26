@@ -176,3 +176,11 @@ bool is_buf_printable (char *s, size_t size)
 	return true;
 };
 
+int search_for_elem_in_array_of_size_t (size_t* array, size_t size, size_t needle)
+{
+	for (int i=0; i<size; i++)
+		if (array[i]==needle)
+			return i;
+
+	return -1;
+};

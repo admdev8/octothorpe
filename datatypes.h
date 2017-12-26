@@ -55,10 +55,10 @@ typedef tetra REG;
 typedef tetra_s SIGNED_REG;
 #define REG_MAX UINT32_MAX
 #define REG_SIZE 4
-#else
-#error "__WORDSIZE is undefined"
 typedef tetra address;
 typedef tetra_s address_offset;
+#else
+#error "__WORDSIZE is undefined"
 #endif
 
 #ifndef ssize_t

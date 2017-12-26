@@ -22,6 +22,8 @@
 #include <intrin.h>
 #endif
 
+#ifdef __GNUC__
+
 #if __WORDSIZE==32
 
 void intrin_SHL (IN tetra value, IN uint8_t shift_value, OUT tetra* result, IN OUT tetra* flags)
@@ -284,7 +286,9 @@ void intrin_NEG (IN tetra op1, OUT tetra* result, IN OUT tetra* flags)
 	*flags=(tmp & FLAG_PSAZOC);
 };
 
-#endif
+#endif // __WORDSIZE
+
+#endif // __GNUC__
 
 byte rotr8(byte x, byte r)
 {
@@ -337,7 +341,7 @@ tetra rotr32(tetra x, byte r)
 	return x;
 #endif
 #ifdef _MSC_VER
-	return _rotl(x,r);
+	return _rotr(x,r);
 #endif
 }
 
@@ -348,7 +352,7 @@ tetra rotl32(tetra x, byte r)
 	return x;
 #endif
 #ifdef _MSC_VER
-	return _rotr(x,r);
+	return _rotl(x,r);
 #endif
 }
 

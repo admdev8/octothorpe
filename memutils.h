@@ -42,6 +42,8 @@ extern "C" {
 	size_t omemmem_count (byte *haystack, size_t haystack_size, byte *needle, size_t needle_size);
 	void XOR_block (byte* a, byte* b, size_t s);
 	bool is_buf_printable (char *s, size_t size);
+	// -1 if not found
+	int search_for_elem_in_array_of_size_t (size_t* array, size_t size, size_t needle);
 
 #ifdef  __cplusplus
 }
