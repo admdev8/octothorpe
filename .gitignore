@@ -4,4 +4,7 @@
 tags
 *.exe
 *.obj
+*.ilk
+*.pdb
+*.lib
 

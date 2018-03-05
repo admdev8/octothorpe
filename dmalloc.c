@@ -27,6 +27,7 @@
 #include "stuff.h"
 #include "memutils.h"
 #include "stuff.h"
+#include "fmt_utils.h"
 
 //#define LOGGING
 //#define BREAK_ON_UNKNOWN_BLOCK_BEING_FREED
@@ -34,6 +35,9 @@
 #ifdef _DEBUG
 #define ADD_GUARDS
 #define DFREE_CHK_ONLY_GUARD_BEING_FREED
+
+static size_t limit=500000000; // 500 MiB
+static size_t allocated=0;
 #endif
 
 
@@ -114,12 +118,17 @@ void* dmalloc (size_t size, const char * filename, unsigned line, const char * f
     if (break_on_seq_n && (seq_n==seq_n_to_break_on))
         debugger_breakpoint();
 
+#ifdef _DEBUG
+    if (allocated+size > limit)
+        die ("%s() limit reached. allocated="PRI_SIZE_T_DEC" limit="PRI_SIZE_T_DEC" size="PRI_SIZE_T_DEC"\n", __FUNCTION__, allocated, limit, size);
+#endif
+
 #ifdef ADD_GUARDS
     rt=(void*)(((REG)malloc (size+8))+4);
-#else    
+#else
     rt=malloc (size);
 #endif    
-    
+
     if (rt==NULL)
         die("%s() can't allocate size %d for %s (%s:%d)\n", __func__, size, structname, filename, line);
 
@@ -133,11 +142,14 @@ void* dmalloc (size_t size, const char * filename, unsigned line, const char * f
 
 #ifdef _DEBUG
     store_info (rt, size, filename, line, function, structname);
+    allocated=allocated+size;
+    //printf ("%s() allocated="PRI_SIZE_T_DEC" limit="PRI_SIZE_T_DEC" size="PRI_SIZE_T_DEC"\n", __FUNCTION__, allocated, limit, size);
 #endif
 
 #ifdef LOGGING
     fprintf (stderr, "returning 0x%p\n", rt);
-#endif    
+#endif
+
     return rt;
 };
 
@@ -161,7 +173,11 @@ void* drealloc (void* ptr, size_t size, const char * filename, unsigned line, co
     };
 
 #ifdef ADD_GUARDS
+    //if (allocated+size>limit)
+    //    die ("%s() limit reached. allocated="PRI_SIZE_T_DEC" limit="PRI_SIZE_T_DEC" size="PRI_SIZE_T_DEC"\n", __FUNCTION__, allocated, limit, size);
     newptr=(byte*)realloc ((byte*)ptr-4, size+8);
+    //allocated+=size;
+    //printf ("%s() allocated="PRI_SIZE_T_DEC" limit="PRI_SIZE_T_DEC" size="PRI_SIZE_T_DEC"\n", __FUNCTION__, allocated, limit, size);
 #else    
     newptr=realloc (ptr, size);
 #endif 
@@ -321,6 +337,15 @@ void dfree2 (void* ptr, const char *filename, unsigned line, const char *funcnam
 #ifdef ADD_GUARDS
 #ifdef _DEBUG
     tetrafill (ptr, blk_user_size, 0xB1CF1EED); // poison #2
+    if (allocated>blk_user_size)
+        allocated-=blk_user_size;
+    //printf ("%s() line %d allocated="PRI_SIZE_T_DEC" limit="PRI_SIZE_T_DEC" size="PRI_SIZE_T_DEC"\n", __FUNCTION__, __LINE__, allocated, limit, blk_user_size);
+    if (allocated<0)
+    {
+        //printf ("%s() line %d cleared\n", __FUNCTION__, __LINE__);
+        allocated=0; // BUG HERE! TODO: check
+    }
+    //printf ("%s() line %d allocated="PRI_SIZE_T_DEC" limit="PRI_SIZE_T_DEC" size="PRI_SIZE_T_DEC"\n", __FUNCTION__, __LINE__, allocated, limit, blk_user_size);
 #endif
     free ((byte*)ptr-4);
 #else
