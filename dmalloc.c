@@ -120,7 +120,10 @@ void* dmalloc (size_t size, const char * filename, unsigned line, const char * f
 
 #ifdef _DEBUG
     if (allocated+size > limit)
+    {
+        debugger_breakpoint();
         die ("%s() limit reached. allocated="PRI_SIZE_T_DEC" limit="PRI_SIZE_T_DEC" size="PRI_SIZE_T_DEC"\n", __FUNCTION__, allocated, limit, size);
+    };
 #endif
 
 #ifdef ADD_GUARDS
